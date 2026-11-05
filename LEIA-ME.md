@@ -51,7 +51,7 @@ npm run instalador
 Quando terminar, o instalador estará em:
 
 ```
-dist\SETUP_SCRIPTROOM_5.0.0.exe
+dist\SETUP_SCRIPTROOM_5.1.0.exe
 ```
 
 Dê dois cliques nele e siga o assistente: **Avançar › Aceito › Avançar › Instalar › Concluir**.
@@ -82,6 +82,23 @@ No VS Code também dá para usar **Terminal › Run Task…**, que lista as quat
   Análise técnica mostra a folha de cada cena por departamento e exporta em .csv.
 - **Exportar PDF…** com opções: folha de rosto, marcas de revisão, só um trecho de cenas, marca
   d'água e **cópias nominais** (um PDF por pessoa, com o nome dela na marca d'água).
+
+## Desfazer de verdade, histórico, rede de personagens e teleprompter (versão 5.1)
+
+- **Ctrl+Z palavra por palavra:** cada palavra digitada é um passo, e também conta como passo
+  trocar de escrever para apagar, colar um texto ou mudar de elemento. Depois de desfazer, o cursor
+  vai para onde a mudança aconteceu. A barra de status diz o que foi desfeito. Ctrl+Z dentro de
+  um campo (busca, painel) desfaz só o campo. Cabem 500 passos por roteiro.
+- **Editar › Histórico de alterações:** a lista de tudo o que você fez desde que abriu o roteiro
+  ("Escreveu “Agora é sério.” em Fala", "Novo elemento: Cena"…). Clique em qualquer passo para
+  voltar até ele; os passos desfeitos continuam lá, em cinza, para refazer.
+- **Exibir › Rede de personagens:** um mapa de quem contracena com quem, do roteiro ou da série
+  inteira. O tamanho do círculo é o número de falas; a grossura da linha, as cenas em comum.
+  Clique num nome para ver com quem ele contracena e com quem nunca divide cena. Salva em .svg.
+- **Exibir › Teleprompter:** o roteiro rolando em letra grande a partir da cena onde está o
+  cursor, com contagem 3, 2, 1, velocidade, tamanho da letra, **espelhar** (para teleprompter
+  com vidro), **destacar** as falas de um personagem (ensaio de ator) e tela cheia. Espaço roda e
+  pausa; as setas mudam a velocidade. No programa instalado, arraste a janela para o outro monitor.
 
 ## Tela de começo e janelas soltas (versão 5.0)
 

@@ -298,7 +298,7 @@ function protegerNavegacao(w) {
     if (w === win && url === "about:blank" && /^sr-pop(-modal)?-[A-Za-z0-9_-]{1,40}$/.test(frameName || "")) {
       const modal = frameName.startsWith("sr-pop-modal");
       return { action: "allow", overrideBrowserWindowOptions: {
-        frame: false, parent: win, modal, show: true, resizable: true, minimizable: !modal, maximizable: false, fullscreenable: false,
+        frame: false, parent: win, modal, show: true, resizable: true, minimizable: !modal, maximizable: false, fullscreenable: true,
         skipTaskbar: true, backgroundColor: "#C0C0C0", minWidth: 200, minHeight: 60, icon: path.join(__dirname, "build", "icon.png"),
         webPreferences: { contextIsolation: true, nodeIntegration: false, sandbox: true, spellcheck: true },
       } };

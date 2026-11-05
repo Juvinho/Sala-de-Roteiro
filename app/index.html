@@ -572,6 +572,27 @@ table.dood .d-I,table.dood .d-IF{background:#7CD07C}table.dood .d-F{background:#
 body.popwin{margin:0;overflow:hidden;background:var(--face,#C0C0C0)}
 body.popwin>.win{position:static!important;width:100%!important;max-width:none!important;max-height:none;margin:0;box-shadow:none;box-sizing:border-box}
 body.popwin .titlebar{-webkit-app-region:drag;cursor:default;user-select:none}body.popwin .titlebar button,body.popwin .titlebar select,body.popwin .titlebar input{-webkit-app-region:no-drag}
+/* pacote 8: histórico, rede de personagens, teleprompter */
+.histlist{display:flex;flex-direction:column;background:#fff}
+.hrow{display:flex;justify-content:space-between;gap:8px;text-align:left;padding:3px 6px;border:0;border-bottom:1px dotted #C0C0C0;background:#fff;font:12px Tahoma,sans-serif;color:#000;cursor:pointer}
+.hrow:hover,.hrow:focus-visible{background:#000080;color:#fff}.hrow small{flex:none;opacity:.7}
+.hrow.now{font-weight:700;background:#FFFFE1}.hrow.now span::before{content:"▶ ";color:#C00000}.hrow.fut{color:#808080;font-style:italic}.hrow.base{color:#404040}
+.netsvg{display:block;background:#fff;border:2px inset var(--face,#C0C0C0);touch-action:none}
+.tp-ctl{gap:10px;flex-wrap:wrap}.tp-time{margin-left:auto;font:bold 20px var(--f-type,monospace);background:#000;color:#30FF30;padding:0 8px}
+.tp-stage{position:relative;height:520px;overflow:hidden;background:#000;color:#fff;border:2px inset var(--face,#C0C0C0);outline:none}
+.tp-stage:focus-visible{border-color:#FFD000}
+.tp-stage:fullscreen{height:100vh;border:0}
+.tp-stage.mirror .tp-text{transform:scaleX(-1)}
+.tp-text{padding:45% 8% 70%;font-family:Arial,Helvetica,sans-serif;line-height:1.35;font-weight:700}
+.tp-text p{margin:0 0 .5em}.tp-scene{color:#FFD000}.tp-act{color:#FFD000;text-align:center}.tp-character{color:#7CC4FF;text-align:center;margin-bottom:0!important}.tp-paren{color:#A0A0A0;text-align:center;font-style:italic;margin-bottom:0!important}
+.tp-dialogue{text-align:center;padding:0 6%}.tp-trans{text-align:right;color:#C0C0C0}.tp-action{color:#E0E0E0;font-weight:400}
+.tp-text p.tp-hi{background:#3A3000;color:#FFF27A}.tp-end{text-align:center;color:#808080}
+.tp-guide{position:sticky;top:33%;height:0;border-top:3px solid rgba(255,208,0,.65);z-index:2;pointer-events:none}
+.tp-count{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font:bold 160px Arial,sans-serif;color:#FFD000;background:rgba(0,0,0,.6);z-index:3}
+.tp-count[hidden]{display:none}
+/* versões */
+.vers{background:#fff;padding:2px 6px}.vers .ver{padding:4px 0;border-bottom:1px dotted #C0C0C0}.vers .ver:last-child{border-bottom:0}
+.vers .ver ul{margin:2px 0 0;padding-left:18px}.vers .ver li{font-size:12px}.vers .ver.atual{background:#FFFFE1;margin:0 -6px;padding:4px 6px}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
 </style>
 
@@ -1348,6 +1369,7 @@ addEventListener("keydown",e=>{
   if(!(e.ctrlKey||e.metaKey)||document.querySelector(".modal"))return;const k=e.key.toLowerCase();
   if(e.target.dataset&&(e.target.dataset.q||e.target.dataset.m))return;
   if(e.target.closest&&e.target.closest(".win")&&k!=="s")return;
+  if(e.target.matches&&e.target.matches("input,textarea,select")&&(k==="z"||k==="y"))return;
   if(k==="z"&&!e.shiftKey){e.preventDefault();undo();}else if((k==="z"&&e.shiftKey)||k==="y"){e.preventDefault();redo();}
   else if(k==="s"){e.preventDefault();histCommit();clearTimeout(saveT);flush();toast("Salvo");}
   else if(k==="f"&&cur()){e.preventDefault();runCmd("localizar");}
@@ -4237,6 +4259,217 @@ if(window.salaNative&&!IS_TOOL){const ex=MENUS.find(m=>m[0]==="Exibir")[2];ex.sp
 addEventListener("beforeunload",()=>{for(const c of POPS){try{c.close();}catch(e){}}});
 TIPS.push("No programa instalado, toda janela é solta: arraste a Estrutura, o Bate-papo ou as Revisões para fora, até para o outro monitor.",
   "Arquivo › Fechar roteiro (Ctrl+F4) volta para a tela de boas-vindas, com os roteiros recentes e a busca.");
+
+/* ================================================================
+   PACOTE 8: desfazer palavra por palavra (com histórico leve) · Histórico de alterações
+   Rede de personagens · Teleprompter
+   ================================================================ */
+Object.assign(ICON,{
+  hist:'<circle cx="8" cy="8.5" r="6" fill="#fff" stroke="#000"/><path d="M8 4.5v4l2.5 1.5" stroke="#000080" stroke-width="1.4" fill="none"/><path d="M1.5 3.5l1.5 2.5 2.5-1.5" fill="none" stroke="#C00000" stroke-width="1.2"/>',
+  net:'<path d="M4 4l8 2M4 4l3 8M12 6l-5 6M12 6l2 6" stroke="#000" stroke-width=".9"/><circle cx="4" cy="4" r="2.5" fill="#C02060" stroke="#000"/><circle cx="12" cy="6" r="2" fill="#3050D0" stroke="#000"/><circle cx="7" cy="12" r="2" fill="#30A030" stroke="#000"/><circle cx="14" cy="12.5" r="1.3" fill="#FFD000" stroke="#000"/>',
+  prompt:'<rect x="1.5" y="2.5" width="13" height="9" fill="#000" stroke="#000"/><path d="M3.5 5h9M3.5 7h7M3.5 9h8" stroke="#fff"/><path d="M6 13.5h4M8 11.5v2" stroke="#000"/><path d="M12.5 3.5v3" stroke="#FFD000" stroke-width="1.2"/>',
+});
+
+/* ---------- histórico: cada passo guarda só o que mudou ---------- */
+function hDiff(A,B){const P={els:{}};if(canon(A.meta)!==canon(B.meta))P.meta=JSON.parse(JSON.stringify(A.meta));
+  const ai=A.els.map(e=>e.id),bi=B.els.map(e=>e.id);if(ai.join("\u0001")!==bi.join("\u0001"))P.ids=ai;
+  const bm=new Map(B.els.map(e=>[e.id,JSON.stringify(e)]));for(const e of A.els){const s=JSON.stringify(e);if(bm.get(e.id)!==s)P.els[e.id]=JSON.parse(s);}return P;}
+function hApply(B,P){const bm=new Map(B.els.map(e=>[e.id,e]));const ids=P.ids||B.els.map(e=>e.id);
+  return {meta:P.meta!==undefined?P.meta:B.meta,els:ids.map(id=>P.els[id]||bm.get(id)).filter(Boolean)};}
+const hq=s=>{s=String(s).replace(/\s+/g," ").trim();return "“"+(s.length>36?s.slice(0,35)+"…":s)+"”";};
+const HMETA={coment:"os comentários",plano:"o plano de filmagem",beats:"o Beat Board",titulo:"o título",analise:"a análise técnica",rev:"as revisões",pagina:"a página e as margens",episodio:"o número do episódio",logline:"a logline",status:"a etapa",notas:"as notas da folha de rosto",estreia:"a data de estreia",cenasTravadas:"a numeração das cenas"};
+function hLabel(A,B){
+  const am=new Map(A.els.map(e=>[e.id,e])),bm=new Map(B.els.map(e=>[e.id,e]));const T=e=>((TYPES[e.t]||TYPES.action).label);
+  const added=B.els.filter(e=>!am.has(e.id)),removed=A.els.filter(e=>!bm.has(e.id)),changed=B.els.filter(e=>am.has(e.id)&&JSON.stringify(am.get(e.id))!==JSON.stringify(e));
+  if(added.length===1&&!removed.length&&changed.length<=1)return `Novo elemento: ${T(added[0])}${added[0].x.trim()?" "+hq(added[0].x):""}`;
+  if(removed.length===1&&!added.length&&changed.length<=1)return `Apagou ${T(removed[0])}${removed[0].x.trim()?" "+hq(removed[0].x):""}`;
+  if(added.length||removed.length)return [added.length?`${added.length} elemento${added.length>1?"s":""} novo${added.length>1?"s":""}`:"",removed.length?`${removed.length} apagado${removed.length>1?"s":""}`:""].filter(Boolean).join(", ");
+  if(changed.length===1){const a=am.get(changed[0].id),b=changed[0];if(a.t!==b.t)return `${T(a)} virou ${T(b)}`;
+    if(a.x!==b.x){let p=0;while(p<a.x.length&&p<b.x.length&&a.x[p]===b.x[p])p++;let s=0;while(s<a.x.length-p&&s<b.x.length-p&&a.x[a.x.length-1-s]===b.x[b.x.length-1-s])s++;
+      const ins=b.x.slice(p,b.x.length-s),del=a.x.slice(p,a.x.length-s);
+      if(ins&&!del)return `Escreveu ${hq(ins)} em ${T(b)}`;if(del&&!ins)return `Apagou ${hq(del)} em ${T(b)}`;return `Trocou ${hq(del)} por ${hq(ins)}`;}
+    return `Mudou ${T(b)} (${b.dual!==a.dual?"diálogo simultâneo":b.quebra!==a.quebra?"página nova":b.ponto!==a.ponto?"ponto de estrutura":b.nota!==a.nota?"nota":b.cor!==a.cor?"cor":"propriedades"})`;}
+  if(changed.length>1)return `${changed.length} elementos alterados`;
+  if(A.els.map(e=>e.id).join()!==B.els.map(e=>e.id).join())return "Mudou a ordem das cenas";
+  const ks=[...new Set([...Object.keys(A.meta||{}),...Object.keys(B.meta||{})])].filter(k=>canon(A.meta[k])!==canon(B.meta[k]));
+  return ks.length?`Mudou ${ks.map(k=>HMETA[k]||"as propriedades").filter((v,i,a)=>a.indexOf(v)===i).slice(0,2).join(" e ")}`:"Alteração";
+}
+H.lastObj=null;
+histReset=function(){clearTimeout(H.t);H.t=null;H.undo=[];H.redo=[];H.last=snap();H.lastObj=H.last?JSON.parse(H.last):null;HG.kind=null;HG.n=0;histDraw();};
+histCommit=function(){clearTimeout(H.t);H.t=null;const now=snap();if(!now||now===H.last)return;
+  if(H.last&&!H.auto.has(S.cur)){H.auto.add(S.cur);saveVersion("Automática · antes desta sessão",true,JSON.parse(H.last)).catch(()=>{});}
+  const nowObj=JSON.parse(now);
+  if(H.last){const prev=H.lastObj||JSON.parse(H.last);H.undo.push({p:hDiff(prev,nowObj),label:hLabel(prev,nowObj),at:Date.now()});if(H.undo.length>500)H.undo.shift();}
+  H.redo=[];H.last=now;H.lastObj=nowObj;histDraw();};
+function hTarget(A,B){const am=new Map(A.els.map(e=>[e.id,e]));const bm=new Set(B.els.map(e=>e.id));
+  for(let i=0;i<B.els.length;i++){const e=B.els[i],o=am.get(e.id);if(!o)return {id:e.id,off:"end"};
+    if(o.x!==e.x){let s=0;while(s<o.x.length&&s<e.x.length&&o.x[o.x.length-1-s]===e.x[e.x.length-1-s])s++;let p=0;while(p<o.x.length-s&&p<e.x.length-s&&o.x[p]===e.x[p])p++;return {id:e.id,off:Math.max(p,e.x.length-s)};}
+    if(JSON.stringify(o)!==JSON.stringify(e))return {id:e.id,off:"end"};}
+  const gone=A.els.findIndex(e=>!bm.has(e.id));if(gone>=0){const nb=B.els[Math.min(gone,B.els.length-1)]||B.els[Math.max(0,gone-1)];if(nb)return {id:nb.id,off:"end"};}
+  return null;}
+function histMove(n){const sc=cur();if(!sc||!n)return;clearTimeout(H.t);let at=H.lastObj||JSON.parse(H.last);const from=at;let last="";
+  while(n<0&&H.undo.length){const st=H.undo.pop();const prev=hApply(at,st.p);H.redo.push({p:hDiff(at,prev),label:st.label,at:st.at});at=prev;last=st.label;n++;}
+  while(n>0&&H.redo.length){const st=H.redo.pop();const next=hApply(at,st.p);H.undo.push({p:hDiff(at,next),label:st.label,at:st.at});at=next;last=st.label;n--;}
+  const tgt=hTarget(from,at);const o=JSON.parse(JSON.stringify(at));sc.meta=o.meta;sc.els=o.els;H.last=snap();H.lastObj=JSON.parse(H.last);HG.kind=null;HG.n=0;
+  markChanged();renderAll();
+  if(tgt&&findEl(tgt.id)&&S.view==="page"){focusEl(tgt.id,tgt.off);flash(tgt.id);}
+  histDraw();return last;}
+undo=function(){histCommit();if(!H.undo.length){toast("Nada para desfazer");return;}const l=histMove(-1);setStatus("ok","Desfeito: "+l);};
+redo=function(){histCommit();if(!H.redo.length){toast("Nada para refazer");return;}const l=histMove(1);setStatus("ok","Refeito: "+l);};
+
+/* passos do tamanho de uma palavra, como no Word */
+const HG={kind:null,n:0};
+sheet.addEventListener("beforeinput",e=>{if(!e.target.closest||!e.target.closest(".el"))return;const t=e.inputType||"";
+  const kind=t.startsWith("delete")?"del":(t==="insertText"||t==="insertCompositionText")?"type":"other";
+  if(HG.kind&&kind!==HG.kind){histCommit();HG.n=0;}
+  else if(kind==="type"&&/^[\s.,;:!?…—]$/.test(e.data||"")&&HG.n>=2){histCommit();HG.n=0;}
+  else if(kind==="other"){histCommit();HG.n=0;}
+  HG.kind=kind;if(kind!=="other")HG.n+=(e.data||" ").length;},true);
+sheet.addEventListener("input",e=>{const t=e.inputType||"";if(t==="insertFromPaste"||t==="insertFromDrop"||t==="insertReplacementText")setTimeout(histCommit,0);});
+sheet.addEventListener("focusin",()=>{if(HG.kind){histCommit();HG.kind=null;HG.n=0;}});
+
+/* ---------- janela Histórico de alterações ---------- */
+function histDraw(){const box=document.getElementById("hist-l");if(!box)return;const n=H.undo.length,R=H.redo.length;
+  const row=(lab,at,moves,cls)=>`<button type="button" class="hrow ${cls||""}" data-hmv="${moves}"><span>${escH(lab)}</span><small>${at?escH(tempoAtras(at)):""}</small></button>`;
+  let h="";for(let m=R-1;m>=0;m--){const st=H.redo[R-1-m];h+=row(st.label,st.at,m+1,"fut");}
+  for(let i=n-1;i>=0;i--){const st=H.undo[i];h+=row(st.label,st.at,(i+1)-n,i===n-1?"now":"");}
+  h+=row(cur()?"Roteiro aberto":"—",0,-n,n===0?"now":"base");
+  box.innerHTML=h;const c=box.querySelector(".now");if(c&&!box.dataset.scrolled){c.scrollIntoView({block:"nearest"});}
+  const s=document.getElementById("hist-s");if(s)s.textContent=`${n} passo${n===1?"":"s"} para desfazer · ${R} para refazer`;}
+function histDialog(){if(!cur())return;histCommit();
+  dialog({id:"histWin",title:"Histórico de alterações",width:440,modal:false,icon:"hist",body:`<p class="muted" style="margin:0">Tudo o que você fez neste roteiro desde que abriu. Clique num passo para voltar até ele; dá para ir e voltar quantas vezes quiser.</p>
+    <div class="listview histlist" id="hist-l" style="max-height:380px"></div><p class="status" id="hist-s" style="margin:0"></p>`,
+    onOpen:w=>{histDraw();w.addEventListener("click",e=>{const b=e.target.closest("[data-hmv]");if(!b)return;const mv=+b.dataset.hmv;if(mv){histCommit();histMove(mv);}});},
+    buttons:[{label:"Fechar"}]});}
+
+/* ---------- Rede de personagens ---------- */
+function netData(scope){const sc=cur();const eps=scope==="serie"?seriesEps(sc.meta.serieId):[sc];const falas=new Map(),pares=new Map(),cenas=new Map();
+  for(const s of eps){const lay=paginate(s);for(const x of scenesOf(s,lay.info)){if(!x.n)continue;const who=[...x.chars].filter(Boolean);
+      for(const w of who)cenas.set(w,(cenas.get(w)||0)+1);
+      for(let i=0;i<who.length;i++)for(let j=i+1;j<who.length;j++){const k=[who[i],who[j]].sort().join("\u0001");pares.set(k,(pares.get(k)||0)+1);}}
+    for(const c of charStats(s))falas.set(c.name,(falas.get(c.name)||0)+c.falas);}
+  const top=[...falas].sort((a,b)=>b[1]-a[1]).slice(0,26).map(([n])=>n);const set=new Set(top);
+  const edges=[...pares].map(([k,w])=>{const [a,b]=k.split("\u0001");return {a,b,w};}).filter(e=>set.has(e.a)&&set.has(e.b));
+  return {nodes:top.map(n=>({id:n,falas:falas.get(n),cenas:cenas.get(n)||0})),edges,eps:eps.length};}
+function netLayout(D,W,Hh){const N=D.nodes;const idx=new Map(N.map((n,i)=>[n.id,i]));let seed=7;const rnd=()=>{seed=(seed*16807)%2147483647;return seed/2147483647;};
+  N.forEach((n,i)=>{const a=i/N.length*Math.PI*2;n.x=W/2+Math.cos(a)*W*.3+rnd()*10;n.y=Hh/2+Math.sin(a)*Hh*.3+rnd()*10;});
+  const maxW=Math.max(1,...D.edges.map(e=>e.w));
+  for(let it=0;it<420;it++){const t=1-it/420;
+    for(let i=0;i<N.length;i++)for(let j=i+1;j<N.length;j++){const a=N[i],b=N[j];let dx=a.x-b.x,dy=a.y-b.y;let d2=dx*dx+dy*dy||.01;const f=(W*Hh/Math.max(4,N.length))*.35/d2;const d=Math.sqrt(d2);dx/=d;dy/=d;a.x+=dx*f*t;a.y+=dy*f*t;b.x-=dx*f*t;b.y-=dy*f*t;}
+    for(const e of D.edges){const a=N[idx.get(e.a)],b=N[idx.get(e.b)];const dx=b.x-a.x,dy=b.y-a.y;const d=Math.sqrt(dx*dx+dy*dy)||.01;const want=170-90*(e.w/maxW);const f=(d-want)*.012*t;a.x+=dx/d*f;a.y+=dy/d*f;b.x-=dx/d*f;b.y-=dy/d*f;}
+    for(const n of N){n.x+=(W/2-n.x)*.004;n.y+=(Hh/2-n.y)*.004;}}
+  if(N.length>1){const xs=N.map(n=>n.x),ys=N.map(n=>n.y);const x0=Math.min(...xs),x1=Math.max(...xs),y0=Math.min(...ys),y1=Math.max(...ys);
+    for(const n of N){n.x=60+(n.x-x0)/((x1-x0)||1)*(W-120);n.y=40+(n.y-y0)/((y1-y0)||1)*(Hh-90);}}else if(N[0]){N[0].x=W/2;N[0].y=Hh/2;}}
+const netColor=name=>{const c=Object.values(S.chars).find(x=>baseName(x.nome||"")===name);if(c&&c.cor)return c.cor;let h=0;for(const ch of name)h=(h*31+ch.charCodeAt(0))>>>0;return `hsl(${h%360} 62% 46%)`;};
+function netDialog(){const sc=cur();if(!sc)return;let scope="ep",sel=null,D=null;const W=760,Hh=420;
+  const svgOf=()=>{const maxF=Math.max(1,...D.nodes.map(n=>n.falas)),maxW=Math.max(1,...D.edges.map(e=>e.w));const idx=new Map(D.nodes.map(n=>[n.id,n]));const nb=new Set(sel?D.edges.filter(e=>e.a===sel||e.b===sel).flatMap(e=>[e.a,e.b]):[]);
+    return `<svg viewBox="0 0 ${W} ${Hh}" width="100%" class="netsvg" role="img" aria-label="Rede de personagens">${D.edges.map(e=>{const a=idx.get(e.a),b=idx.get(e.b);const on=!sel||e.a===sel||e.b===sel;
+        return `<line x1="${a.x.toFixed(1)}" y1="${a.y.toFixed(1)}" x2="${b.x.toFixed(1)}" y2="${b.y.toFixed(1)}" stroke="${on?"#000080":"#B0B0B0"}" stroke-opacity="${on?.25+.65*e.w/maxW:.25}" stroke-width="${(1+5*Math.sqrt(e.w/maxW)).toFixed(1)}"><title>${escH(e.a)} e ${escH(e.b)}: ${e.w} cena${e.w>1?"s":""} juntos</title></line>`;}).join("")}
+      ${D.nodes.map(n=>{const r=7+16*Math.sqrt(n.falas/maxF);const dim=sel&&n.id!==sel&&!nb.has(n.id);return `<g class="nnode" data-nn="${escH(n.id)}" transform="translate(${n.x.toFixed(1)} ${n.y.toFixed(1)})" opacity="${dim?.3:1}" style="cursor:pointer"><circle r="${r.toFixed(1)}" fill="${netColor(n.id)}" stroke="${n.id===sel?"#000":"#fff"}" stroke-width="${n.id===sel?3:1.5}"/><text y="${(r+12).toFixed(1)}" text-anchor="middle" font-size="11" font-weight="700" fill="currentColor" paint-order="stroke" stroke="var(--face,#C0C0C0)" stroke-width="3">${escH(n.id)}</text><title>${escH(n.id)}: ${n.falas} falas, ${n.cenas} cenas</title></g>`;}).join("")}</svg>`;};
+  const info=()=>{if(!sel)return `<p class="muted" style="margin:0">Cada círculo é um personagem, do tamanho de quantas falas ele tem. As linhas ligam quem divide cenas; quanto mais grossa, mais cenas juntos. Clique num nome para ver com quem ele contracena; arraste para arrumar.</p>`;
+    const l=D.edges.filter(e=>e.a===sel||e.b===sel).map(e=>({n:e.a===sel?e.b:e.a,w:e.w})).sort((a,b)=>b.w-a.w);const n=D.nodes.find(x=>x.id===sel);const sozinho=D.nodes.filter(x=>x.id!==sel&&!l.some(y=>y.n===x.id)).map(x=>x.id);
+    return `<p style="margin:0"><b>${escH(sel)}</b> · ${n.falas} falas em ${n.cenas} cenas. Contracena com: ${l.map(x=>`${escH(x.n)} (${x.w})`).join(", ")||"ninguém"}.${sozinho.length&&l.length?` <span class="muted">Nunca divide cena com ${escH(sozinho.slice(0,6).join(", "))}${sozinho.length>6?"…":""}.</span>`:""}</p>`;};
+  const draw=w=>{w.querySelector("#net-svg").innerHTML=svgOf();w.querySelector("#net-i").innerHTML=info();};
+  const build=w=>{D=netData(scope);netLayout(D,W,Hh);if(sel&&!D.nodes.some(n=>n.id===sel))sel=null;draw(w);w.querySelector("#net-c").textContent=`${D.nodes.length} personagens · ${D.edges.length} ligações · ${D.eps} roteiro${D.eps>1?"s":""}`;};
+  dialog({id:"netWin",title:`Rede de personagens — ${epCode(sc.meta)}`,width:820,modal:false,icon:"net",body:`<div class="row"><label class="row">Mostrar <select id="net-sc"><option value="ep">Este roteiro</option><option value="serie">A série inteira</option></select></label><span class="muted" id="net-c"></span><button type="button" class="btn sm" id="net-x" style="margin-left:auto">Salvar imagem (.svg)</button></div>
+    <div class="mapbox" id="net-svg" style="color:var(--text)"></div><div id="net-i"></div>`,
+    onOpen:w=>{build(w);w.querySelector("#net-sc").onchange=e=>{scope=e.target.value;build(w);};
+      let drag=null;const box=w.querySelector("#net-svg");
+      const pt=ev=>{const s=box.querySelector("svg");const r=s.getBoundingClientRect();return {x:(ev.clientX-r.left)/r.width*W,y:(ev.clientY-r.top)/r.height*Hh};};
+      box.addEventListener("pointerdown",ev=>{const g=ev.target.closest("[data-nn]");if(!g)return;drag={id:g.dataset.nn,moved:false};box.setPointerCapture(ev.pointerId);});
+      box.addEventListener("pointermove",ev=>{if(!drag)return;const n=D.nodes.find(x=>x.id===drag.id);const p=pt(ev);if(Math.abs(p.x-n.x)+Math.abs(p.y-n.y)>2)drag.moved=true;n.x=Math.max(20,Math.min(W-20,p.x));n.y=Math.max(20,Math.min(Hh-20,p.y));w.querySelector("#net-svg").innerHTML=svgOf();});
+      box.addEventListener("pointerup",()=>{if(drag&&!drag.moved){sel=sel===drag.id?null:drag.id;draw(w);}drag=null;});
+      w.querySelector("#net-x").onclick=async()=>{const s=svgOf().replace("<svg ",`<svg xmlns="http://www.w3.org/2000/svg" style="background:#fff;color:#000;font-family:Tahoma,sans-serif" `).replace(/var\(--face,#C0C0C0\)/g,"#fff");await offer(fileName(sc).replace(/\.docx$/,"_rede_personagens.svg"),new Blob([s],{type:"image/svg+xml"}));};},
+    buttons:[{label:"Fechar"}]});}
+
+/* ---------- Teleprompter ---------- */
+function teleprompter(){const sc=cur();if(!sc)return;histCommit();
+  const f=S.focusId&&findEl(S.focusId);let from=f?f.i:0;while(from>0&&sc.els[from].t!=="scene")from--;
+  const lay=S.lay||paginate(sc);const els=sc.els.map((e,i)=>({e,i})).filter(({e,i})=>i>=from&&e.x.trim()&&!["time","note"].includes(e.t));
+  const cs=charStats(sc);let who=null;
+  const P={speed:+(prefs.tpSpeed||3),size:+(prefs.tpSize||44),mirror:!!prefs.tpMirror,only:""};
+  const text=els.map(({e,i})=>{let t=e.x;if(e.t==="scene")t=`CENA ${lay.info[i].label||lay.info[i].num} — ${e.x.toUpperCase()}`;if(e.t==="character"){who=baseName(e.x);t=e.x.toUpperCase();}else if(!["dialogue","paren"].includes(e.t))who=null;
+    return `<p class="tp-${e.t}" data-who="${escH(["dialogue","paren","character"].includes(e.t)?who||"":"")}">${escH(t)}</p>`;}).join("");
+  dialog({id:"tpWin",title:`Teleprompter — ${epCode(sc.meta)}`,width:980,modal:false,icon:"prompt",body:`<div class="row tp-ctl">
+      <button type="button" class="btn" id="tp-play">▶ Rodar</button>
+      <label class="row">Velocidade <input type="range" id="tp-v" min="1" max="12" value="${P.speed}"></label>
+      <label class="row">Letra <input type="range" id="tp-f" min="24" max="96" step="2" value="${P.size}"></label>
+      <label class="chk"><input type="checkbox" id="tp-m"${P.mirror?" checked":""}> Espelhar</label>
+      <label class="row">Destacar <select id="tp-o"><option value="">ninguém</option>${cs.map(c=>`<option>${escH(c.name)}</option>`).join("")}</select></label>
+      <button type="button" class="btn sm" id="tp-fs">Tela cheia</button><span class="tp-time" id="tp-t">0:00</span></div>
+    <div class="tp-stage" id="tp-stage" tabindex="0" aria-label="Texto do teleprompter. Espaço roda e pausa; setas mudam a velocidade."><div class="tp-guide" aria-hidden="true"></div><div class="tp-count" id="tp-c" hidden></div><div class="tp-text" id="tp-x">${text}<p class="tp-end">— FIM —</p></div></div>
+    <p class="muted" style="margin:0">Espaço roda e pausa · ↑ ↓ velocidade · + − tamanho da letra · Home volta ao começo · a faixa amarela é a linha de leitura.</p>`,
+    onOpen:(w,close)=>{const st=w.querySelector("#tp-stage"),tx=w.querySelector("#tp-x"),view=w.ownerDocument.defaultView||window;let run=false,raf=0,last=0,el=0,acc=0;
+      const apply=()=>{tx.style.fontSize=P.size+"px";st.classList.toggle("mirror",P.mirror);tx.querySelectorAll("p").forEach(p=>p.classList.toggle("tp-hi",!!P.only&&p.dataset.who===P.only));};apply();
+      const fmt=s=>`${Math.floor(s/60)}:${String(Math.floor(s%60)).padStart(2,"0")}`;
+      const tick=t=>{if(!run)return;const v=view;if(!last)last=t;const dt=Math.min(.1,(t-last)/1000);last=t;el+=dt;acc+=P.speed*P.size*.32*dt;if(acc>=1){const k=Math.floor(acc);st.scrollTop+=k;acc-=k;}
+        w.querySelector("#tp-t").textContent=fmt(el);if(st.scrollTop+st.clientHeight>=st.scrollHeight-2){stop();}else raf=v.requestAnimationFrame(tick);};
+      const play=()=>{if(run)return;const c=w.querySelector("#tp-c");let n=el?0:3;const go=()=>{c.hidden=true;run=true;last=0;w.querySelector("#tp-play").textContent="❚❚ Pausar";raf=view.requestAnimationFrame(tick);};
+        if(!n)return go();c.hidden=false;c.textContent=n;const iv=view.setInterval(()=>{n--;if(n<=0){view.clearInterval(iv);go();}else c.textContent=n;},700);};
+      const stop=()=>{run=false;view.cancelAnimationFrame(raf);w.querySelector("#tp-play").textContent="▶ Rodar";};
+      w.querySelector("#tp-play").onclick=()=>{run?stop():play();st.focus();};
+      w.querySelector("#tp-v").oninput=e=>{P.speed=+e.target.value;prefs.tpSpeed=P.speed;savePrefs();};
+      w.querySelector("#tp-f").oninput=e=>{P.size=+e.target.value;prefs.tpSize=P.size;savePrefs();apply();};
+      w.querySelector("#tp-m").onchange=e=>{P.mirror=e.target.checked;prefs.tpMirror=P.mirror;savePrefs();apply();};
+      w.querySelector("#tp-o").onchange=e=>{P.only=e.target.value;apply();const first=[...tx.querySelectorAll("p.tp-hi")].find(p=>p.offsetTop>st.scrollTop);if(first&&!run)st.scrollTop=first.offsetTop-st.clientHeight*.3;};
+      w.querySelector("#tp-fs").onclick=()=>{const d=st.ownerDocument;if(d.fullscreenElement){d.exitFullscreen();return;}const r=st.requestFullscreen&&st.requestFullscreen();if(r&&r.catch)r.catch(()=>toast("Este navegador não deixou abrir em tela cheia"));st.focus();};
+      st.addEventListener("keydown",e=>{if(e.key===" "){e.preventDefault();run?stop():play();}else if(e.key==="ArrowUp"){e.preventDefault();P.speed=Math.min(12,P.speed+1);w.querySelector("#tp-v").value=P.speed;}else if(e.key==="ArrowDown"){e.preventDefault();P.speed=Math.max(1,P.speed-1);w.querySelector("#tp-v").value=P.speed;}
+        else if(e.key==="+"||e.key==="="){P.size=Math.min(96,P.size+4);w.querySelector("#tp-f").value=P.size;apply();}else if(e.key==="-"){P.size=Math.max(24,P.size-4);w.querySelector("#tp-f").value=P.size;apply();}else if(e.key==="Home"){e.preventDefault();st.scrollTop=0;el=0;w.querySelector("#tp-t").textContent="0:00";}});
+      setTimeout(()=>st.focus(),60);},
+    onClose:()=>{},buttons:[{label:"Fechar"}]});}
+
+/* ---------- comandos e menus ---------- */
+Object.assign(CMD,{
+  historico:{label:"Histórico de alterações…",icon:"hist",needs:1,run:()=>histDialog()},
+  redePers:{label:"Rede de personagens…",icon:"net",needs:1,run:()=>netDialog()},
+  teleprompter:{label:"Teleprompter…",icon:"prompt",needs:1,run:()=>teleprompter()},
+});
+{const ed=MENUS.find(m=>m[0]==="Editar")[2];ed.splice(ed.indexOf("refazer")+1,0,"historico");}
+{const ex=MENUS.find(m=>m[0]==="Exibir")[2];ex.splice(ex.indexOf("estrutura")+1,0,"redePers","teleprompter");}
+TIPS.push("Ctrl+Z agora desfaz palavra por palavra. Editar › Histórico de alterações mostra cada passo e volta direto para qualquer um.",
+  "Exibir › Rede de personagens desenha quem contracena com quem. Bom para descobrir dois personagens que nunca se encontram.",
+  "Exibir › Teleprompter rola o roteiro em letra grande: ótimo para ensaio, leitura de mesa e para gravar vídeo. Dá para espelhar e destacar as falas de um ator.");
+
+/* ================================================================
+   VERSÕES: o número desta versão e o que entrou em cada uma.
+   A cada versão nova: mude APP_VERSAO e acrescente a entrada no topo de VERSOES.
+   (o empacotamento confere se APP_VERSAO bate com o package.json)
+   ================================================================ */
+const APP_VERSAO="5.1.0";
+const VERSOES=[
+  ["5.1.0","Desfazer de verdade",["Ctrl+Z desfaz palavra por palavra, e o cursor volta para onde a mudança aconteceu","Editar › Histórico de alterações: volte para qualquer passo","Exibir › Rede de personagens: quem contracena com quem","Exibir › Teleprompter: rolagem, espelho e destaque das falas de um ator","Sobre mostra a versão de verdade e esta lista de novidades"]],
+  ["5.0.0","Tela de começo",["O ScriptRoom abre na tela de boas-vindas, com os roteiros recentes e a busca","Arquivo › Fechar roteiro (Ctrl+F4)","No programa instalado, todas as janelas ficam soltas como o Bloco de notas"]],
+  ["4.9.0","Sala na rede local",["Hospedar ou entrar numa sala pelo IP, com senha opcional","Escrever junto, ver quem está na sala e conversar no bate-papo, sem internet"]],
+  ["4.8.0","ScriptRoom",["A Sala de Roteiro 95 virou ScriptRoom (seus roteiros vieram junto)","Importar e exportar Final Draft (.fdx)","Beat Board: a mesa livre de ideias ligadas às cenas"]],
+  ["4.7.0","Sala ao vivo",["Na versão web: mudanças de duas pessoas se juntam sozinhas","Quem está na sala, digitação ao vivo, seguir alguém e bate-papo"]],
+  ["4.6.0","Comentários e plano de filmagem",["Comentários com autor, que vão e voltam do Word","Oitavos de página, plano de filmagem em faixas, diárias do elenco e ordem do dia"]],
+  ["4.5.0","Final Draft, parte 2",["Diálogo simultâneo e falas divididas com (MAIS)/(CONT.)","SmartType completo, destaques na página e estrutura do episódio","Página nova forçada, cabeçalho editável e número de cena nas margens do PDF"]],
+  ["4.4.0","Final Draft, parte 1",["Revisões coloridas, numeração de cenas travada e cenas omitidas","Notas de roteiro, falas alternativas e análise técnica","PDF com marca d'água e cópias nominais"]],
+  ["4.3.0","Página e PDF",["Régua com margens e recuos que se arrastam","Página e margens com seis modelos","Exportar PDF e escaleta","Localizar do Bloco de notas em janela própria"]],
+  ["4.2.0","Acessórios e atualizações",["Bloco de notas, Calculadora, Cronômetro e Mapa de caracteres em janelas próprias","Lixeira da sala","Atualização automática pelo GitHub"]],
+  ["4.1.0","Várias séries",["Qualquer série, em 10 formatos","Planejamento da temporada, modelos e comparar versões"]],
+  ["4.0.0","Cara de 1995",["Interface de Windows 95 com menu Iniciar","Fichas do elenco, calendário de exibição e instalador próprio"]],
+];
+const verDe=v=>String(v||"").replace(/^v/,"");
+async function versaoAtual(){if(window.salaNative&&window.salaNative.version){try{const v=await window.salaNative.version();if(v)return verDe(v);}catch(e){}}return APP_VERSAO;}
+function novidadesHTML(atual,so){const lista=so?VERSOES.filter(v=>v[0]===so):VERSOES;
+  return `<div class="listview vers" style="max-height:${so?"none":"210px"}">${lista.map(([v,nome,itens])=>`<div class="ver${v===atual?" atual":""}"><b>${escH(v.replace(/\.0$/,""))} · ${escH(nome)}</b>${v===atual?` <span class="chip95">você está nesta</span>`:""}<ul>${itens.map(i=>`<li>${escH(i)}</li>`).join("")}</ul></div>`).join("")}</div>`;}
+aboutDialog=async function(){
+  const n=Object.values(S.eps);const cenas=n.reduce((a,s)=>a+s.els.filter(e=>e.t==="scene").length,0),falas=n.reduce((a,s)=>a+s.els.filter(e=>e.t==="character").length,0);
+  const kb=Math.round(JSON.stringify(S.eps).length/1024);const v=await versaoAtual();const onde=window.salaNative?"programa para Windows":"versão web";
+  dialog({title:"Sobre o ScriptRoom",width:480,body:`<div class="splash"><svg viewBox="0 0 16 16" width="48" height="48" aria-hidden="true">${ICON.clapper}</svg><span class="big">SCRIPTROOM</span><span class="sub">Versão ${escH(v)} · edição 95</span></div>
+  <div>Licenciado para:<br><b>Departamento de Dramaturgia — C2</b><br>Série em produção: ${escH((cur()||{meta:{serie:"—"}}).meta.serie)}</div><hr style="border:0;border-top:1px solid var(--lo);border-bottom:1px solid var(--hi);width:100%">
+  <div class="muted">${n.length} roteiros · ${fmtN(cenas)} cenas · ${fmtN(falas)} falas<br>Memória usada pela sala: ${fmtN(kb)} KB · ${onde}</div>
+  <b style="margin-top:4px">O que há de novo</b>${novidadesHTML(v)}`,buttons:[...(window.salaNative?[{label:"Procurar atualizações…",run:()=>{setTimeout(()=>runCmd("atualizar"),0);}}]:[]),{label:"OK",def:1}]});
+};
+/* depois de atualizar, mostra uma vez o que entrou */
+async function novidadesCheck(){if(IS_TOOL)return;const v=await versaoAtual();const vista=prefs.versaoVista;prefs.versaoVista=v;savePrefs();
+  if(!vista||vista===v)return;const e=VERSOES.find(x=>x[0]===v);if(!e)return;
+  dialog({id:"novWin",title:`Novidades do ScriptRoom ${v.replace(/\.0$/,"")}`,width:440,modal:false,icon:"lamp",body:`<div class="row" style="flex-wrap:nowrap;align-items:flex-start">${icon("update",32)}<div>O ScriptRoom foi atualizado da versão ${escH(vista)} para a <b>${escH(v)}</b>. Seus roteiros estão todos aqui.</div></div>${novidadesHTML(v,v)}<p class="muted" style="margin:0">A lista completa fica em Ajuda › Sobre o ScriptRoom.</p>`,buttons:[{label:"OK",def:1}]});}
+setTimeout(()=>{novidadesCheck().catch(()=>{});},2500);
+CMD.sobre.label="Sobre o ScriptRoom…";
+Object.assign(CMD,{novidades:{label:"O que há de novo…",icon:"lamp",run:async()=>{const v=await versaoAtual();dialog({id:"novWin",title:`O que há de novo — ScriptRoom ${v}`,width:460,modal:false,icon:"lamp",body:novidadesHTML(v),buttons:[{label:"OK",def:1}]});}}});
+{const aj=MENUS.find(m=>m[0]==="Ajuda")[2];aj.splice(aj.indexOf("sobre"),0,"novidades");}
 
 if(IS_TOOL)bootTool(new URLSearchParams(location.search).get("janela"));else boot();
 </script>
