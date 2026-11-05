@@ -115,7 +115,7 @@ No VS Code também dá para usar **Terminal › Run Task…**, que lista as quat
   - Controles de volume, afinação (pitch) e eco/reverb.
   - Botão "+ Inserir" adiciona a marca sonoplástica `(SFX: SOM)` direto no ponto do cursor.
   - **Áudio interativo na folha:** ao escrever `(SFX: TROVÃO)` ou qualquer outro som no roteiro, aparece um
-    botão sonoro `🔊 SFX` na linha: basta clicar nele ou dar Alt+clique para disparar o efeito sonoro na hora!
+    botão sonoro `[► SFX]` na linha: basta clicar nele ou dar Alt+clique para disparar o efeito sonoro na hora!
   - Atalho rápido: **Ctrl+Shift+S**.
 - **Exibir › Ritmo dramático e curva de tensão:** monitor osciloscópio de fósforo verde com a curva de tensão
   cena a cena do episódio inteiro.
@@ -175,8 +175,8 @@ No VS Code também dá para usar **Terminal › Run Task…**, que lista as quat
 
 - **Plantar e colher:** botão direito num trecho › Plantar e colher › Plantar aqui. Dê um nome
   ("o rifle roxo brilha perto de mentira"). Onde a pista paga a conta, em qualquer episódio da
-  série: botão direito › Plantar e colher › Colher. Um 🌱 na margem mostra o que foi plantado
-  (amarelo enquanto não for colhido) e um 🌾 o que colhe. **Produção › Plantar e colher** lista o
+  série: botão direito › Plantar e colher › Colher. Um ícone de broto na margem mostra o que foi plantado
+  (amarelo enquanto não for colhido) e outro o que colhe. **Produção › Plantar e colher** lista o
   que ainda falta colher na série inteira, e avisa se algo é colhido antes de ser plantado.
 - **Ferramentas › Gerador de nomes do mundo:** aprende com os nomes do seu elenco e inventa
   nomes novos com o mesmo sotaque. Cole nomes de lugares ou de uma língua inventada para ele

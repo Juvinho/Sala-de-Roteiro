@@ -635,77 +635,75 @@ body.foco #sheet .el:not(.foco-on){opacity:.18;transition:opacity .25s}body.foco
 .vbar{display:inline-block;width:60px;height:8px;border:1px solid #808080;background:#fff;vertical-align:middle}.vbar i{display:block;height:100%}
 #vz-t tr[data-vz]{cursor:pointer}#vz-t tr.sel td{background:#FFFFE1}
 /* 6.1: sonoplastia foley, ritmo dramático, grade de transmissão, matriz de conflitos */
-.el[data-sfx]::after{content:" 🔊 SFX";font:bold 9px var(--f-ui);color:#000080;background:#E2ECF8;border:1px solid #7090B0;padding:1px 4px;margin-left:6px;cursor:pointer;border-radius:2px;vertical-align:middle;user-select:none;display:inline-block}
+.el[data-sfx]::after{content:" [► SFX]";font:bold 9px var(--f-ui);color:#000080;background:var(--face,#C0C0C0);border:1px outset #fff;padding:0 4px;margin-left:6px;cursor:pointer;vertical-align:middle;user-select:none;display:inline-block}
 .el[data-sfx]:hover::after{background:#000080;color:#fff}
 .foley-panel{display:flex;flex-direction:column;gap:10px}
-.foley-mixer{display:flex;gap:16px;background:#E8E8E8;border:2px inset var(--face,#C0C0C0);padding:8px 12px;align-items:center;flex-wrap:wrap}
+.foley-mixer{display:flex;gap:16px;background:var(--face,#C0C0C0);border:2px inset var(--face,#C0C0C0);padding:8px 12px;align-items:center;flex-wrap:wrap}
 .foley-mixer label{font-size:11px;display:inline-flex;align-items:center;gap:6px}
 .foley-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}@media (max-width:640px){.foley-grid{grid-template-columns:1fr 1fr}}
-.foley-card{background:#F7F7F7;border:2px outset var(--face,#C0C0C0);padding:6px 8px;display:flex;flex-direction:column;gap:4px}
-.foley-card:hover{background:#FFFEE0}
+.foley-card{background:var(--face,#C0C0C0);border:2px outset #fff;padding:6px 8px;display:flex;flex-direction:column;gap:4px}
+.foley-card:hover{background:#FFFFE1}
 .foley-card-head{display:flex;justify-content:space-between;align-items:center;font-size:10px}
-.foley-tag{background:#C0C0C0;border:1px solid #808080;padding:0 3px;font-size:9px;font-weight:700}
-.foley-title{font-weight:700;font-size:12px;color:#000060;margin:2px 0}
+.foley-tag{background:#fff;border:1px solid #808080;padding:0 3px;font-size:9px;font-weight:700}
+.foley-title{font-weight:700;font-size:12px;color:#000080;margin:2px 0}
 .foley-btns{display:flex;gap:4px;margin-top:auto}
 .foley-btns .btn{flex:1;padding:2px 4px;font-size:11px}
-.ritmo-crt{background:#05140b;border:2px inset #000;padding:8px;position:relative;overflow:hidden}
-.ritmo-crt::before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(0deg,rgba(0,255,100,0.06) 0px,rgba(0,255,100,0.06) 1px,transparent 1px,transparent 3px);pointer-events:none}
-.ritmo-head{display:flex;justify-content:space-between;color:#00ff66;font:11px var(--f-pix,monospace);margin-bottom:6px}
-.ritmo-svg{display:block;width:100%;height:160px;background:#030f07}
+.ritmo-crt{background:#000;border:2px inset var(--face,#C0C0C0);padding:8px;position:relative;overflow:hidden}
+.ritmo-head{display:flex;justify-content:space-between;color:#00FF00;font:11px var(--f-pix,monospace);margin-bottom:6px}
+.ritmo-svg{display:block;width:100%;height:160px;background:#001400;border:1px solid #004000}
 .ritmo-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:8px}@media (max-width:600px){.ritmo-stats{grid-template-columns:1fr 1fr}}
-.ritmo-stat{background:#fff;border:1px solid #808080;padding:6px;font-size:11px}
+.ritmo-stat{background:#fff;border:2px inset var(--face,#C0C0C0);padding:6px;font-size:11px}
 .ritmo-stat b{display:block;font-size:16px;color:#000080}
 .ritmo-acts{display:flex;flex-direction:column;gap:4px;max-height:160px;overflow:auto;background:#fff;border:2px inset var(--face,#C0C0C0);padding:6px;margin-top:8px}
 .ritmo-act-row{display:flex;justify-content:space-between;align-items:center;padding:3px 4px;border-bottom:1px dotted #C0C0C0;font-size:11px}
-.badge-hook-ok{background:#D4F8D4;border:1px solid #208020;color:#006000;font-weight:700;padding:1px 5px}
-.badge-hook-warn{background:#FFF0C0;border:1px solid #A07000;color:#805000;font-weight:700;padding:1px 5px}
+.badge-hook-ok{background:#D4F8D4;border:1px solid #006400;color:#006400;font-weight:700;padding:1px 5px}
+.badge-hook-warn{background:#FFFFE1;border:1px solid #805000;color:#805000;font-weight:700;padding:1px 5px}
 .grade-table{width:100%;border-collapse:collapse;font-size:11px;background:#fff;border:2px inset var(--face,#C0C0C0)}
 .grade-table th{background:var(--face,#C0C0C0);border:1px solid #808080;padding:3px 6px;text-align:left;position:sticky;top:0}
-.grade-table td{border:1px solid #E0E0E0;padding:3px 6px}
-.grade-table tr.break-row td{background:#FFF6D6;font-weight:700;color:#604000}
-.grade-alert{padding:6px 10px;margin-bottom:8px;font-weight:700;font-size:12px;border:1px solid}
-.grade-alert.ok{background:#D0F0D0;border-color:#208020;color:#005000}
-.grade-alert.warn{background:#FFF0C0;border-color:#C08000;color:#604000}
-.grade-alert.err{background:#FFD8D8;border-color:#C00000;color:#800000}
-.dram-card{background:#FFFFEE;border:2px solid #806020;padding:12px;box-shadow:inset 0 0 10px rgba(180,140,50,0.15),2px 2px 5px rgba(0,0,0,0.25);font-size:12px;line-height:1.5}
-.dram-card h4{margin:0 0 8px;font-size:14px;color:#800000;border-bottom:1px solid #C0A060;padding-bottom:3px}
+.grade-table td{border:1px solid #C0C0C0;padding:3px 6px}
+.grade-table tr.break-row td{background:#FFFFE1;font-weight:700;color:#800000}
+.grade-alert{padding:6px 10px;margin-bottom:8px;font-weight:700;font-size:12px;border:2px inset var(--face,#C0C0C0)}
+.grade-alert.ok{background:#D0F0D0;color:#005000}
+.grade-alert.warn{background:#FFFFE1;color:#604000}
+.grade-alert.err{background:#FFD8D8;color:#800000}
+.dram-card{background:#FFFFE1;border:2px inset var(--face,#C0C0C0);padding:12px;font-size:12px;line-height:1.5}
+.dram-card h4{margin:0 0 8px;font-size:14px;color:#800000;border-bottom:1px solid #808080;padding-bottom:3px}
 .dram-field{margin-bottom:8px}
 .dram-field span{font-weight:700;color:#000080;display:block;font-size:10px;text-transform:uppercase}
 /* 6.1.1: decupagem multi-cam, teletexto/closed-caption, deck de fita cassete */
-.multicam-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;background:#181818;border:2px inset #000;padding:8px}
-.multicam-mon{background:#000;border:2px solid #444;position:relative;height:120px;display:flex;flex-direction:column;justify-content:space-between;padding:4px;overflow:hidden}
-.multicam-mon.live{border-color:#E00000;box-shadow:0 0 10px rgba(255,0,0,0.6)}
-.multicam-mon.prev{border-color:#00C000;box-shadow:0 0 10px rgba(0,255,0,0.4)}
-.multicam-tally{font:bold 9px var(--f-pix,monospace);padding:1px 4px;border-radius:2px;display:inline-block}
+.multicam-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;background:#808080;border:2px inset var(--face,#C0C0C0);padding:8px}
+.multicam-mon{background:#000;border:2px inset #808080;position:relative;height:120px;display:flex;flex-direction:column;justify-content:space-between;padding:4px;overflow:hidden}
+.multicam-mon.live{border:2px solid #E00000}
+.multicam-mon.prev{border:2px solid #00A000}
+.multicam-tally{font:bold 11px var(--f-pix,monospace);padding:1px 5px;display:inline-block;border:1px solid #000}
 .multicam-tally.red{background:#C00000;color:#fff}
 .multicam-tally.green{background:#008000;color:#fff}
-.multicam-mon-body{flex:1;display:flex;align-items:center;justify-content:center;color:#888;font:11px Tahoma,sans-serif;text-align:center}
-.multicam-mon-foot{display:flex;justify-content:space-between;align-items:center;font-size:10px;background:rgba(0,0,0,0.7);padding:2px 4px;color:#ccc}
+.multicam-mon-body{flex:1;display:flex;align-items:center;justify-content:center;color:#C0C0C0;font:11px Tahoma,sans-serif;text-align:center}
+.multicam-mon-foot{display:flex;justify-content:space-between;align-items:center;font-size:10px;background:var(--face,#C0C0C0);border-top:1px solid #808080;padding:2px 4px;color:#000}
 .twocol-wrap{max-height:360px;overflow:auto;background:#fff;border:2px inset var(--face,#C0C0C0)}
 .twocol-table{width:100%;border-collapse:collapse;font-size:11px}
 .twocol-table th{background:var(--face,#C0C0C0);border:1px solid #808080;padding:4px 8px;text-align:left;position:sticky;top:0}
-.twocol-table td{border:1px solid #DFDFDF;padding:4px 8px;vertical-align:top}
-.twocol-table td.col-vid{width:35%;font-weight:700;color:#000080;background:#F8F8FC}
+.twocol-table td{border:1px solid #C0C0C0;padding:4px 8px;vertical-align:top}
+.twocol-table td.col-vid{width:35%;font-weight:700;color:#000080;background:#F4F4F0}
 .twocol-table td.col-aud{width:65%}
-.tv-bezel{background:radial-gradient(circle at 50% 40%,#333,#111);border:12px solid #222;border-radius:18px;box-shadow:inset 0 0 20px #000,4px 4px 12px rgba(0,0,0,0.5);padding:14px;position:relative}
-.tv-screen{background:#000;border:4px solid #1a1a1a;border-radius:8px;height:240px;position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-end;padding:16px}
-.tv-screen::before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(0deg,rgba(255,255,255,0.04) 0px,rgba(255,255,255,0.04) 1px,transparent 1px,transparent 2px);pointer-events:none}
-.cc-bar{background:rgba(0,0,0,0.85);border:1px solid #333;color:#FFF880;font:bold 16px/1.3 var(--f-pix,"Courier New",monospace);padding:6px 12px;text-align:center;box-shadow:0 0 8px rgba(0,0,0,0.8);max-width:90%;margin:0 auto 10px}
-.k7-deck{background:linear-gradient(180deg,#C8C8C8 0%,#A8A8A8 100%);border:2px outset #fff;box-shadow:inset 1px 1px #fff,inset -1px -1px #666;padding:12px;display:flex;flex-direction:column;gap:10px}
-.k7-bay{background:#222;border:3px inset #555;height:120px;border-radius:4px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
-.k7-window{width:220px;height:84px;background:rgba(255,255,255,0.15);border:2px solid #888;border-radius:6px;display:flex;align-items:center;justify-content:space-around;position:relative}
-.k7-spool{width:46px;height:46px;border-radius:50%;background:repeating-conic-gradient(#555 0 30deg,#222 30deg 60deg);border:3px solid #ccc;display:flex;align-items:center;justify-content:center}
+.tv-bezel{background:#808080;border:3px outset #C0C0C0;padding:10px;position:relative}
+.tv-screen{background:#000040;border:2px inset #404040;height:240px;position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-end;padding:16px}
+.cc-bar{background:#000;border:1px solid #808080;color:#FFFF80;font:bold 18px/1.2 var(--f-pix,"Courier New",monospace);padding:6px 12px;text-align:center;max-width:90%;margin:0 auto 10px}
+.k7-deck{background:var(--face,#C0C0C0);border:2px inset var(--face,#C0C0C0);padding:10px;display:flex;flex-direction:column;gap:10px}
+.k7-bay{background:#202020;border:2px inset #808080;height:116px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+.k7-window{width:230px;height:80px;background:#404040;border:2px outset #808080;display:flex;align-items:center;justify-content:space-around;position:relative}
+.k7-spool{width:44px;height:44px;border-radius:50%;background:repeating-conic-gradient(#808080 0 30deg,#202020 30deg 60deg);border:2px solid #fff;display:flex;align-items:center;justify-content:center}
 .k7-spool.spin{animation:k7spin 1.8s linear infinite}
 @keyframes k7spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
-.k7-spool-center{width:16px;height:16px;border-radius:50%;background:#fff;border:2px solid #333}
-.vu-meter-box{display:flex;gap:12px;background:#111;padding:6px 12px;border:2px inset #444;justify-content:space-around}
-.vu-ch{display:flex;flex-direction:column;align-items:center;font:bold 9px var(--f-pix,monospace);color:#00ffcc}
-.vu-bar{width:110px;height:10px;background:#222;box-shadow:inset 0 0 3px #000;display:flex;gap:2px;padding:1px}
-.vu-seg{flex:1;background:#00aa44}
-.vu-seg.warn{background:#ffaa00}
-.vu-seg.clip{background:#ff2200}
-.vu-seg.off{opacity:0.18}
-.k7-counter{background:#000;color:#33ff33;font:bold 14px "Courier New",monospace;padding:2px 6px;border:2px inset #444;letter-spacing:2px}
+.k7-spool-center{width:14px;height:14px;border-radius:50%;background:#fff;border:2px solid #000}
+.vu-meter-box{display:flex;gap:12px;background:#000;padding:6px 12px;border:2px inset #808080;justify-content:space-around}
+.vu-ch{display:flex;flex-direction:column;align-items:center;font:bold 11px var(--f-pix,monospace);color:#00FF00}
+.vu-bar{width:110px;height:10px;background:#202020;border:1px solid #404040;display:flex;gap:2px;padding:1px}
+.vu-seg{flex:1;background:#00AA00}
+.vu-seg.warn{background:#FFFF00}
+.vu-seg.clip{background:#FF0000}
+.vu-seg.off{opacity:0.2}
+.k7-counter{background:#000;color:#00FF00;font:bold 14px "Courier New",monospace;padding:2px 6px;border:2px inset #808080;letter-spacing:2px}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
 </style>
 
@@ -4635,15 +4633,15 @@ function placePlantMarks(){const sc=cur();let box=document.getElementById("plmar
   if(!box||box.parentElement!==sheet){box=document.createElement("div");box.id="plmarks";box.className="plmarks";sheet.appendChild(box);}
   const idx=new Map(plantIndex(sc.meta.serieId).map(p=>[p.id,p]));let h="";
   for(const e of sc.els){if(!e.plant&&!(e.colhe&&e.colhe.length))continue;const n=nodeOf(e.id);if(!n)continue;
-    if(e.plant){const p=idx.get(e.plant.id);const ok=p&&p.colhe.length;h+=`<button type="button" class="plk ${ok?"ok":"pend"}" data-plk="1" style="top:${n.offsetTop}px" title="Plantado: ${escH(e.plant.nome)}${ok?` · colhido ${p.colhe.length}×`:" · ainda não colhido"}">🌱</button>`;}
-    if(e.colhe&&e.colhe.length){const ns=e.colhe.map(id=>idx.get(id)).filter(Boolean).map(p=>p.nome);h+=`<button type="button" class="plk colhe" data-plk="1" style="top:${n.offsetTop+(e.plant?18:0)}px" title="Colhe: ${escH(ns.join(" · "))}">🌾</button>`;}}
+    if(e.plant){const p=idx.get(e.plant.id);const ok=p&&p.colhe.length;h+=`<button type="button" class="plk ${ok?"ok":"pend"}" data-plk="1" style="top:${n.offsetTop}px" title="Plantado: ${escH(e.plant.nome)}${ok?` · colhido ${p.colhe.length}×`:" · ainda não colhido"}">${icon("seed",12)}</button>`;}
+    if(e.colhe&&e.colhe.length){const ns=e.colhe.map(id=>idx.get(id)).filter(Boolean).map(p=>p.nome);h+=`<button type="button" class="plk colhe" data-plk="1" style="top:${n.offsetTop+(e.plant?18:0)}px" title="Colhe: ${escH(ns.join(" · "))}">${icon("seed",12)}</button>`;}}
   box.innerHTML=h;}
 sheet.addEventListener("click",e=>{if(e.target.closest("[data-plk]")){e.preventDefault();plantDialog();}});
 const _paintHi15=paintHighlights;paintHighlights=function(){_paintHi15();placePlantMarks();};
 let plFilt="pend";
 function plantDraw(){const box=document.getElementById("pl-l");if(!box)return;const sc=cur();if(!sc)return;const idx=plantIndex(sc.meta.serieId);
   const pend=idx.filter(p=>!p.colhe.length).length;const l=idx.filter(p=>plFilt==="todos"||!p.colhe.length);const where=x=>`${epTag(x.ep.meta)} · cena ${x.scn||"–"}`;
-  box.innerHTML=`<table><thead><tr><th>Plantado</th><th>Onde</th><th>Colhido em</th></tr></thead><tbody>${l.map(p=>`<tr><td><b>${escH(p.nome)}</b>${p.antes.length?` <span class="late" title="Colhido antes de ser plantado">⚠ colhido antes</span>`:""}</td><td><button type="button" class="lnk" data-plgo="${p.where.ep.id}|${p.where.el.id}">${escH(where(p.where))}</button></td>
+  box.innerHTML=`<table><thead><tr><th>Plantado</th><th>Onde</th><th>Colhido em</th></tr></thead><tbody>${l.map(p=>`<tr><td><b>${escH(p.nome)}</b>${p.antes.length?` <span class="late" title="Colhido antes de ser plantado">[colhido antes]</span>`:""}</td><td><button type="button" class="lnk" data-plgo="${p.where.ep.id}|${p.where.el.id}">${escH(where(p.where))}</button></td>
     <td>${p.colhe.length?p.colhe.map(c=>`<button type="button" class="lnk" data-plgo="${c.ep.id}|${c.el.id}">${escH(where(c))}</button>`).join(", "):`<span class="late">ainda não colhido</span>`}</td></tr>`).join("")||`<tr><td colspan="3" class="muted">${idx.length?"Tudo o que foi plantado já foi colhido.":"Nada plantado ainda. Botão direito num trecho › Plantar e colher › Plantar aqui."}</td></tr>`}</tbody></table>`;
   const s=document.getElementById("pl-s");if(s)s.textContent=`${idx.length} plantado${idx.length===1?"":"s"} na série · ${pend} esperando colheita`;}
 function plantDialog(){if(!cur())return;
@@ -4917,7 +4915,7 @@ async function mapDialog(){const sc=cur();if(!sc)return;const se=bibOf();se.mapa
     let rota="";if(mapRota){const s=S.eps[mapRota];if(s){const seq=[];for(const e of s.els){if(e.t!=="scene")continue;const L=semAcento(locParse(e.x).loc);const p=pins.find(p=>{const v=se.biblia.find(x=>x.id===p.vid);return v&&bibNames(v).map(semAcento).some(n=>n.length>=3&&L.includes(n));});if(p&&seq[seq.length-1]!==p)seq.push(p);}
         if(seq.length>1)rota=`<svg class="mp-rota" viewBox="0 0 1000 ${Math.round(1000*ar)}" preserveAspectRatio="none" aria-hidden="true"><defs><marker id="mpA" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0L10 5 0 10z" fill="#C00000"/></marker></defs>${seq.slice(1).map((p,i)=>{const a=seq[i];return `<line x1="${a.x*10}" y1="${a.y*10*ar}" x2="${p.x*10}" y2="${p.y*10*ar}" stroke="#C00000" stroke-width="3" stroke-dasharray="10 6" marker-end="url(#mpA)" vector-effect="non-scaling-stroke"/>`;}).join("")}</svg>`;}}
     box.querySelector(".mp-over").innerHTML=rota+pins.map(p=>{const v=se.biblia.find(x=>x.id===p.vid);const n=cenasEm(v,sid).length;return `<button type="button" class="mpin${p.id===mapSel?" sel":""}" data-pin="${p.id}" style="left:${p.x}%;top:${p.y}%" title="${escH(v.termo)} · ${n} cena${n===1?"":"s"}"><i></i><span>${escH(v.termo)}</span></button>`;}).join("");
-    w.querySelector("#mp-list").innerHTML=lug.map(v=>{const p=pins.find(x=>x.vid===v.id);const n=cenasEm(v,sid).length;return `<button type="button" class="mpl${mapArm===v.id?" arm":""}${p&&p.id===mapSel?" sel":""}" data-mpl="${v.id}"><span>${p?"📍":"○"}</span><b>${escH(v.termo)}</b><small>${n} cena${n===1?"":"s"}</small></button>`;}).join("")||`<p class="muted" style="margin:4px">A Bíblia ainda não tem lugares. Use “Trazer lugares dos roteiros”.</p>`;
+    w.querySelector("#mp-list").innerHTML=lug.map(v=>{const p=pins.find(x=>x.vid===v.id);const n=cenasEm(v,sid).length;return `<button type="button" class="mpl${mapArm===v.id?" arm":""}${p&&p.id===mapSel?" sel":""}" data-mpl="${v.id}"><span>${p?"■":"□"}</span><b>${escH(v.termo)}</b><small>${n} cena${n===1?"":"s"}</small></button>`;}).join("")||`<p class="muted" style="margin:4px">A Bíblia ainda não tem lugares. Use “Trazer lugares dos roteiros”.</p>`;
     const info=w.querySelector("#mp-info");const sp=pins.find(p=>p.id===mapSel);
     if(sp){const v=se.biblia.find(x=>x.id===sp.vid);const cs=cenasEm(v,sid);info.innerHTML=`<b>${escH(v.termo)}</b>${v.desc?`<div>${escH(v.desc.slice(0,240))}</div>`:""}<div class="muted">${cs.length} cena${cs.length===1?"":"s"} aqui:</div><div class="mp-cs">${cs.slice(0,40).map(c=>`<button type="button" class="lnk" data-mgo="${c.s.id}|${c.e.id}">${escH(epTag(c.s.meta))} · ${escH(String(c.label))}</button>`).join(" ")}</div><div class="row"><button type="button" class="btn sm" data-mpa="bib">Abrir na Bíblia</button><button type="button" class="btn sm" data-mpa="tirar">Tirar do mapa</button></div>`;}
     else info.innerHTML=mapArm?`<b>Clique no mapa</b> para espetar “${escH((se.biblia.find(x=>x.id===mapArm)||{}).termo||"")}”.`:`<span class="muted">Clique num lugar da lista e depois no mapa para espetar. Arraste um alfinete para mudar de lugar.</span>`;};
@@ -5069,11 +5067,11 @@ TIPS.push("Produção › Mapa do mundo: suba a imagem do mapa e espete os lugar
    SCRIPTROOM 6.1 — MESA DE SONOPLASTIA, RITMO DE TV E SPLASH SCREEN
    ================================================================ */
 Object.assign(ICON, {
-  foley: '<rect x="1.5" y="2.5" width="13" height="11" fill="#202020" stroke="#000"/><path d="M4 8h2l2-3v6l-2-3H4z" fill="#00ffcc" stroke="#000" stroke-width=".5"/><path d="M10.5 6q1.5 2 0 4M12.5 4.5q3 3.5 0 7" fill="none" stroke="#00ffcc" stroke-width="1.2"/>',
-  ritmo: '<rect x="1.5" y="2.5" width="13" height="11" fill="#030f07" stroke="#000"/><path d="M2.5 8h2l1.5-4 2.5 8 2-5 1.5 2.5h2" stroke="#00ff66" stroke-width="1.1" fill="none"/>',
-  grade: '<rect x="1.5" y="2.5" width="13" height="11" fill="#fff" stroke="#000"/><path d="M1.5 6h13M6 2.5v11" stroke="#808080"/><circle cx="10.5" cy="9.5" r="2.5" fill="#FFE070" stroke="#000" stroke-width=".8"/><path d="M10.5 8v1.5h1" stroke="#000" stroke-width=".7"/>',
-  matrix: '<path d="M3 3l10 10M13 3L3 13" stroke="#800000" stroke-width="2"/><circle cx="8" cy="8" r="3.5" fill="#FFE880" stroke="#000"/>',
-  splash: '<rect x="1.5" y="4.5" width="13" height="7" fill="#0a192f" stroke="#000"/><circle cx="5" cy="8" r="2" fill="#ffd700"/><rect x="8" y="7" width="5" height="2" fill="#00ffcc"/>'
+  foley: '<rect x="1.5" y="2.5" width="13" height="11" fill="#C0C0C0" stroke="#000"/><path d="M3.5 6.5h2l3-2.5v8l-3-2.5h-2z" fill="#FFE060" stroke="#000"/><path d="M10.5 6v4M12.5 4.5v7" stroke="#000080" stroke-width="1.2"/>',
+  ritmo: '<rect x="1.5" y="2.5" width="13" height="11" fill="#000" stroke="#000"/><path d="M2.5 8h2l1.5-4 2.5 8 2-5 1.5 2.5h2" stroke="#00FF00" stroke-width="1.2" fill="none"/>',
+  grade: '<rect x="1.5" y="1.5" width="13" height="13" fill="#fff" stroke="#000"/><rect x="1.5" y="1.5" width="13" height="3" fill="#000080" stroke="#000"/><path d="M1.5 8h13M1.5 11.5h13M6 4.5v10" stroke="#808080"/><circle cx="11.5" cy="11.5" r="2.8" fill="#FFE060" stroke="#000"/><path d="M11.5 9.8v1.7h1.4" stroke="#000" fill="none"/>',
+  matrix: '<rect x="1.5" y="1.5" width="13" height="13" fill="#fff" stroke="#000"/><path d="M9 2.5 4.5 8.5h3.5L6.5 13.5 12 7.5H8.5z" fill="#FFE000" stroke="#000"/>',
+  splash: '<rect x="1.5" y="2.5" width="13" height="11" fill="#C6BFA6" stroke="#000"/><rect x="3" y="4" width="10" height="6" fill="#800000" stroke="#000"/><rect x="3" y="11" width="6" height="1.5" fill="#800000"/>'
 });
 
 function sfxKeyFromText(t) {
@@ -5395,7 +5393,7 @@ sheet.addEventListener("click", e => {
     e.stopPropagation();
     playFoley(n.dataset.sfx);
     const it = FOLEY_ITEMS.find(x => x.k === n.dataset.sfx);
-    toast("🔊 Efeito sonoro: " + (it ? it.rotulo : n.dataset.sfx));
+    toast("Efeito sonoro: " + (it ? it.rotulo : n.dataset.sfx));
   }
 });
 
@@ -5423,7 +5421,7 @@ function foleyDialog() {
             <div class="foley-title">${escH(it.rotulo)}</div>
             <div class="muted" style="font-size:10px;margin-bottom:4px">${escH(it.desc)}</div>
             <div class="foley-btns">
-              <button type="button" class="btn def" data-fplay="${it.k}">▶ Tocar</button>
+              <button type="button" class="btn def" data-fplay="${it.k}">${icon("speaker",14)} Tocar</button>
               <button type="button" class="btn" data-fins="${it.k}" title="Inserir marca (SFX: ...) no roteiro">+ Inserir</button>
             </div>
           </div>
@@ -5747,7 +5745,7 @@ function gradeDialog() {
           <tbody>
             ${rows.map(r => r.tipo === "break" ? `
               <tr class="break-row">
-                <td colspan="5">⏸ INTERVALO COMERCIAL Nº ${r.bloco} (${fmtT(r.comSec)} de comerciais da emissora aos ${fmtT(r.posSec)})</td>
+                <td colspan="5">[INTERVALO COMERCIAL Nº ${r.bloco}] (${fmtT(r.comSec)} de comerciais da emissora aos ${fmtT(r.posSec)})</td>
               </tr>
             ` : `
               <tr>
@@ -5825,7 +5823,7 @@ function conflitoDialog() {
             ${charNames.map(n => `<option value="${escH(n)}">${escH(n)}</option>`).join("")}
           </select>
         </label>
-        <button type="button" class="btn def" id="dram-btn">🎲 Gerar Novo Conflito</button>
+        <button type="button" class="btn def" id="dram-btn">${icon("wand",14)} Gerar Novo Conflito</button>
       </div>
       <div id="dram-box">${sortear()}</div>
       <p class="muted" style="margin:0">Inspirado nos motores dramáticos de 1995: combine seu elenco com arquétipos de tensão para superar bloqueios criativos.</p>
@@ -5941,9 +5939,9 @@ TIPS.push(
    SCRIPTROOM 6.1.1 — ESTÚDIO DE TV E MULTIMÍDIA 1995
    ================================================================ */
 Object.assign(ICON, {
-  cam: '<rect x="1.5" y="3.5" width="9" height="9" fill="#202020" stroke="#000"/><path d="M10.5 6l4-2.5v9l-4-2.5z" fill="#000080" stroke="#000"/><circle cx="5" cy="8" r="2" fill="#E00000"/><circle cx="5" cy="8" r="0.8" fill="#fff"/>',
-  tv: '<rect x="1.5" y="3.5" width="13" height="10" rx="1" fill="#404040" stroke="#000"/><rect x="2.5" y="4.5" width="8.5" height="8" fill="#000" stroke="#222"/><path d="M12.5 6h1M12.5 8h1M12.5 10h1" stroke="#ccc"/><path d="M4 1.5l3 2M11 1.5l-3 2" stroke="#000"/>',
-  tape: '<rect x="1.5" y="3.5" width="13" height="9" rx="1" fill="#D0D0D0" stroke="#000"/><circle cx="4.5" cy="8" r="2" fill="#333" stroke="#000"/><circle cx="11.5" cy="8" r="2" fill="#333" stroke="#000"/><rect x="4.5" y="6.5" width="7" height="3" fill="#fff" stroke="#000"/><path d="M3.5 12.5h9" stroke="#808080"/>'
+  cam: '<rect x="1.5" y="4.5" width="8" height="6" fill="#C0C0C0" stroke="#000"/><path d="M9.5 6l4-2v7l-4-2z" fill="#808080" stroke="#000"/><rect x="3" y="2.5" width="3" height="2" fill="#E00000" stroke="#000"/><path d="M5.5 10.5v4M3 14.5h5" stroke="#000"/>',
+  tv: '<rect x="1.5" y="4.5" width="13" height="10" fill="#808080" stroke="#000"/><rect x="2.5" y="5.5" width="8.5" height="8" fill="#000080" stroke="#000"/><rect x="3.5" y="10.5" width="6.5" height="2" fill="#000"/><path d="M4.5 11.5h4.5" stroke="#FFE060"/><path d="M12 7h1.5M12 9.5h1.5M5 1.5l3 3M11 1.5l-3 3" stroke="#000"/>',
+  tape: '<rect x="1.5" y="3.5" width="13" height="9" fill="#C0C0C0" stroke="#000"/><rect x="3" y="5" width="10" height="4.5" fill="#fff" stroke="#000"/><circle cx="5.2" cy="7.2" r="1.3" fill="#000"/><circle cx="10.8" cy="7.2" r="1.3" fill="#000"/><path d="M4 12.5l1-2h6l1 2" fill="#808080" stroke="#000"/>'
 });
 
 /* ---------- Decupagem Multi-Câmera de Estúdio (1995 Switcher & Roteiro 2 Colunas) ---------- */
@@ -6030,7 +6028,7 @@ function multicamDialog() {
           <div class="multicam-mon ${progCam === c.n ? "live" : (prevCam === c.n ? "prev" : "")}" data-cam="${c.n}">
             <div style="display:flex;justify-content:space-between;align-items:center">
               <span class="multicam-tally ${progCam === c.n ? "red" : (prevCam === c.n ? "green" : "")}">
-                ${progCam === c.n ? "🔴 NO AR" : (prevCam === c.n ? "🟢 PRÉVIA" : "ESTÚDIO")}
+                ${progCam === c.n ? "■ NO AR (PGM)" : (prevCam === c.n ? "■ PRÉVIA (PVW)" : "ESTÚDIO")}
               </span>
               <span style="font-size:9.5px;color:#aaa">${c.lens}</span>
             </div>
@@ -6055,8 +6053,8 @@ function multicamDialog() {
       <div style="display:flex;justify-content:space-between;align-items:center">
         <span class="muted" style="font-size:11px">Mesa de Corte Grass Valley 1995 · 4 Câmeras de Estúdio</span>
         <div class="row">
-          <button type="button" class="btn def sm" id="mc-swap">⚡ Transição (FUSÃO)</button>
-          <button type="button" class="btn sm" id="mc-print">🖨 Imprimir Roteiro em 2 Colunas</button>
+          <button type="button" class="btn def sm" id="mc-swap">Transição (FUSÃO)</button>
+          <button type="button" class="btn sm" id="mc-print">${icon("script",14)} Exportar Roteiro em 2 Colunas</button>
         </div>
       </div>
       <div id="mc-switcher">${switcherHTML()}</div>
@@ -6213,36 +6211,36 @@ function closedCaptionDialog() {
   function renderView() {
     const d = dialogos[curIdx] || dialogos[0];
     const ccLines = wrapCC(d.text, 34);
-    let speedBadge = `<span class="badge-hook-ok">✓ Leitura Confortável (${d.wpm} PPM · ${d.cps} CPS)</span>`;
+    let speedBadge = `<span class="badge-hook-ok">Leitura Confortável (${d.wpm} PPM · ${d.cps} CPS)</span>`;
     if (d.wpm > 200 || d.cps > 17) {
-      speedBadge = `<span class="badge-hook-warn" style="background:#FFD0D0;color:#900">⚠️ Fala Muito Rápida (${d.wpm} PPM) — Difícil de ler na TV</span>`;
+      speedBadge = `<span class="badge-hook-warn" style="background:#FFD0D0;color:#900">ATENÇÃO: Fala Muito Rápida (${d.wpm} PPM) — Difícil de ler na TV</span>`;
     } else if (d.wpm > 170) {
-      speedBadge = `<span class="badge-hook-warn">⚠️ Limite da Emissora (${d.wpm} PPM)</span>`;
+      speedBadge = `<span class="badge-hook-warn">AVISO: Limite da Emissora (${d.wpm} PPM)</span>`;
     }
 
     return `
       <div style="display:flex;flex-direction:column;gap:10px">
         <div class="tv-bezel">
           <div class="tv-screen">
-            <div style="position:absolute;top:10px;left:14px;color:#00ffcc;font:bold 12px monospace">
+            <div style="position:absolute;top:10px;left:14px;color:#00FF00;font:bold 12px monospace">
               CANAL 02 · EIA-608 CC [LINHA 21] · TC: ${fmtTC(d.startSec)}
             </div>
             <div class="cc-bar">
-              <div style="color:#00e0ff;font-size:12px;margin-bottom:2px">[${escH(d.char)}]</div>
+              <div style="color:#9FD8FF;font-size:12px;margin-bottom:2px">[${escH(d.char)}]</div>
               ${ccLines.map(l => `<div>${escH(l.toUpperCase())}</div>`).join("")}
             </div>
           </div>
         </div>
 
-        <div style="display:flex;justify-content:space-between;align-items:center;background:#fff;padding:6px 10px;border:1px solid #808080">
-          <button type="button" class="btn sm" id="cc-prev"${curIdx === 0 ? " disabled" : ""}>◀ Anterior</button>
+        <div style="display:flex;justify-content:space-between;align-items:center;background:#fff;padding:6px 10px;border:2px inset var(--face,#C0C0C0)">
+          <button type="button" class="btn sm" id="cc-prev"${curIdx === 0 ? " disabled" : ""}>&lt; Anterior</button>
           <span>Legenda <b>${curIdx + 1} de ${dialogos.length}</b></span>
-          <button type="button" class="btn sm" id="cc-next"${curIdx >= dialogos.length - 1 ? " disabled" : ""}>Próxima ▶</button>
+          <button type="button" class="btn sm" id="cc-next"${curIdx >= dialogos.length - 1 ? " disabled" : ""}>Próxima &gt;</button>
         </div>
 
         <div style="display:flex;justify-content:space-between;align-items:center">
           <div>${speedBadge}</div>
-          <button type="button" class="btn def sm" id="cc-srt">💾 Baixar Legendas (.SRT)</button>
+          <button type="button" class="btn def sm" id="cc-srt">${icon("save",14)} Exportar Legendas (.SRT)</button>
         </div>
       </div>
     `;
@@ -6357,11 +6355,11 @@ function tapeDeckDialog() {
         </div>
 
         <div class="row" style="justify-content:center;gap:6px">
-          <button type="button" class="btn ${isPlaying ? "def" : ""}" id="k7-play">▶ REPRODUZIR</button>
-          <button type="button" class="btn" id="k7-stop">■ PARAR</button>
-          <button type="button" class="btn ${isRecording ? "def" : ""}" id="k7-rec" style="color:#C00000">● GRAVAR</button>
-          <button type="button" class="btn" id="k7-rew">⏪ VOLTAR</button>
-          <button type="button" class="btn" id="k7-fwd">⏩ AVANÇAR</button>
+          <button type="button" class="btn ${isPlaying ? "def" : ""}" id="k7-play">REPRODUZIR</button>
+          <button type="button" class="btn" id="k7-stop">PARAR</button>
+          <button type="button" class="btn ${isRecording ? "def" : ""}" id="k7-rec" style="color:#C00000">GRAVAR</button>
+          <button type="button" class="btn" id="k7-rew">&lt;&lt; VOLTAR</button>
+          <button type="button" class="btn" id="k7-fwd">AVANÇAR &gt;&gt;</button>
         </div>
 
         <div style="display:flex;justify-content:space-between;align-items:center;margin-top:4px">
@@ -6372,7 +6370,7 @@ function tapeDeckDialog() {
               <option value="Type IV (Metal)"${tapeType.includes("Type IV") ? " selected" : ""}>Type IV (Metal Studio)</option>
             </select>
           </label>
-          <button type="button" class="btn def sm" id="k7-export-wav">💾 Exportar Master (.WAV 16-bit)</button>
+          <button type="button" class="btn def sm" id="k7-export-wav">${icon("save",14)} Exportar Master (.WAV 16-bit)</button>
         </div>
       </div>
     `;
