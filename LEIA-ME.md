@@ -49,7 +49,7 @@ npm run instalador
 Quando terminar, o instalador estará em:
 
 ```
-dist\SETUP_SALA95_4.3.0.exe
+dist\SETUP_SALA95_4.4.0.exe
 ```
 
 Dê dois cliques nele e siga o assistente: **Avançar › Aceito › Avançar › Instalar › Concluir**.
@@ -61,6 +61,25 @@ No VS Code também dá para usar **Terminal › Run Task…**, que lista as quat
 (instalar dependências, rodar, gerar instalador e gerar portátil).
 
 ---
+
+## Recursos de produção (menu Produção e botão direito)
+
+- **Revisões coloridas:** Produção › Revisões › Nova revisão. Enquanto ela estiver ativa, tudo o que
+  você escreve ganha um **\*** na margem direita, na tela e no PDF, e o cabeçalho das páginas
+  mudadas mostra a cor e a data (Azul, Rosa, Amarela… na ordem da indústria). "Desde uma
+  versão…" marca de uma vez tudo o que mudou desde uma versão guardada.
+- **Numeração travada:** Produção › Travar numeração de cenas. Uma cena nova entre a 12 e a 13
+  vira **12A**, e uma cena cortada vira **OMITIDA** (botão direito no cabeçalho), sem renumerar o resto.
+- **(CONT.) automático** quando o personagem volta a falar depois de uma ação (Formatar).
+- **Transição** (Alt+9): CORTA PARA:, FUSÃO:, alinhada à direita.
+- **Notas de roteiro:** botão direito › Nota de roteiro. Ficam grifadas em amarelo, aparecem na aba
+  Notas do painel e não saem no PDF nem no .docx.
+- **Falas alternativas:** botão direito numa fala › Falas alternativas. Guarda outras versões da
+  mesma fala para trocar depois.
+- **Análise técnica:** selecione palavras, botão direito › Marcar para análise técnica. Produção ›
+  Análise técnica mostra a folha de cada cena por departamento e exporta em .csv.
+- **Exportar PDF…** com opções: folha de rosto, marcas de revisão, só um trecho de cenas, marca
+  d'água e **cópias nominais** (um PDF por pessoa, com o nome dela na marca d'água).
 
 ## Página, margens e PDF
 
