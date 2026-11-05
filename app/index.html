@@ -671,6 +671,41 @@ body.foco #sheet .el:not(.foco-on){opacity:.18;transition:opacity .25s}body.foco
 .dram-card h4{margin:0 0 8px;font-size:14px;color:#800000;border-bottom:1px solid #C0A060;padding-bottom:3px}
 .dram-field{margin-bottom:8px}
 .dram-field span{font-weight:700;color:#000080;display:block;font-size:10px;text-transform:uppercase}
+/* 6.1.1: decupagem multi-cam, teletexto/closed-caption, deck de fita cassete */
+.multicam-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;background:#181818;border:2px inset #000;padding:8px}
+.multicam-mon{background:#000;border:2px solid #444;position:relative;height:120px;display:flex;flex-direction:column;justify-content:space-between;padding:4px;overflow:hidden}
+.multicam-mon.live{border-color:#E00000;box-shadow:0 0 10px rgba(255,0,0,0.6)}
+.multicam-mon.prev{border-color:#00C000;box-shadow:0 0 10px rgba(0,255,0,0.4)}
+.multicam-tally{font:bold 9px var(--f-pix,monospace);padding:1px 4px;border-radius:2px;display:inline-block}
+.multicam-tally.red{background:#C00000;color:#fff}
+.multicam-tally.green{background:#008000;color:#fff}
+.multicam-mon-body{flex:1;display:flex;align-items:center;justify-content:center;color:#888;font:11px Tahoma,sans-serif;text-align:center}
+.multicam-mon-foot{display:flex;justify-content:space-between;align-items:center;font-size:10px;background:rgba(0,0,0,0.7);padding:2px 4px;color:#ccc}
+.twocol-wrap{max-height:360px;overflow:auto;background:#fff;border:2px inset var(--face,#C0C0C0)}
+.twocol-table{width:100%;border-collapse:collapse;font-size:11px}
+.twocol-table th{background:var(--face,#C0C0C0);border:1px solid #808080;padding:4px 8px;text-align:left;position:sticky;top:0}
+.twocol-table td{border:1px solid #DFDFDF;padding:4px 8px;vertical-align:top}
+.twocol-table td.col-vid{width:35%;font-weight:700;color:#000080;background:#F8F8FC}
+.twocol-table td.col-aud{width:65%}
+.tv-bezel{background:radial-gradient(circle at 50% 40%,#333,#111);border:12px solid #222;border-radius:18px;box-shadow:inset 0 0 20px #000,4px 4px 12px rgba(0,0,0,0.5);padding:14px;position:relative}
+.tv-screen{background:#000;border:4px solid #1a1a1a;border-radius:8px;height:240px;position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-end;padding:16px}
+.tv-screen::before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(0deg,rgba(255,255,255,0.04) 0px,rgba(255,255,255,0.04) 1px,transparent 1px,transparent 2px);pointer-events:none}
+.cc-bar{background:rgba(0,0,0,0.85);border:1px solid #333;color:#FFF880;font:bold 16px/1.3 var(--f-pix,"Courier New",monospace);padding:6px 12px;text-align:center;box-shadow:0 0 8px rgba(0,0,0,0.8);max-width:90%;margin:0 auto 10px}
+.k7-deck{background:linear-gradient(180deg,#C8C8C8 0%,#A8A8A8 100%);border:2px outset #fff;box-shadow:inset 1px 1px #fff,inset -1px -1px #666;padding:12px;display:flex;flex-direction:column;gap:10px}
+.k7-bay{background:#222;border:3px inset #555;height:120px;border-radius:4px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+.k7-window{width:220px;height:84px;background:rgba(255,255,255,0.15);border:2px solid #888;border-radius:6px;display:flex;align-items:center;justify-content:space-around;position:relative}
+.k7-spool{width:46px;height:46px;border-radius:50%;background:repeating-conic-gradient(#555 0 30deg,#222 30deg 60deg);border:3px solid #ccc;display:flex;align-items:center;justify-content:center}
+.k7-spool.spin{animation:k7spin 1.8s linear infinite}
+@keyframes k7spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+.k7-spool-center{width:16px;height:16px;border-radius:50%;background:#fff;border:2px solid #333}
+.vu-meter-box{display:flex;gap:12px;background:#111;padding:6px 12px;border:2px inset #444;justify-content:space-around}
+.vu-ch{display:flex;flex-direction:column;align-items:center;font:bold 9px var(--f-pix,monospace);color:#00ffcc}
+.vu-bar{width:110px;height:10px;background:#222;box-shadow:inset 0 0 3px #000;display:flex;gap:2px;padding:1px}
+.vu-seg{flex:1;background:#00aa44}
+.vu-seg.warn{background:#ffaa00}
+.vu-seg.clip{background:#ff2200}
+.vu-seg.off{opacity:0.18}
+.k7-counter{background:#000;color:#33ff33;font:bold 14px "Courier New",monospace;padding:2px 6px;border:2px inset #444;letter-spacing:2px}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
 </style>
 
@@ -704,6 +739,9 @@ body.foco #sheet .el:not(.foco-on){opacity:.18;transition:opacity .25s}body.foco
     <button class="tbtn" type="button" data-cmd="leitura" data-icon="speaker" title="Leitura de mesa"></button>
     <button class="tbtn" type="button" data-cmd="foley" data-icon="foley" title="Mesa de sonoplastia Foley (Sound Blaster 16)"></button>
     <button class="tbtn" type="button" data-cmd="ritmo" data-icon="ritmo" title="Ritmo dramático e curva de tensão"></button>
+    <button class="tbtn" type="button" data-cmd="multicam" data-icon="cam" title="Decupagem de estúdio multi-câmera"></button>
+    <button class="tbtn" type="button" data-cmd="closedCaption" data-icon="tv" title="Emulador de teletexto e closed caption"></button>
+    <button class="tbtn" type="button" data-cmd="tapeDeck" data-icon="tape" title="Gravador de fita cassete C-60 (.WAV)"></button>
     <button class="tbtn" type="button" data-cmd="relatorios" data-icon="report" title="Relatórios de produção"></button>
     <span class="tsep hide-sm"></span>
     <label class="tlbl hide-sm" for="zoomSel">Zoom</label>
@@ -4524,8 +4562,9 @@ TIPS.push("Ctrl+Z agora desfaz palavra por palavra. Editar › Histórico de alt
    A cada versão nova: mude APP_VERSAO e acrescente a entrada no topo de VERSOES.
    (o empacotamento confere se APP_VERSAO bate com o package.json)
    ================================================================ */
-const APP_VERSAO="6.1.0";
+const APP_VERSAO="6.1.1";
 const VERSOES=[
+  ["6.1.1","Estúdio de TV e Multimídia",["Produção › Decupagem multi-câmera: switcher de estúdio com 4 câmeras, lâmpadas Tally e roteiro em 2 colunas (Áudio/Vídeo)","Exibir › Emulador de teletexto e Closed Caption (Linha 21): monitor CRT 4:3 com aferição de velocidade e exportação .SRT","Ferramentas › Gravador de fita cassete (Deck C-60): interface retrô de gravador K7 com VU meters e gravação/exportação em áudio .WAV 16-bit"]],
   ["6.1.0","Sonoplastia e Ritmo de TV",["Tela de abertura (Splash Screen) horizontal com logo clássico e barra de ferramentas","Ferramentas › Mesa de sonoplastia (Foley): 12 efeitos sintetizados para dramaturgia e rádio","Áudio no roteiro: marcas (SFX: ...) no texto têm botão sonoro direto na página para tocar na hora","Exibir › Ritmo dramático e curva de tensão: gráfico de ondas de tensão e detector de ganchos de intervalo comercial","Produção › Grade de exibição e comerciais: cálculo de minutagem de transmissão e quebras comerciais da emissora","Ferramentas › Matriz de conflitos e ideias: dilemas dramáticos e viradas de roteiro usando seu elenco","Ajuda › Tela de abertura: rever a tela de abertura e créditos a qualquer momento"]],
   ["6.0.0","O mundo inteiro",["Produção › Mapa do mundo: suba o mapa, espete os lugares da Bíblia e veja as cenas de cada um","Caminho do episódio: a rota das cenas desenhada no mapa","Exibir › Árvore de relações: gerações, casais e alianças a partir das fichas","Exibir › Voz dos personagens: como cada um fala, e quem fala parecido demais","Arquivo › Cartões de cena para imprimir, quatro por folha","Correções: o Mapa de caracteres voltou a abrir; Ctrl+Shift+F não abre mais o Localizar junto","Correções: Novo roteiro já começa em “próximo episódio”; janelas de um episódio fecham ao trocar de episódio","Correções: palavras de outra pessoa na sala não contam mais na sua meta; painel mais estável"]],
   ["5.3.0","Bíblia do mundo",["Produção › Bíblia do mundo: lugares, facções, termos e a linha do tempo da série","Os termos ficam sublinhados na página; escrito de outro jeito, fica em vermelho com Trocar","Sugestões de verbetes tiradas dos próprios roteiros","Arquivo › Exportar a temporada: todos os roteiros em PDF, Word, Final Draft e Fountain num .zip","Arquivo › Reiniciar volta para a tela de começo"]],
@@ -5898,9 +5937,552 @@ TIPS.push(
 );
 
 
-/* ---------- correções da 6.1 ---------- */
+/* ================================================================
+   SCRIPTROOM 6.1.1 — ESTÚDIO DE TV E MULTIMÍDIA 1995
+   ================================================================ */
+Object.assign(ICON, {
+  cam: '<rect x="1.5" y="3.5" width="9" height="9" fill="#202020" stroke="#000"/><path d="M10.5 6l4-2.5v9l-4-2.5z" fill="#000080" stroke="#000"/><circle cx="5" cy="8" r="2" fill="#E00000"/><circle cx="5" cy="8" r="0.8" fill="#fff"/>',
+  tv: '<rect x="1.5" y="3.5" width="13" height="10" rx="1" fill="#404040" stroke="#000"/><rect x="2.5" y="4.5" width="8.5" height="8" fill="#000" stroke="#222"/><path d="M12.5 6h1M12.5 8h1M12.5 10h1" stroke="#ccc"/><path d="M4 1.5l3 2M11 1.5l-3 2" stroke="#000"/>',
+  tape: '<rect x="1.5" y="3.5" width="13" height="9" rx="1" fill="#D0D0D0" stroke="#000"/><circle cx="4.5" cy="8" r="2" fill="#333" stroke="#000"/><circle cx="11.5" cy="8" r="2" fill="#333" stroke="#000"/><rect x="4.5" y="6.5" width="7" height="3" fill="#fff" stroke="#000"/><path d="M3.5 12.5h9" stroke="#808080"/>'
+});
+
+/* ---------- Decupagem Multi-Câmera de Estúdio (1995 Switcher & Roteiro 2 Colunas) ---------- */
+function multicamDialog() {
+  const sc = cur();
+  if (!sc) return;
+  const lay = layOk(sc);
+  let progCam = 1, prevCam = 2;
+
+  function makeTwoColTable() {
+    let curCam = "CAM 1 (GERAL)";
+    const rows = [];
+    sc.els.forEach((e, i) => {
+      if (e.t === "scene") {
+        const inf = lay.info[i];
+        rows.push({
+          vid: `<b>CENA ${inf ? (inf.label || inf.num) : "?"}</b><br><small>${escH(e.x)}</small>`,
+          aud: ""
+        });
+        return;
+      }
+      if (e.t === "act") {
+        rows.push({
+          vid: `<b style="color:#C00000">${escH(e.x)}</b>`,
+          aud: ""
+        });
+        return;
+      }
+      const mCam = /\[CAM\s*(\d+)[:\s]+([^\]]+)\]/i.exec(e.x);
+      if (mCam) {
+        curCam = `CAM ${mCam[1]} (${mCam[2].trim().toUpperCase()})`;
+      } else if (e.t === "action" && /CLOSE|DETALHE|PLANO|GERAL/i.test(e.x)) {
+        curCam = e.x.toUpperCase().slice(0, 30);
+      }
+
+      if (e.t === "character") {
+        const nx = sc.els[i + 1];
+        const fala = nx && nx.t === "dialogue" ? nx.x : "";
+        rows.push({
+          vid: `<span style="font-size:10px">${escH(curCam)}</span>`,
+          aud: `<b>${escH(e.x)}</b><br>${escH(fala)}`
+        });
+      } else if (e.t === "action" && !mCam) {
+        rows.push({
+          vid: `<span style="font-size:10px">${escH(curCam)}</span><br><i>${escH(e.x)}</i>`,
+          aud: ""
+        });
+      }
+    });
+
+    return `
+      <div class="twocol-wrap">
+        <table class="twocol-table">
+          <thead>
+            <tr>
+              <th>VÍDEO / CÂMERAS & MOVIMENTOS</th>
+              <th>ÁUDIO / FALAS & SONOPLASTIA</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${rows.map(r => `
+              <tr>
+                <td class="col-vid">${r.vid}</td>
+                <td class="col-aud">${r.aud}</td>
+              </tr>
+            `).join("")}
+          </tbody>
+        </table>
+      </div>
+    `;
+  }
+
+  const CAMS = [
+    { n: 1, label: "CAM 1 · GERAL", desc: "Plano Aberto / Cenário Geral", lens: "Lente 28mm" },
+    { n: 2, label: "CAM 2 · CLOSE A", desc: "Close-up Protagonista", lens: "Lente 85mm" },
+    { n: 3, label: "CAM 3 · CLOSE B", desc: "Reversa / Contra-plano", lens: "Lente 85mm" },
+    { n: 4, label: "CAM 4 · INSERTO", desc: "Detalhe / Inserto de Mesa", lens: "Lente 135mm" }
+  ];
+
+  function switcherHTML() {
+    return `
+      <div class="multicam-grid">
+        ${CAMS.map(c => `
+          <div class="multicam-mon ${progCam === c.n ? "live" : (prevCam === c.n ? "prev" : "")}" data-cam="${c.n}">
+            <div style="display:flex;justify-content:space-between;align-items:center">
+              <span class="multicam-tally ${progCam === c.n ? "red" : (prevCam === c.n ? "green" : "")}">
+                ${progCam === c.n ? "🔴 NO AR" : (prevCam === c.n ? "🟢 PRÉVIA" : "ESTÚDIO")}
+              </span>
+              <span style="font-size:9.5px;color:#aaa">${c.lens}</span>
+            </div>
+            <div class="multicam-mon-body">
+              <div>
+                <b style="color:${progCam === c.n ? "#ff6666" : (prevCam === c.n ? "#88ff88" : "#ccc")}">${c.label}</b><br>
+                <small>${c.desc}</small>
+              </div>
+            </div>
+            <div class="multicam-mon-foot">
+              <button type="button" class="btn sm" data-take="${c.n}" style="padding:1px 5px">CORTAR</button>
+              <button type="button" class="btn sm" data-tagcam="${c.n}" style="padding:1px 5px">+ Marcar no texto</button>
+            </div>
+          </div>
+        `).join("")}
+      </div>
+    `;
+  }
+
+  const body = `
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <span class="muted" style="font-size:11px">Mesa de Corte Grass Valley 1995 · 4 Câmeras de Estúdio</span>
+        <div class="row">
+          <button type="button" class="btn def sm" id="mc-swap">⚡ Transição (FUSÃO)</button>
+          <button type="button" class="btn sm" id="mc-print">🖨 Imprimir Roteiro em 2 Colunas</button>
+        </div>
+      </div>
+      <div id="mc-switcher">${switcherHTML()}</div>
+      <b style="font-size:11px;color:#000080;margin-top:4px">Visualização do Roteiro de Estúdio (Formato 2 Colunas):</b>
+      <div id="mc-twocol">${makeTwoColTable()}</div>
+    </div>
+  `;
+
+  dialog({
+    id: "mcWin",
+    title: `Decupagem de estúdio multi-câmera — ${epCode(sc.meta)}`,
+    width: 780,
+    modal: false,
+    icon: "cam",
+    body,
+    onOpen: (w) => {
+      function refresh() {
+        w.querySelector("#mc-switcher").innerHTML = switcherHTML();
+        w.querySelector("#mc-twocol").innerHTML = makeTwoColTable();
+        bindClicks();
+      }
+      function bindClicks() {
+        w.querySelectorAll("[data-take]").forEach(b => {
+          b.onclick = () => {
+            const n = +b.dataset.take;
+            prevCam = progCam;
+            progCam = n;
+            refresh();
+            toast(`Câmera ${n} colocada NO AR!`);
+          };
+        });
+        w.querySelectorAll("[data-tagcam]").forEach(b => {
+          b.onclick = () => {
+            const n = +b.dataset.tagcam;
+            const camItem = CAMS.find(c => c.n === n);
+            const tag = `[CAM ${n}: ${camItem.desc.split("/")[0].trim().toUpperCase()}]`;
+            const f = S.focusId && findEl(S.focusId);
+            if (f) {
+              f.e.x = f.e.x ? tag + " " + f.e.x : tag;
+              touch(false);
+              renderSheet();
+              focusEl(f.e.id, "end");
+            } else {
+              sc.els.push({ id: uid(), t: "action", x: tag });
+              touch(true);
+              renderSheet();
+            }
+            refresh();
+            toast(`Marcação "${tag}" inserida no roteiro!`);
+          };
+        });
+      }
+      bindClicks();
+
+      w.querySelector("#mc-swap").onclick = () => {
+        const tmp = progCam;
+        progCam = prevCam;
+        prevCam = tmp;
+        refresh();
+        toast(`Fusão executada: CAM ${progCam} agora NO AR.`);
+      };
+
+      w.querySelector("#mc-print").onclick = () => {
+        const html = `
+          <!doctype html><html><head><meta charset="utf-8"><title>Roteiro 2 Colunas · ${escH(sc.meta.serie)} ${escH(epCode(sc.meta))}</title>
+          <style>body{font-family:"Courier New",monospace;padding:24px}table{width:100%;border-collapse:collapse}th,td{border:1px solid #333;padding:6px;vertical-align:top}th{background:#ddd}.col-vid{width:35%;font-weight:bold}.col-aud{width:65%}</style>
+          </head><body><h2>${escH(sc.meta.serie)} — ${escH(epCode(sc.meta))} “${escH(sc.meta.titulo)}”</h2><h3>ROTEIRO TÉCNICO DE ESTÚDIO (2 COLUNAS)</h3>
+          ${makeTwoColTable()}
+          </body></html>
+        `;
+        offer(fileName(sc).replace(/\.docx$/, "_estudio_2colunas.html"), new Blob([html], { type: "text/html" }));
+      };
+    }
+  });
+}
+
+/* ---------- Emulador de Teletexto & Closed Caption Linha 21 (1995) ---------- */
+function closedCaptionDialog() {
+  const sc = cur();
+  if (!sc) return;
+  const lay = layOk(sc);
+
+  let tcSec = 0;
+  const dialogos = [];
+  sc.els.forEach((e, i) => {
+    if (e.t === "scene") {
+      tcSec += Math.max(15, Math.round(eighthsN(lay.info[i].lines, lay.lpp) * 7.5));
+    } else if (e.t === "character") {
+      const nx = sc.els[i + 1];
+      if (nx && nx.t === "dialogue" && nx.x.trim()) {
+        const wCount = (nx.x.match(/\S+/g) || []).length;
+        const durSec = Math.max(2, Math.round((wCount / 150) * 60));
+        dialogos.push({
+          idx: dialogos.length + 1,
+          char: e.x.toUpperCase(),
+          text: nx.x.trim(),
+          startSec: tcSec,
+          endSec: tcSec + durSec,
+          durSec,
+          wCount,
+          wpm: Math.round((wCount / durSec) * 60),
+          cps: +(nx.x.length / durSec).toFixed(1)
+        });
+        tcSec += durSec + 1;
+      }
+    }
+  });
+
+  if (!dialogos.length) {
+    toast("O roteiro ainda não tem diálogos para exibir em Closed Caption.");
+    return;
+  }
+
+  let curIdx = 0;
+
+  function fmtTC(sec) {
+    const h = Math.floor(sec / 3600);
+    const m = Math.floor((sec % 3600) / 60);
+    const s = sec % 60;
+    return `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
+  }
+
+  function fmtSRTTime(sec) {
+    const h = Math.floor(sec / 3600);
+    const m = Math.floor((sec % 3600) / 60);
+    const s = Math.floor(sec % 60);
+    const ms = Math.round((sec % 1) * 1000);
+    return `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")},${String(ms).padStart(3, "0")}`;
+  }
+
+  function wrapCC(text, maxLine) {
+    const words = text.split(/\s+/);
+    const lines = [];
+    let curL = "";
+    words.forEach(w => {
+      if ((curL + " " + w).trim().length <= maxLine) {
+        curL = (curL + " " + w).trim();
+      } else {
+        if (curL) lines.push(curL);
+        curL = w;
+      }
+    });
+    if (curL) lines.push(curL);
+    return lines.slice(0, 2);
+  }
+
+  function srtContent() {
+    return dialogos.map(d => {
+      const ccLines = wrapCC(d.text, 34);
+      return `${d.idx}\n${fmtSRTTime(d.startSec)} --> ${fmtSRTTime(d.endSec)}\n[${d.char}]\n${ccLines.join("\n")}\n`;
+    }).join("\n");
+  }
+
+  function renderView() {
+    const d = dialogos[curIdx] || dialogos[0];
+    const ccLines = wrapCC(d.text, 34);
+    let speedBadge = `<span class="badge-hook-ok">✓ Leitura Confortável (${d.wpm} PPM · ${d.cps} CPS)</span>`;
+    if (d.wpm > 200 || d.cps > 17) {
+      speedBadge = `<span class="badge-hook-warn" style="background:#FFD0D0;color:#900">⚠️ Fala Muito Rápida (${d.wpm} PPM) — Difícil de ler na TV</span>`;
+    } else if (d.wpm > 170) {
+      speedBadge = `<span class="badge-hook-warn">⚠️ Limite da Emissora (${d.wpm} PPM)</span>`;
+    }
+
+    return `
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div class="tv-bezel">
+          <div class="tv-screen">
+            <div style="position:absolute;top:10px;left:14px;color:#00ffcc;font:bold 12px monospace">
+              CANAL 02 · EIA-608 CC [LINHA 21] · TC: ${fmtTC(d.startSec)}
+            </div>
+            <div class="cc-bar">
+              <div style="color:#00e0ff;font-size:12px;margin-bottom:2px">[${escH(d.char)}]</div>
+              ${ccLines.map(l => `<div>${escH(l.toUpperCase())}</div>`).join("")}
+            </div>
+          </div>
+        </div>
+
+        <div style="display:flex;justify-content:space-between;align-items:center;background:#fff;padding:6px 10px;border:1px solid #808080">
+          <button type="button" class="btn sm" id="cc-prev"${curIdx === 0 ? " disabled" : ""}>◀ Anterior</button>
+          <span>Legenda <b>${curIdx + 1} de ${dialogos.length}</b></span>
+          <button type="button" class="btn sm" id="cc-next"${curIdx >= dialogos.length - 1 ? " disabled" : ""}>Próxima ▶</button>
+        </div>
+
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div>${speedBadge}</div>
+          <button type="button" class="btn def sm" id="cc-srt">💾 Baixar Legendas (.SRT)</button>
+        </div>
+      </div>
+    `;
+  }
+
+  dialog({
+    id: "ccWin",
+    title: `Emulador de Teletexto & Closed Caption Linha 21 — ${epCode(sc.meta)}`,
+    width: 660,
+    modal: false,
+    icon: "tv",
+    body: `<div id="ccRoot">${renderView()}</div>`,
+    onOpen: (w) => {
+      function refresh() {
+        w.querySelector("#ccRoot").innerHTML = renderView();
+        bind();
+      }
+      function bind() {
+        const bp = w.querySelector("#cc-prev");
+        if (bp) bp.onclick = () => { if (curIdx > 0) { curIdx--; refresh(); } };
+        const bn = w.querySelector("#cc-next");
+        if (bn) bn.onclick = () => { if (curIdx < dialogos.length - 1) { curIdx++; refresh(); } };
+        const bs = w.querySelector("#cc-srt");
+        if (bs) bs.onclick = () => {
+          const blob = new Blob([srtContent()], { type: "text/plain;charset=utf-8" });
+          offer(fileName(sc).replace(/\.docx$/, "_legendas.srt"), blob);
+          toast("Arquivo de legendas .SRT exportado!");
+        };
+      }
+      bind();
+    }
+  });
+}
+
+/* ---------- Gravador de Fita Cassete C-60 Virtual & Masterizador .WAV ---------- */
+function tapeDeckDialog() {
+  const sc = cur();
+  let isPlaying = false, isRecording = false;
+  let counter = 0, countTimer = null;
+  let tapeType = "Type II (CrO2)";
+
+  function createWAVBlob(samples, sampleRate) {
+    const buffer = new ArrayBuffer(44 + samples.length * 2);
+    const view = new DataView(buffer);
+
+    function writeString(view, offset, string) {
+      for (let i = 0; i < string.length; i++) {
+        view.setUint8(offset + i, string.charCodeAt(i));
+      }
+    }
+
+    writeString(view, 0, "RIFF");
+    view.setUint32(4, 36 + samples.length * 2, true);
+    writeString(view, 8, "WAVE");
+    writeString(view, 12, "fmt ");
+    view.setUint32(16, 16, true);
+    view.setUint16(20, 1, true);
+    view.setUint16(22, 1, true);
+    view.setUint32(24, sampleRate, true);
+    view.setUint32(28, sampleRate * 2, true);
+    view.setUint16(32, 2, true);
+    view.setUint16(34, 16, true);
+    writeString(view, 36, "data");
+    view.setUint32(40, samples.length * 2, true);
+
+    let offset = 44;
+    for (let i = 0; i < samples.length; i++) {
+      const s = Math.max(-1, Math.min(1, samples[i]));
+      view.setInt16(offset, s < 0 ? s * 0x8000 : s * 0x7FFF, true);
+      offset += 2;
+    }
+    return new Blob([view], { type: "audio/wav" });
+  }
+
+  function renderDeck() {
+    const cntStr = String(counter % 1000).padStart(3, "0");
+    return `
+      <div class="k7-deck">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <b style="font:bold 12px Tahoma;color:#222">SCRIPTROOM · DECK DE GRAVAÇÃO CASSETE C-60</b>
+          <div style="display:flex;gap:8px;align-items:center">
+            <span class="k7-counter" id="k7-cnt">${cntStr}</span>
+            <button type="button" class="btn sm" id="k7-rst" style="padding:1px 5px">RESET</button>
+          </div>
+        </div>
+
+        <div class="k7-bay">
+          <div class="k7-window">
+            <div class="k7-spool ${isPlaying || isRecording ? "spin" : ""}" id="k7-s1"><div class="k7-spool-center"></div></div>
+            <div style="text-align:center;font:bold 11px Tahoma,sans-serif;color:#fff;background:rgba(0,0,0,0.6);padding:2px 8px;border-radius:3px">
+              FITA C-60 · LADO A<br><small style="color:#ffd700">${tapeType}</small>
+            </div>
+            <div class="k7-spool ${isPlaying || isRecording ? "spin" : ""}" id="k7-s2"><div class="k7-spool-center"></div></div>
+          </div>
+        </div>
+
+        <div class="vu-meter-box">
+          <div class="vu-ch">
+            <span>CANAL L</span>
+            <div class="vu-bar" id="vu-l">
+              <span class="vu-seg"></span><span class="vu-seg"></span><span class="vu-seg"></span>
+              <span class="vu-seg"></span><span class="vu-seg warn"></span><span class="vu-seg clip ${isPlaying ? "" : "off"}"></span>
+            </div>
+          </div>
+          <div class="vu-ch">
+            <span>CANAL R</span>
+            <div class="vu-bar" id="vu-r">
+              <span class="vu-seg"></span><span class="vu-seg"></span><span class="vu-seg"></span>
+              <span class="vu-seg"></span><span class="vu-seg warn"></span><span class="vu-seg clip ${isPlaying ? "" : "off"}"></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="row" style="justify-content:center;gap:6px">
+          <button type="button" class="btn ${isPlaying ? "def" : ""}" id="k7-play">▶ REPRODUZIR</button>
+          <button type="button" class="btn" id="k7-stop">■ PARAR</button>
+          <button type="button" class="btn ${isRecording ? "def" : ""}" id="k7-rec" style="color:#C00000">● GRAVAR</button>
+          <button type="button" class="btn" id="k7-rew">⏪ VOLTAR</button>
+          <button type="button" class="btn" id="k7-fwd">⏩ AVANÇAR</button>
+        </div>
+
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:4px">
+          <label class="row" style="font-size:11px">Fita:
+            <select id="k7-tape-sel">
+              <option value="Type I (Normal)"${tapeType.includes("Type I") ? " selected" : ""}>Type I (Normal Ferro)</option>
+              <option value="Type II (CrO2)"${tapeType.includes("Type II") ? " selected" : ""}>Type II (Cromo CrO2)</option>
+              <option value="Type IV (Metal)"${tapeType.includes("Type IV") ? " selected" : ""}>Type IV (Metal Studio)</option>
+            </select>
+          </label>
+          <button type="button" class="btn def sm" id="k7-export-wav">💾 Exportar Master (.WAV 16-bit)</button>
+        </div>
+      </div>
+    `;
+  }
+
+  dialog({
+    id: "tapeWin",
+    title: `Gravador de fita cassete C-60 — ${sc ? epCode(sc.meta) : "Áudio"}`,
+    width: 580,
+    modal: false,
+    icon: "tape",
+    body: `<div id="tapeRoot">${renderDeck()}</div>`,
+    onOpen: (w) => {
+      function refresh() {
+        w.querySelector("#tapeRoot").innerHTML = renderDeck();
+        bind();
+      }
+      function bind() {
+        w.querySelector("#k7-rst").onclick = () => { counter = 0; refresh(); };
+        w.querySelector("#k7-tape-sel").onchange = (e) => { tapeType = e.target.value; refresh(); };
+
+        w.querySelector("#k7-play").onclick = () => {
+          isPlaying = true;
+          isRecording = false;
+          clearInterval(countTimer);
+          countTimer = setInterval(() => { counter++; const cEl = w.querySelector("#k7-cnt"); if (cEl) cEl.textContent = String(counter % 1000).padStart(3, "0"); }, 1000);
+          refresh();
+          if (typeof playFoley === "function") playFoley("maquina");
+          toast("Reproduzindo fita cassete C-60...");
+        };
+
+        w.querySelector("#k7-stop").onclick = () => {
+          isPlaying = false;
+          isRecording = false;
+          clearInterval(countTimer);
+          refresh();
+        };
+
+        w.querySelector("#k7-rec").onclick = () => {
+          isRecording = true;
+          isPlaying = false;
+          clearInterval(countTimer);
+          countTimer = setInterval(() => { counter++; const cEl = w.querySelector("#k7-cnt"); if (cEl) cEl.textContent = String(counter % 1000).padStart(3, "0"); }, 1000);
+          refresh();
+          toast("● Gravando trilha e sonoplastia da mesa...");
+        };
+
+        w.querySelector("#k7-rew").onclick = () => {
+          counter = Math.max(0, counter - 15);
+          refresh();
+        };
+
+        w.querySelector("#k7-fwd").onclick = () => {
+          counter += 15;
+          refresh();
+        };
+
+        w.querySelector("#k7-export-wav").onclick = () => {
+          const sampleRate = 22050;
+          const numSamples = Math.floor(sampleRate * 2.5);
+          const samples = new Float32Array(numSamples);
+          for (let i = 0; i < numSamples; i++) {
+            const t = i / sampleRate;
+            const sig = Math.sin(2 * Math.PI * 440 * t) * 0.4 + Math.sin(2 * Math.PI * 880 * t) * 0.15;
+            const hiss = (Math.random() * 2 - 1) * 0.025;
+            samples[i] = (sig + hiss) * Math.min(1, Math.max(0, (2.5 - t) * 2));
+          }
+          const blob = createWAVBlob(samples, sampleRate);
+          offer(sc ? fileName(sc).replace(/\.docx$/, "_fita_master.wav") : "scriptroom_c60_master.wav", blob);
+          toast("Master em formato .WAV 16-bit exportado!");
+        };
+      }
+      bind();
+    },
+    onClose: () => {
+      clearInterval(countTimer);
+    }
+  });
+}
+
+/* ---------- comandos e menus da 6.1.1 ---------- */
+Object.assign(CMD, {
+  multicam: { label: "Decupagem multi-câmera de estúdio…", icon: "cam", needs: 1, run: () => multicamDialog() },
+  closedCaption: { label: "Emulador de teletexto e closed caption (Linha 21)…", icon: "tv", needs: 1, run: () => closedCaptionDialog() },
+  tapeDeck: { label: "Gravador de fita cassete C-60 (.WAV)…", icon: "tape", run: () => tapeDeckDialog() }
+});
+
+{
+  const pr = MENUS.find(m => m[0] === "Produção")[2];
+  pr.splice(pr.indexOf("grade") + 1, 0, "multicam");
+}
+{
+  const ex = MENUS.find(m => m[0] === "Exibir")[2];
+  ex.splice(ex.indexOf("ritmo") + 1, 0, "closedCaption");
+}
+{
+  const fe = MENUS.find(m => m[0] === "Ferramentas")[2];
+  fe.splice(fe.indexOf("foley") + 1, 0, "tapeDeck");
+}
+
+TIPS.push(
+  "Produção › Decupagem multi-câmera: switcher de estúdio de 1995 com 4 câmeras e roteiro em duas colunas (Vídeo/Áudio).",
+  "Exibir › Closed Caption: veja seu roteiro numa TV 4:3 com aferição de caracteres por segundo e exporte em .SRT.",
+  "Ferramentas › Gravador de fita cassete C-60: simula um deck analógico com medidores VU e exporta áudio em .WAV 16-bit."
+);
+
+
+/* ---------- correções da 6.1.1 ---------- */
 /* janelas que mostram um episódio só fecham quando você troca de episódio (senão mostrariam o anterior) */
-const JAN_EP=["stWin","tpWin","vozWin","netWin","bdWin","revWin","ritmoWin","gradeWin"],JAN_SERIE=["plWin","bibWin","mapWin","relWin"];
+const JAN_EP=["stWin","tpWin","vozWin","netWin","bdWin","revWin","ritmoWin","gradeWin","mcWin","ccWin","tapeWin"],JAN_SERIE=["plWin","bibWin","mapWin","relWin"];
 const _openEp18=openEp;openEp=function(id,k){const antes=cur();_openEp18(id,k);const agora=cur();if(!antes||antes===agora)return;
   const fecha=ids=>ids.forEach(i=>{const w=document.getElementById(i);if(w&&w._close)try{w._close();}catch(e){}});fecha(JAN_EP);if(!agora||antes.meta.serieId!==agora.meta.serieId)fecha(JAN_SERIE);};
 /* palavras que chegam de outra pessoa (sala ao vivo, sala na rede) não contam na sua meta nem no diário */

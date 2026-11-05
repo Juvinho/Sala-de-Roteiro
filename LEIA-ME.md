@@ -51,7 +51,7 @@ npm run instalador
 Quando terminar, o instalador estará em:
 
 ```
-dist\SETUP_SCRIPTROOM_6.1.0.exe
+dist\SETUP_SCRIPTROOM_6.1.1.exe
 ```
 
 Dê dois cliques nele e siga o assistente: **Avançar › Aceito › Avançar › Instalar › Concluir**.
@@ -83,7 +83,25 @@ No VS Code também dá para usar **Terminal › Run Task…**, que lista as quat
 - **Exportar PDF…** com opções: folha de rosto, marcas de revisão, só um trecho de cenas, marca
   d'água e **cópias nominais** (um PDF por pessoa, com o nome dela na marca d'água).
 
-## Sonoplastia, Ritmo de TV e Splash Screen (versão 6.1)
+## Estúdio de Gravação, Multi-Câmera e Closed Caption (versão 6.1.1)
+
+- **Produção › Decupagem de estúdio (Multi-câmera):** simulador de switcher e mesa de corte de TV dos anos 90 com 4 câmeras de estúdio simultâneas (CAM 1 Geral, CAM 2 Fechada no Ator A, CAM 3 Reação do Ator B, CAM 4 Grua/Plano Detalhe).
+  - Luzes Tally ativas: Câmera no ar (**Tally Vermelho / PROGRAM**) e Câmera em espera (**Tally Verde / PREVIEW**).
+  - Comutador de corte direto (Take), corte automático com base nas falas dos personagens e transições de estúdio.
+  - Visualização em roteiro de estúdio clássico de duas colunas (coluna esquerda com vídeo/enquadramentos de câmera e coluna direita com diálogos e sonoplastia).
+  - Exportação direta da folha de corte técnico para HTML pronto para impressão do diretor de TV.
+  - Atalho rápido no menu e botão na barra de ferramentas (**Decupagem Multi-câmera**).
+- **Ferramentas › Closed Caption (Linha 21 EIA-608):** emulador de televisor CRT 4:3 dos anos 90 com decodificador de legenda oculta para telejornais, novelas e programas de auditório.
+  - Renderiza as falas do roteiro na tipografia clássica verde/branca em bloco preto translúcido, fiel ao padrão da Linha 21 do sinal analógico NTSC/PAL-M.
+  - Velocímetro de leitura em palavras por minuto (PPM) e caracteres por segundo (CPS) com alerta visual de conforto óptico para o telespectador.
+  - Exportação instantânea de legendas no formato padrão `.srt` para pós-produção e distribuição digital.
+- **Ferramentas › Deck de gravação de fita cassete (Áudio C-60):** gravador e reprodutor analógico estéreo estilo fita K7 de estúdio.
+  - Animação mecânica com carretéis giratórios, cabeçote magnético e contador de fita analógico de 3 dígitos com botão Reset.
+  - Medidores VU analógicos estéreo de agulha com resposta balística às falas e efeitos da cena.
+  - **Exportação real de áudio PCM RIFF .WAV:** sintetiza a sonoplastia do roteiro em arquivo `.wav` de 16 bits não comprimido para download e reprodução em qualquer player moderno ou sampler de época.
+- **Janelas seguras:** as três novas ferramentas fecham automaticamente ao trocar de episódio, evitando vazamento de dados de episódios anteriores.
+
+## Sonoplastia, Ritmo de TV e Splash Screen (versão 6.1.0)
 
 - **Tela de abertura horizontal (Splash Screen):** ao abrir o ScriptRoom, surge uma janela horizontal
   clássica (estilo Creative Cloud e programas emblemáticos de 1995 como Adobe Premiere, Photoshop 3.0 e
