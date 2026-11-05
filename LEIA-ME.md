@@ -1,0 +1,157 @@
+# Sala de Roteiro 95
+
+Editor de roteiros de TV com cara de programa de 1995. Nasceu para **Fundação Varguelia** e hoje
+escreve qualquer série: drama, telenovela, comédia de situação, policial, antologia, minissérie,
+telefilme, desenho animado, radionovela e humorístico de esquetes.
+Este projeto transforma a Sala de Roteiro num programa de verdade para Windows, com um
+**instalador clássico** (SETUP.EXE com assistente, contrato de licença, fundo azul em tela cheia,
+atalho na área de trabalho e desinstalador).
+
+Já vem com os roteiros **EP16 a EP20**: eles são copiados para a sua pasta de dados na primeira vez
+que o programa abre.
+
+---
+
+## 1. O que instalar antes (uma vez só)
+
+1. **Node.js LTS** (versão 20 ou mais nova): https://nodejs.org. Instale com as opções padrão.
+2. **VS Code**, que você já tem.
+
+Para conferir, abra um terminal e rode `node -v`. Tem que aparecer `v20…` ou maior.
+
+## 2. Abrir no VS Code
+
+1. Descompacte o zip numa pasta **sem acento e fora do OneDrive**, por exemplo `C:\Projetos\sala-de-roteiro-95`.
+   O OneDrive costuma travar a compilação.
+2. No VS Code: **File › Open Folder…** e escolha a pasta.
+3. Abra o terminal (**Terminal › New Terminal**) e rode:
+
+```
+npm install
+```
+
+Isso baixa o Electron e o gerador de instalador (uns 300 MB, só na primeira vez).
+
+## 3. Rodar o programa (sem instalar)
+
+```
+npm start
+```
+
+Ou aperte **F5** no VS Code: a configuração "Rodar a Sala de Roteiro 95" já está pronta.
+
+## 4. Gerar o instalador
+
+```
+npm run instalador
+```
+
+Quando terminar, o instalador estará em:
+
+```
+dist\SETUP_SALA95_4.2.0.exe
+```
+
+Dê dois cliques nele e siga o assistente: **Avançar › Aceito › Avançar › Instalar › Concluir**.
+
+Prefere um .exe que roda sem instalar (pendrive, por exemplo)? Use `npm run portatil`.
+O arquivo sai como `dist\SalaDeRoteiro95_portatil.exe`.
+
+No VS Code também dá para usar **Terminal › Run Task…**, que lista as quatro tarefas
+(instalar dependências, rodar, gerar instalador e gerar portátil).
+
+---
+
+## Acessórios em janelas próprias
+
+No programa instalado, estes acessórios abrem como janelas separadas do Windows: dá para arrastar
+para fora da janela principal, levar para outro monitor, e cada um aparece na barra de tarefas.
+
+- **Bloco de notas** (F5 põe data e hora, Localizar, quebra automática de linha)
+- **Calculadora de minutagem**: entende `2:45 × 12`, `55:30 − 48:10`, `1:02:00 ÷ 4`
+- **Cronômetro da leitura**: espaço inicia, L marca o fim de cada cena
+- **Mapa de caracteres**: ë, ö, —, “ ” e companhia, inseridos onde o cursor estava no roteiro
+
+Ficam em **Ferramentas** ou em **Iniciar › Acessórios**.
+
+## Séries
+
+Cada série tem os próprios roteiros, elenco, calendário de exibição e regras de revisão.
+
+- **Arquivo › Nova série…** abre o assistente: formato, nome, canal, dia de exibição, duração e o
+  primeiro roteiro.
+- **Arquivo › Séries…** lista todas as séries, com propriedades, exportação em .zip e exclusão.
+- **Exibir › Planejamento da temporada** mostra etapa, logline e prazo de entrega de cada roteiro.
+- **Arquivo › Salvar como modelo…** guarda a estrutura do roteiro aberto para reaproveitar.
+- No painel **Versões**, **Comparar** mostra o que entrou e o que saiu desde aquela versão.
+
+A Fundação Varguelia vira automaticamente a primeira série na primeira vez que a versão 4.1 abre.
+
+## Onde ficam os seus roteiros
+
+```
+Documentos\Sala de Roteiro 95\
+   roteiros\      um .json por episódio (ep-16.json, ep-17.json…)
+   personagens\   uma ficha por personagem
+   versoes\       versões guardadas (automáticas e com nome)
+   notas\         o Bloco de notas da sala
+   series\        uma ficha por série (canal, dia de exibição, formato)
+   modelos\       os modelos que você salvar
+   .lixeira\      o que você exclui vem para cá (Arquivo › Lixeira da sala… restaura)
+```
+
+- No programa: **Arquivo › Abrir pasta dos roteiros**.
+- **Desinstalar não apaga essa pasta.**
+- Para levar tudo para outro PC, copie a pasta inteira ou use **Arquivo › Fazer backup (.json)**.
+- Cada arquivo é gravado de forma atômica (primeiro num temporário, depois renomeado),
+  então uma queda de energia no meio do salvamento não corrompe o roteiro.
+
+---
+
+## Problemas comuns
+
+**"O Windows protegeu o computador" ao abrir o SETUP.**
+É o SmartScreen. Ele avisa em qualquer programa sem assinatura digital paga, não é vírus.
+Clique em **Mais informações › Executar assim mesmo**. Para sumir com o aviso de vez, só
+comprando um certificado de assinatura de código.
+
+**Erro `Cannot create symbolic link` ou `privilege not held` no `npm run instalador`.**
+O gerador precisa criar atalhos de arquivo. Resolva de um destes jeitos:
+- ative o **Modo de Desenvolvedor** do Windows (Configurações › Privacidade e segurança › Para desenvolvedores), ou
+- abra o VS Code **como administrador** e rode de novo.
+
+**Erro citando `BGGradient` ou `BGFont`.**
+É o fundo azul em tela cheia. Apague as duas linhas que começam com `BGFont` e `BGGradient`
+em `build\installer.nsh`. O instalador continua funcionando, só sem o fundo.
+
+**"Não foi possível procurar atualizações".**
+Confira se rodou o `configurar-repo`, se o repositório é público e se já existe pelo menos uma
+Release publicada pelo Actions. Antivírus ou firewall corporativo também podem bloquear o acesso.
+
+**O programa abre sem a fonte pixelada dos números.**
+A fonte VT323 vem da internet. Sem conexão, o programa usa uma fonte monoespaçada do Windows.
+Tahoma e Courier New, as fontes principais, já vêm no Windows.
+
+---
+
+## Estrutura do projeto
+
+```
+main.js            processo principal: janelas, arquivos em Documentos, lixeira, atualizações
+preload.js         ponte segura entre a página e o Windows (só a pasta da sala e as janelas do app)
+scripts\          configurar-repo.js, que liga o projeto ao seu repositório
+.github\workflows\ instalador.yml, que gera e publica o SETUP quando você cria uma tag
+app\index.html     o programa inteiro (o mesmo da versão na web)
+app\seed\          roteiros que vêm de fábrica (EP16 a EP20)
+build\             ícone, imagens e textos do instalador
+  icon.ico / icon.png         claquete em pixel art
+  installerSidebar.bmp        faixa lateral do assistente (164×314)
+  installerHeader.bmp         cabeçalho das páginas (150×57)
+  licenca.txt                 o contrato de licença do assistente
+  installer.nsh               fundo azul em tela cheia e textos de boas-vindas
+package.json       versões e configuração do instalador
+```
+
+Para mudar a versão que aparece no instalador, edite `"version"` no `package.json`.
+Para trocar o visual do assistente, substitua os BMPs em `build\` mantendo os mesmos tamanhos,
+salvos como BMP de 24 bits.

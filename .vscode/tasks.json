@@ -1,0 +1,9 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    { "label": "Instalar dependências", "type": "shell", "command": "npm install", "problemMatcher": [] },
+    { "label": "Rodar o programa", "type": "shell", "command": "npm start", "problemMatcher": [] },
+    { "label": "Gerar instalador (SETUP .exe)", "type": "shell", "command": "npm run instalador", "group": { "kind": "build", "isDefault": true }, "problemMatcher": [] },
+    { "label": "Gerar versão portátil (.exe sem instalar)", "type": "shell", "command": "npm run portatil", "problemMatcher": [] }
+  ]
+}

@@ -1,0 +1,79 @@
+{
+  "name": "sala-de-roteiro-95",
+  "productName": "Sala de Roteiro 95",
+  "version": "4.2.0",
+  "description": "Editor de roteiros de TV com cara de 1995, para qualquer série: drama, novela, comédia, policial, radionovela e mais.",
+  "main": "main.js",
+  "author": "Departamento de Dramaturgia",
+  "license": "UNLICENSED",
+  "private": true,
+  "scripts": {
+    "start": "electron .",
+    "instalador": "electron-builder --win nsis",
+    "portatil": "electron-builder --win portable",
+    "publicar": "electron-builder --win nsis --publish always",
+    "configurar-repo": "node scripts/configurar-repo.js"
+  },
+  "devDependencies": {
+    "electron": "33.4.11",
+    "electron-builder": "25.1.8"
+  },
+  "build": {
+    "appId": "br.c2.saladeroteiro95",
+    "productName": "Sala de Roteiro 95",
+    "copyright": "Departamento de Dramaturgia · C2",
+    "directories": {
+      "output": "dist",
+      "buildResources": "build"
+    },
+    "files": [
+      "main.js",
+      "preload.js",
+      "app/**/*",
+      "build/icon.png"
+    ],
+    "win": {
+      "target": [
+        "nsis"
+      ],
+      "icon": "build/icon.ico"
+    },
+    "portable": {
+      "artifactName": "SalaDeRoteiro95_portatil.exe"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "installerIcon": "build/icon.ico",
+      "uninstallerIcon": "build/icon.ico",
+      "installerHeaderIcon": "build/icon.ico",
+      "installerSidebar": "build/installerSidebar.bmp",
+      "uninstallerSidebar": "build/installerSidebar.bmp",
+      "installerHeader": "build/installerHeader.bmp",
+      "license": "build/licenca.txt",
+      "include": "build/installer.nsh",
+      "createDesktopShortcut": "always",
+      "createStartMenuShortcut": true,
+      "shortcutName": "Sala de Roteiro 95",
+      "menuCategory": "Sala de Roteiro",
+      "runAfterFinish": true,
+      "deleteAppDataOnUninstall": false,
+      "installerLanguages": [
+        "pt_BR"
+      ],
+      "language": "1046",
+      "artifactName": "SETUP_SALA95_${version}.${ext}"
+    },
+    "publish": {
+      "provider": "github",
+      "owner": "juvinho",
+      "repo": "sala-de-roteiro",
+      "releaseType": "release"
+    }
+  },
+  "repository": "https://github.com/juvinho/sala-de-roteiro",
+  "dependencies": {
+    "electron-updater": "6.3.9"
+  }
+}

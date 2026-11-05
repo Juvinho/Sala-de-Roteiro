@@ -1,0 +1,40 @@
+# Gera o SETUP.EXE no Windows do GitHub e publica como Release.
+# Dispara quando você cria uma tag que começa com "v", por exemplo v4.2.0.
+# O botão "Procurar atualizações" do programa instalado lê essas Releases.
+name: Gerar instalador
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Conferir se a tag bate com a versão do package.json
+        if: startsWith(github.ref, 'refs/tags/v')
+        shell: bash
+        run: |
+          VERSAO=$(node -p "require('./package.json').version")
+          if [ "v$VERSAO" != "${GITHUB_REF_NAME}" ]; then
+            echo "::error::A tag é ${GITHUB_REF_NAME}, mas o package.json diz $VERSAO. Mude o campo version para ${GITHUB_REF_NAME#v} e crie a tag de novo."
+            exit 1
+          fi
+
+      - run: npm ci
+
+      - name: Gerar e publicar o instalador
+        run: npx electron-builder --win nsis --publish always -c.publish.owner=${{ github.repository_owner }} -c.publish.repo=${{ github.event.repository.name }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
