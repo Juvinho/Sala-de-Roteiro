@@ -51,7 +51,7 @@ npm run instalador
 Quando terminar, o instalador estará em:
 
 ```
-dist\SETUP_SCRIPTROOM_5.3.0.exe
+dist\SETUP_SCRIPTROOM_6.0.0.exe
 ```
 
 Dê dois cliques nele e siga o assistente: **Avançar › Aceito › Avançar › Instalar › Concluir**.
@@ -82,6 +82,30 @@ No VS Code também dá para usar **Terminal › Run Task…**, que lista as quat
   Análise técnica mostra a folha de cada cena por departamento e exporta em .csv.
 - **Exportar PDF…** com opções: folha de rosto, marcas de revisão, só um trecho de cenas, marca
   d'água e **cópias nominais** (um PDF por pessoa, com o nome dela na marca d'água).
+
+## O mundo inteiro (versão 6.0)
+
+- **Produção › Mapa do mundo:** **Usar uma imagem…** sobe o mapa da série (o ScriptRoom reduz
+  sozinho para não pesar) ou use o **pergaminho em branco**. Clique num lugar da lista (os
+  lugares da Bíblia) e depois no mapa para espetar o alfinete; arraste para mudar de lugar.
+  - Clicar num alfinete mostra a descrição e **todas as cenas** que se passam ali, na série
+    inteira, com link para cada uma.
+  - **Caminho do episódio:** escolha um episódio e o mapa desenha a rota das cenas, na ordem.
+  - **Trazer lugares dos roteiros** cria os lugares a partir dos cabeçalhos das cenas.
+  - O mapa fica na pasta `mapas` e vai junto para a sala na rede.
+- **Exibir › Árvore de relações:** lê o que está escrito nas fichas do Elenco (Relações) e
+  monta as gerações: "pai de", "mãe de", "avó de", "filha de", "irmã de", "tio de", "casado com",
+  "noiva de"… Amor, inimizade, alianças e chefia aparecem como arcos coloridos por cima.
+- **Exibir › Voz dos personagens:** palavras por fala, perguntas, exclamações, reticências,
+  riqueza de vocabulário, as palavras que só aquele personagem usa, as falas mais curta e mais
+  longa, e o aviso de quem **fala parecido demais** com quem.
+- **Arquivo › Cartões de cena para imprimir:** um PDF com quatro cartões por folha A4 (cor da
+  cena, número, cabeçalho, minutagem, oitavos, personagens e resumo), com linha de corte.
+- **Correções:** Ferramentas › Mapa de caracteres voltou a abrir (o Mapa do mundo tinha pegado o
+  lugar dele); Ctrl+Shift+F não abre mais o Localizar junto com o modo foco; **Novo roteiro** já
+  vem marcado em "Começar o próximo episódio"; Estrutura, Teleprompter, Voz e Análise fecham
+  quando você troca de episódio (antes mostravam o anterior); palavras escritas por outra pessoa
+  na sala ao vivo ou na rede não contam mais na sua meta nem no diário.
 
 ## Bíblia do mundo e exportar a temporada (versão 5.3)
 
@@ -297,6 +321,7 @@ Documentos\ScriptRoom\
    notas\         o Bloco de notas da sala
    series\        uma ficha por série (canal, dia de exibição, formato)
    modelos\       os modelos que você salvar
+   mapas\         a imagem do mapa de cada série
    .lixeira\      o que você exclui vem para cá (Arquivo › Lixeira da sala… restaura)
 ```
 

@@ -617,6 +617,23 @@ body.foco #sheet .el:not(.foco-on){opacity:.18;transition:opacity .25s}body.foco
 .bsug{display:block;padding:2px 4px}
 ::highlight(sr-bib){text-decoration:underline dotted #8000A0;text-decoration-thickness:2px;text-underline-offset:3px}
 ::highlight(sr-bibx){text-decoration:underline wavy #E00000;text-decoration-thickness:1px;background-color:#FFE8E8}
+/* 6.0: mapa, árvore, vozes */
+.mpgrid{display:grid;grid-template-columns:1fr 250px;gap:10px}@media (max-width:760px){.mpgrid{grid-template-columns:1fr}}
+.mp-area{position:relative;width:100%;border:2px inset var(--face,#C0C0C0);background:#E9D7A4;overflow:hidden;cursor:crosshair;touch-action:none;user-select:none}
+.mp-bg,.mp-bg img,.mp-bg svg{position:absolute;inset:0;width:100%;height:100%;display:block}
+.mp-over{position:absolute;inset:0}.mp-rota{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.mpin{position:absolute;transform:translate(-50%,-100%);background:none;border:0;padding:0;cursor:grab;display:flex;flex-direction:column;align-items:center}
+.mpin i{width:14px;height:14px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);background:#C00000;border:2px solid #fff;box-shadow:1px 1px 2px rgba(0,0,0,.6)}
+.mpin span{margin-top:3px;background:rgba(255,255,240,.9);border:1px solid #000;font:bold 10px Tahoma,sans-serif;padding:0 3px;white-space:nowrap;color:#000}
+.mpin.sel i{background:#FFD000}.mpin.sel span{background:#000080;color:#fff}
+.mp-list{display:flex;flex-direction:column;background:#fff;max-height:300px}
+.mpl{display:flex;gap:6px;align-items:center;text-align:left;border:0;border-bottom:1px dotted #C0C0C0;background:#fff;padding:3px 6px;font:12px Tahoma,sans-serif;color:#000;cursor:pointer}
+.mpl b{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.mpl small{color:#606060}.mpl:hover,.mpl.sel{background:#000080;color:#fff}.mpl.arm{background:#FFD000;color:#000}
+.mp-info{font-size:12px;display:flex;flex-direction:column;gap:4px}.mp-cs{max-height:120px;overflow:auto;line-height:1.6}
+.relsvg{display:block;background:#fff;border:2px inset var(--face,#C0C0C0)}
+.relleg{display:flex;flex-wrap:wrap;gap:8px;font-size:11px;margin-left:auto}.relleg i{display:inline-block;width:14px;height:3px;vertical-align:middle;margin-right:3px}
+.vbar{display:inline-block;width:60px;height:8px;border:1px solid #808080;background:#fff;vertical-align:middle}.vbar i{display:block;height:100%}
+#vz-t tr[data-vz]{cursor:pointer}#vz-t tr.sel td{background:#FFFFE1}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
 </style>
 
@@ -788,6 +805,7 @@ function charStats(sc){
 const LS="varguelia.sala.v1",LS_VER="varguelia.sala.versoes.v1";
 const S={eps:{},cur:null,db:null,dl:null,dirty:new Set(),saving:false,tool:"cenas",focusId:null,q:{find:"",rep:"",all:false,cs:false},cyc:{},lay:null};
 const cur=()=>S.eps[S.cur];
+const layOk=sc=>(S.lay&&sc===cur()&&S.lay.info&&S.lay.info.length===sc.els.length)?S.lay:paginate(sc);
 function lsLoad(){try{return JSON.parse(localStorage.getItem(LS)||"null");}catch(e){return null;}}
 function lsSave(){try{localStorage.setItem(LS,JSON.stringify({eps:S.eps,cur:S.cur}));}catch(e){}}
 function setStatus(k,t){const el=document.getElementById("status");el.className="status "+k;el.lastElementChild.textContent=t;}
@@ -1068,7 +1086,7 @@ function markSceneInSide(){
   const b=sid&&side.querySelector(`.scn[data-goto="${sid}"]`);if(b)b.classList.add("cur");
 }
 function cenasHTML(sc){
-  const lay=S.lay||paginate(sc);const sc_=scenesOf(sc,lay.info);
+  const lay=layOk(sc);const sc_=scenesOf(sc,lay.info);
   const scenes=sc_.filter(x=>x.n);const falas=sc.els.filter(e=>e.t==="character").length;
   const lastTc=[...scenes].reverse().find(x=>x.tc);
   let prevEnd=null;
@@ -1737,7 +1755,7 @@ function showPanel(){if(innerWidth<=900){setView("panel");return;}if(!prefs.pain
 function updStatus(){
   const sc=cur();const f=S.focusId&&findEl(S.focusId);const set=(id,t)=>{const el=document.getElementById(id);if(el)el.textContent=t;};
   if(!sc){set("sbScene","Cena –");set("sbPage","Pág. –");set("sbStyle","–");return;}
-  const lay=S.lay||paginate(sc);const total=sc.els.filter(e=>e.t==="scene").length;
+  const lay=layOk(sc);const total=sc.els.filter(e=>e.t==="scene").length;
   let sn=0;if(f){for(let k=f.i;k>=0;k--)if(sc.els[k].t==="scene"){sn=lay.info[k].num;break;}}
   set("sbScene",`Cena ${sn||"–"} de ${total}`);set("sbPage",`Pág. ${f&&lay.info[f.i]?lay.info[f.i].page:"–"} de ${lay.pages}`);set("sbStyle",f?TYPES[f.e.t].label:"–");{const m=sc.meta;const el=document.getElementById("sbEtapa");if(el){el.textContent=`${m.status||"Sem etapa"}${m.entrega&&!["Aprovado","Gravado","Exibido"].includes(m.status)?" · "+prazo(m.entrega):""}`;el.style.color=m.entrega&&daysTo(m.entrega)<0&&!["Aprovado","Gravado","Exibido"].includes(m.status)?"var(--err)":"";}}
 }
@@ -2523,11 +2541,11 @@ function showWelcome(force){
   const body=`<div class="welcome"><div class="art"><div class="splash"><svg viewBox="0 0 16 16" width="64" height="64" aria-hidden="true">${ICON.clapper}</svg><span class="big">SCRIPTROOM</span><span class="sub">edição 95</span></div>
     <div class="tip">${icon("lamp",24)}<div><b>Você sabia…</b><span id="tipTxt">${escH(TIPS[prefs.tip||0])}</span><div style="margin-top:6px"><button type="button" class="btn sm" id="tipNext">Próxima dica</button></div></div></div></div>
     <fieldset><legend>O que você quer fazer?</legend>
-    ${last?opt("cont","Continuar de onde parei",escH(`${se?se.nome+" · ":""}${epLabel(last)}`),true):""}
-    ${prev?opt("next",`Começar o próximo ${escH(se.unidade||"episódio")} de ${escH(se.nome)}`,escH(nxt),false):""}
-    ${opt("serie","Criar uma série nova","Novela, comédia, policial, radionovela, telefilme e mais 5 formatos",!last)}
+    ${last&&!force?opt("cont","Continuar de onde parei",escH(`${se?se.nome+" · ":""}${epLabel(last)}`),true):""}
+    ${prev?opt("next",`Começar o próximo ${escH(se.unidade||"episódio")} de ${escH(se.nome)}`,escH(nxt),!!force):""}
+    ${opt("serie","Criar uma série nova","Novela, comédia, policial, radionovela, telefilme e mais 5 formatos",!last||(!!force&&!prev))}
     ${se?opt("tpl",`Novo roteiro de ${escH(se.nome)} a partir de um modelo`,"",false,`<div style="margin-top:3px"><select id="welTpl" aria-label="Modelo">${templateOptions()}</select></div>`):""}
-    ${all.length?opt("open","Abrir outro roteiro","",false,`<div style="margin-top:3px"><select id="welOpen" aria-label="Roteiro">${[...new Set(all.map(s=>s.meta.serieId))].map(sid=>`<optgroup label="${escH((S.series[sid]||{}).nome||"Sem série")}">${all.filter(s=>s.meta.serieId===sid).map(s=>`<option value="${s.id}">${escH(epLabel(s))}</option>`).join("")}</optgroup>`).join("")}</select></div>`):""}
+    ${all.length&&!force?opt("open","Abrir outro roteiro","",false,`<div style="margin-top:3px"><select id="welOpen" aria-label="Roteiro">${[...new Set(all.map(s=>s.meta.serieId))].map(sid=>`<optgroup label="${escH((S.series[sid]||{}).nome||"Sem série")}">${all.filter(s=>s.meta.serieId===sid).map(s=>`<option value="${s.id}">${escH(epLabel(s))}</option>`).join("")}</optgroup>`).join("")}</select></div>`):""}
     ${opt("imp","Importar .docx, .fdx (Final Draft) ou .fountain","")}</fieldset></div>
     `;
   dialog({id:"welcomeWin",title:"Novo roteiro",width:660,body,
@@ -3001,7 +3019,7 @@ function decor(){
   placeBreaks();placeRevMarks();renderTypebar();refreshSide();if(typeof updGoal==="function")updGoal();
 }
 function gotoDialog(){
-  const sc=cur();const lay=S.lay||paginate(sc);const labels=sc.els.map((e,i)=>e.t==="scene"?lay.info[i].label:null).filter(Boolean);
+  const sc=cur();const lay=layOk(sc);const labels=sc.els.map((e,i)=>e.t==="scene"?lay.info[i].label:null).filter(Boolean);
   dialog({title:"Ir para",width:320,body:`<label class="fld"><span>Cena (${escH(labels[0]||"1")} a ${escH(labels[labels.length-1]||"1")}${sc.meta.cenasTravadas?", aceita 12A":""})</span><input type="text" id="go-n" autofocus autocomplete="off"></label>`,
     buttons:[{label:"Ir",def:1,run:w=>{const v=w.querySelector("#go-n").value.trim().toUpperCase();let idx=sc.els.findIndex((e,i)=>e.t==="scene"&&lay.info[i].label===v);
       if(idx<0&&/^\d+$/.test(v)){const s=sc.els.filter(e=>e.t==="scene")[+v-1];if(s)idx=sc.els.indexOf(s);}
@@ -3064,7 +3082,7 @@ function omitScene(id){
   const sc=cur();const i=sc.els.findIndex(e=>e.id===id);if(i<0||sc.els[i].t!=="scene")return;
   if(!sc.meta.cenasTravadas){msgBox({title:"Omitir cena",icon:"info",text:"Omitir só faz sentido com a numeração travada (Produção › Travar numeração). Sem ela, é só apagar a cena."});return;}
   let j=i+1;while(j<sc.els.length&&!["scene","act"].includes(sc.els[j].t))j++;
-  const lbl=(S.lay||paginate(sc)).info[i].label;
+  const lbl=(layOk(sc)).info[i].label;
   msgBox({title:"Omitir cena",icon:"warn",text:`A cena ${lbl} vira “OMITIDA” e o texto dela sai do roteiro (Ctrl+Z desfaz). As outras cenas mantêm os números.`,buttons:[{label:"Omitir",run:()=>{
     const e=sc.els[i];e.omitida=e.x;e.x="OMITIDA";e.omit=true;markRev(e);sc.els.splice(i+1,j-i-1);touch(true);renderSheet();renderSide();toast(`Cena ${lbl} omitida`);}},{label:"Cancelar",def:1}]});
 }
@@ -3086,7 +3104,7 @@ function altsDialog(id){
       {label:"Apagar marcada",run:w=>{if(sel===0){toast("A versão em uso não pode ser apagada aqui");return false;}f.e.alts.splice(sel-1,1);sel=0;touch(true);w._draw();decor();return false;}},{label:"Fechar"}]});
 }
 function notasHTML(sc){
-  const l=sc.els.map((e,i)=>({e,i})).filter(x=>x.e.nota);let sn=0;const scn=[];sc.els.forEach(e=>{if(e.t==="scene")sn++;scn.push(sn);});const lay=S.lay||paginate(sc);
+  const l=sc.els.map((e,i)=>({e,i})).filter(x=>x.e.nota);let sn=0;const scn=[];sc.els.forEach(e=>{if(e.t==="scene")sn++;scn.push(sn);});const lay=layOk(sc);
   const lbl=i=>{for(let k=i;k>=0;k--)if(sc.els[k].t==="scene")return lay.info[k].label;return "–";};
   return `<div class="panel"><p class="status" style="margin:0">Notas presas a trechos do roteiro. Botão direito num elemento › Nota de roteiro.</p>${l.map(x=>`<button type="button" class="hit" data-goto="${x.e.id}"><small>Cena ${escH(lbl(x.i))} · ${TYPES[x.e.t].label}</small><span><b>${escH(x.e.nota)}</b></span><span class="muted" style="font-family:var(--f-type)">${escH(x.e.x.slice(0,90))}</span></button>`).join("")||`<div class="empty">${icon("sticky",32)}Nenhuma nota ainda.</div>`}</div>`;
 }
@@ -3099,7 +3117,7 @@ function bdAdd(sc,sid,cat,item){item=String(item||"").trim();if(!item||!sid)retu
   sc.meta.analise.push({id:uid("an"),sid,cat,item});touch(true);return true;}
 function tagSelection(id,cat){
   const sc=cur();const f=findEl(id);if(!f)return;const sid=sceneOfIndex(sc,f.i);if(!sid){toast("Esse trecho está antes da primeira cena");return;}
-  const sel=String(getSelection()).trim();const lbl=(S.lay||paginate(sc)).info[sc.els.findIndex(e=>e.id===sid)].label;
+  const sel=String(getSelection()).trim();const lbl=(layOk(sc)).info[sc.els.findIndex(e=>e.id===sid)].label;
   const doAdd=t=>{if(bdAdd(sc,sid,cat,t))toast(`“${t}” anotado em ${bdCat(cat)[1]} (cena ${lbl})`);else toast("Já estava anotado");};
   if(sel&&sel.length<=80&&f.e.x.includes(sel)){doAdd(sel);return;}
   dialog({title:"Marcar para análise técnica",width:400,body:`<p class="muted" style="margin:0">Dica: selecione as palavras antes de clicar com o botão direito.</p><label class="fld"><span>${escH(bdCat(cat)[1])} · cena ${escH(lbl)}</span><input type="text" id="tg-i" autofocus placeholder="ex.: rifle roxo"></label>`,buttons:[{label:"Anotar",def:1,run:w=>{doAdd(w.querySelector("#tg-i").value);}},{label:"Cancelar"}]});
@@ -3925,7 +3943,7 @@ Object.assign(CMD,{
   batePapo:{label:"Bate-papo da sala…",icon:"chat",key:"Ctrl+Shift+B",run:()=>chatWin()},
 });
 {const fe=MENUS.find(m=>m[0]==="Ferramentas")[2];fe.splice(0,0,"salaAoVivo","batePapo","-");}
-document.addEventListener("keydown",e=>{if(e.ctrlKey&&e.shiftKey&&e.code==="KeyB"&&!IS_TOOL){e.preventDefault();chatWin();}});
+document.addEventListener("keydown",e=>{if(e.ctrlKey&&e.shiftKey&&e.code==="KeyB"&&!IS_TOOL){e.preventDefault();e.stopPropagation();chatWin();}});
 TIPS.push("Compartilhe o link do ScriptRoom no claude.ai e escrevam juntos: cada pessoa aparece na margem do trecho em que está, com o nome dela.",
   "Ferramentas › Sala ao vivo › Seguir faz a sua tela acompanhar a de outra pessoa, ótimo para uma leitura com a equipe.",
   "Ctrl+Shift+B abre o bate-papo da sala. As mensagens não ficam guardadas: é conversa de corredor.");
@@ -4080,7 +4098,7 @@ TIPS.push("Arquivo › Exportar para Final Draft (.fdx) gera um arquivo que abre
 Object.assign(ICON,{
   lan:'<rect x="1.5" y="2.5" width="6" height="5" fill="#fff" stroke="#000"/><rect x="8.5" y="2.5" width="6" height="5" fill="#fff" stroke="#000"/><path d="M4.5 7.5v2.5h7V7.5M8 10v2" stroke="#000"/><rect x="5.5" y="12" width="5" height="2.5" fill="#C0C0C0" stroke="#000"/><path d="M2.5 3.5h4v3h-4zM9.5 3.5h4v3h-4z" fill="#000080"/>',
 });
-const LAN_SHARED=["roteiros","personagens","series"];
+const LAN_SHARED=["roteiros","personagens","series","mapas"];
 const LAN={on:false,role:null,me:null,ids:new Set(),localAtJoin:new Set(),R:null,ip:"",ips:[],nativeDb:null,host:"",waitT:null};
 const lanOk=()=>!!(window.salaNative&&window.salaNative.lanHost);
 
@@ -4118,6 +4136,7 @@ const fakeSnap=(type,id,data)=>({docChanges:()=>[{type,doc:{id,data:()=>data,met
 const cacheLocal=(c,id,data)=>{if(LAN.role==="client"&&LAN.nativeDb)LAN.nativeDb.collection(c).doc(id).set(data).catch(()=>{});};
 function lanOnDoc(m){const {c,id,data}=m;if(!LAN_SHARED.includes(c)||typeof id!=="string"||!data||typeof data!=="object")return;LAN.ids.add(id);
   if(c==="roteiros"){cacheLocal(c,id,data);onRemoteRoteiros(fakeSnap(S.eps[id]?"modified":"added",id,data));return;}
+  if(c==="mapas"){cacheLocal(c,id,data);if(typeof MAPCACHE!=="undefined")MAPCACHE[id]=data;return;}
   const obj=c==="series"?S.series:S.chars;const r=Object.assign({},data,{id});if(obj[id]&&canon(obj[id])===canon(r))return;obj[id]=r;cacheLocal(c,id,data);
   if(c==="series"){renderEpSel();if(S.view==="season")renderSeason();}else if(S.view==="cast")renderCast();}
 function lanOnDel(m){const {c,id}=m;if(!LAN_SHARED.includes(c)||typeof id!=="string")return;
@@ -4128,6 +4147,7 @@ async function lanWelcome(m){
   LAN.localAtJoin=new Set([...Object.keys(S.eps),...Object.keys(S.chars),...Object.keys(S.series)]);LAN.ids=new Set();
   const docs=m.docs||{};let trocados=0;
   for(const {id,data} of docs.series||[]){if(!data)continue;LAN.ids.add(id);S.series[id]=Object.assign({},data,{id});cacheLocal("series",id,data);}
+  for(const {id,data} of docs.mapas||[]){if(!data)continue;LAN.ids.add(id);cacheLocal("mapas",id,data);if(typeof MAPCACHE!=="undefined")MAPCACHE[id]=data;}
   for(const {id,data} of docs.personagens||[]){if(!data)continue;LAN.ids.add(id);S.chars[id]=Object.assign({},data,{id});cacheLocal("personagens",id,data);}
   for(const {id,data} of docs.roteiros||[]){if(!data||!data.meta)continue;LAN.ids.add(id);const r=Object.assign({},data,{id});const l=S.eps[id];
     if(l&&canonDoc(l)!==canonDoc(r)){trocados++;const v={id:uid("v"),epId:id,label:"Minha cópia antes de entrar na sala",auto:true,at:Date.now(),cenas:l.els.filter(e=>e.t==="scene").length,snapshot:JSON.parse(JSON.stringify({meta:l.meta,els:l.els}))};
@@ -4240,7 +4260,7 @@ const _renderSide12=renderSide;
 renderSide=function(){_renderSide12();if(!cur()&&Object.keys(S.eps).length){const em=side.querySelector(".empty");if(em)em.innerHTML=`<strong>Nenhum roteiro aberto</strong>Escolha um na tela de boas-vindas ou em Arquivo › Abrir.`;}};
 Object.assign(CMD,{fecharRoteiro:{label:"Fechar roteiro",icon:"open",key:"Ctrl+F4",needs:1,run:()=>fecharRoteiro()}});
 {const a=MENUS.find(m=>m[0]==="Arquivo")[2];a.splice(a.indexOf("abrir")+1,0,"fecharRoteiro");}
-document.addEventListener("keydown",e=>{if(e.ctrlKey&&e.key==="F4"&&!IS_TOOL){e.preventDefault();fecharRoteiro();}});
+document.addEventListener("keydown",e=>{if(e.ctrlKey&&e.key==="F4"&&!IS_TOOL){e.preventDefault();e.stopPropagation();fecharRoteiro();}});
 
 /* ---------- janelas soltas: cada diálogo vira uma janela do Windows ---------- */
 const POPS=new Set();
@@ -4410,7 +4430,7 @@ function netDialog(){const sc=cur();if(!sc)return;let scope="ep",sel=null,D=null
 /* ---------- Teleprompter ---------- */
 function teleprompter(){const sc=cur();if(!sc)return;histCommit();
   const f=S.focusId&&findEl(S.focusId);let from=f?f.i:0;while(from>0&&sc.els[from].t!=="scene")from--;
-  const lay=S.lay||paginate(sc);const els=sc.els.map((e,i)=>({e,i})).filter(({e,i})=>i>=from&&e.x.trim()&&!["time","note"].includes(e.t));
+  const lay=layOk(sc);const els=sc.els.map((e,i)=>({e,i})).filter(({e,i})=>i>=from&&e.x.trim()&&!["time","note"].includes(e.t));
   const cs=charStats(sc);let who=null;
   const P={speed:+(prefs.tpSpeed||3),size:+(prefs.tpSize||44),mirror:!!prefs.tpMirror,only:""};
   const text=els.map(({e,i})=>{let t=e.x;if(e.t==="scene")t=`CENA ${lay.info[i].label||lay.info[i].num} — ${e.x.toUpperCase()}`;if(e.t==="character"){who=baseName(e.x);t=e.x.toUpperCase();}else if(!["dialogue","paren"].includes(e.t))who=null;
@@ -4460,8 +4480,9 @@ TIPS.push("Ctrl+Z agora desfaz palavra por palavra. Editar › Histórico de alt
    A cada versão nova: mude APP_VERSAO e acrescente a entrada no topo de VERSOES.
    (o empacotamento confere se APP_VERSAO bate com o package.json)
    ================================================================ */
-const APP_VERSAO="5.3.0";
+const APP_VERSAO="6.0.0";
 const VERSOES=[
+  ["6.0.0","O mundo inteiro",["Produção › Mapa do mundo: suba o mapa, espete os lugares da Bíblia e veja as cenas de cada um","Caminho do episódio: a rota das cenas desenhada no mapa","Exibir › Árvore de relações: gerações, casais e alianças a partir das fichas","Exibir › Voz dos personagens: como cada um fala, e quem fala parecido demais","Arquivo › Cartões de cena para imprimir, quatro por folha","Correções: o Mapa de caracteres voltou a abrir; Ctrl+Shift+F não abre mais o Localizar junto","Correções: Novo roteiro já começa em “próximo episódio”; janelas de um episódio fecham ao trocar de episódio","Correções: palavras de outra pessoa na sala não contam mais na sua meta; painel mais estável"]],
   ["5.3.0","Bíblia do mundo",["Produção › Bíblia do mundo: lugares, facções, termos e a linha do tempo da série","Os termos ficam sublinhados na página; escrito de outro jeito, fica em vermelho com Trocar","Sugestões de verbetes tiradas dos próprios roteiros","Arquivo › Exportar a temporada: todos os roteiros em PDF, Word, Final Draft e Fountain num .zip","Arquivo › Reiniciar volta para a tela de começo"]],
   ["5.2.0","Para escritor de série",["Plantar e colher: pistas plantadas e onde elas pagam a conta, na série inteira","Gerador de nomes do mundo, que aprende com o seu elenco","A Revisão agora confere continuidade","Diário de escrita com mapa de calor do ano","Modo foco (Ctrl+Shift+F)"]],
   ["5.1.0","Desfazer de verdade",["Ctrl+Z desfaz palavra por palavra, e o cursor volta para onde a mudança aconteceu","Editar › Histórico de alterações: volte para qualquer passo","Exibir › Rede de personagens: quem contracena com quem","Exibir › Teleprompter: rolagem, espelho e destaque das falas de um ator","Sobre mostra a versão de verdade e esta lista de novidades"]],
@@ -4627,7 +4648,7 @@ function focusTick(){if(!prefs.foco||!cur())return;const f=S.focusId&&findEl(S.f
 sheet.addEventListener("focusin",()=>setTimeout(focusTick,0));
 const _renderSheet15=renderSheet;renderSheet=function(){_renderSheet15();document.body.classList.toggle("foco",!!prefs.foco);focusTick();};
 function toggleFoco(){prefs.foco=!prefs.foco;savePrefs();document.body.classList.toggle("foco",prefs.foco);focusTick();toast(prefs.foco?"Modo foco: só a cena em que você está fica acesa (Ctrl+Shift+F desliga)":"Modo foco desligado");}
-document.addEventListener("keydown",e=>{if(e.ctrlKey&&e.shiftKey&&e.code==="KeyF"&&!IS_TOOL){e.preventDefault();toggleFoco();}});
+document.addEventListener("keydown",e=>{if(e.ctrlKey&&e.shiftKey&&e.code==="KeyF"&&!IS_TOOL){e.preventDefault();e.stopPropagation();toggleFoco();}});
 
 Object.assign(CMD,{
   plantar:{label:"Plantar e colher…",icon:"seed",needs:1,run:()=>plantDialog()},
@@ -4779,6 +4800,196 @@ function irParaInicio(reinicio){histCommit();flush();
   if(S.view!=="page"){S.view="page";syncViews();}if(cur())fecharRoteiro();else renderAll();desk.scrollTop=0;
   if(reinicio){if(typeof initDay==="function")initDay();toast("ScriptRoom reiniciado. Tudo salvo.");if(prefs.som)try{clack("ding");}catch(e){}}}
 CMD.novo.label="Novo roteiro…";
+
+/* ================================================================
+   PACOTE 11 (6.0): Mapa do mundo · Árvore de relações · Voz dos personagens · Cartões de cena (PDF)
+   ================================================================ */
+Object.assign(ICON,{
+  map:'<path d="M1.5 3.5l4-1.5 5 1.5 4-1.5v10.5l-4 1.5-5-1.5-4 1.5z" fill="#F0E0B0" stroke="#000"/><path d="M5.5 2v10.5M10.5 3.5V14" stroke="#806000" stroke-width=".8"/><circle cx="8" cy="7" r="1.6" fill="#C00000" stroke="#000" stroke-width=".7"/>',
+  tree:'<rect x="5.5" y="1.5" width="5" height="3" fill="#FFF8B0" stroke="#000"/><rect x="1.5" y="10.5" width="5" height="3" fill="#C8E0FF" stroke="#000"/><rect x="9.5" y="10.5" width="5" height="3" fill="#FFD8D8" stroke="#000"/><path d="M8 4.5v3H4v3M8 7.5h4v3" fill="none" stroke="#000"/>',
+  voice:'<path d="M2.5 6.5h2l3-3v9l-3-3h-2z" fill="#C0C0C0" stroke="#000"/><path d="M10 5.5c1 .8 1 4.2 0 5M12 4c2 1.6 2 6.4 0 8" fill="none" stroke="#000080" stroke-width="1.2"/>',
+  cards:'<rect x="1.5" y="2.5" width="6" height="5" fill="#fff" stroke="#000"/><rect x="8.5" y="2.5" width="6" height="5" fill="#fff" stroke="#000"/><rect x="1.5" y="8.5" width="6" height="5" fill="#fff" stroke="#000"/><rect x="8.5" y="8.5" width="6" height="5" fill="#fff" stroke="#000"/><path d="M2 3h5M9 3h5M2 9h5M9 9h5" stroke="#C00000" stroke-width="1.4"/>',
+});
+
+/* ================= MAPA DO MUNDO ================= */
+const MAPCACHE={};
+async function mapLoad(sid){if(MAPCACHE[sid]!==undefined)return MAPCACHE[sid];let d=null;
+  try{if(S.db){const s=await S.db.collection("mapas").doc(sid).get();d=s&&s.exists?s.data():null;}else d=JSON.parse(localStorage.getItem("sr.mapa."+sid)||"null");}catch(e){d=null;}MAPCACHE[sid]=d;return d;}
+async function mapSave(sid,data){MAPCACHE[sid]=data;try{if(S.db)await S.db.collection("mapas").doc(sid).set(data);else localStorage.setItem("sr.mapa."+sid,JSON.stringify(data));return true;}catch(e){toast("Não consegui guardar a imagem do mapa ("+(e&&e.code||e.message||"erro")+")");return false;}}
+async function mapShrink(file){const url=await new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result);r.onerror=rej;r.readAsDataURL(file);});
+  const img=await new Promise((res,rej)=>{const i=new Image();i.onload=()=>res(i);i.onerror=()=>rej(new Error("imagem inválida"));i.src=url;});
+  let max=1600,q=.82,out=null,w=0,h=0;for(let t=0;t<8;t++){const k=Math.min(1,max/Math.max(img.width,img.height));w=Math.round(img.width*k);h=Math.round(img.height*k);
+    const c=document.createElement("canvas");c.width=w;c.height=h;const g=c.getContext("2d");g.fillStyle="#fff";g.fillRect(0,0,w,h);g.drawImage(img,0,0,w,h);out=c.toDataURL("image/jpeg",q);
+    if(out.length<235000)break;if(q>.55)q-=.1;else max=Math.round(max*.82);}
+  return {img:out,w,h,atualizado:Date.now()};}
+const PERGAMINHO=`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 900" preserveAspectRatio="none"><defs><radialGradient id="pg" cx="50%" cy="50%" r="75%"><stop offset="0" stop-color="#F6EBC8"/><stop offset=".75" stop-color="#E9D7A4"/><stop offset="1" stop-color="#C9AE72"/></radialGradient><pattern id="pgg" width="100" height="100" patternUnits="userSpaceOnUse"><path d="M100 0H0V100" fill="none" stroke="#B89A5A" stroke-width=".8" stroke-dasharray="4 6" opacity=".55"/></pattern></defs><rect width="1400" height="900" fill="url(#pg)"/><rect width="1400" height="900" fill="url(#pgg)"/><g transform="translate(1270 790)" fill="none" stroke="#7A5A20" stroke-width="2"><circle r="52"/><path d="M0-70L12 0 0 70-12 0z" fill="#7A5A20" opacity=".85"/><path d="M-70 0L0 10 70 0 0-10z" fill="#7A5A20" opacity=".5"/><text y="-78" text-anchor="middle" font-family="Georgia,serif" font-size="22" fill="#7A5A20" stroke="none">N</text></g><rect x="12" y="12" width="1376" height="876" fill="none" stroke="#7A5A20" stroke-width="3"/><rect x="22" y="22" width="1356" height="856" fill="none" stroke="#7A5A20" stroke-width="1"/></svg>`;
+function lugaresDe(se){return (se.biblia||[]).filter(v=>v.tipo==="Lugar");}
+function cenasEm(v,sid){const names=bibNames(v).map(semAcento).filter(n=>n.length>=3);const out=[];
+  for(const s of seriesEps(sid)){const lay=paginate(s);s.els.forEach((e,i)=>{if(e.t!=="scene")return;const L=semAcento(locParse(e.x).loc);if(names.some(n=>L.includes(n)))out.push({s,e,label:lay.info[i].label||lay.info[i].num});});}return out;}
+let mapSel=null,mapArm=null,mapRota="";
+async function mapDialog(){const sc=cur();if(!sc)return;const se=bibOf();se.mapa=se.mapa||{pins:[]};const sid=se.id;let M=await mapLoad(sid);
+  const draw=w=>{const pins=se.mapa.pins.filter(p=>se.biblia.some(v=>v.id===p.vid));const lug=lugaresDe(se);const box=w.querySelector("#mp-area");const ar=M&&M.w?M.h/M.w:900/1400;
+    box.style.aspectRatio=`${M&&M.w?M.w:1400} / ${M&&M.h?M.h:900}`;box.querySelector(".mp-bg").innerHTML=M&&M.img?`<img src="${M.img}" alt="Mapa da série" draggable="false">`:PERGAMINHO;
+    let rota="";if(mapRota){const s=S.eps[mapRota];if(s){const seq=[];for(const e of s.els){if(e.t!=="scene")continue;const L=semAcento(locParse(e.x).loc);const p=pins.find(p=>{const v=se.biblia.find(x=>x.id===p.vid);return v&&bibNames(v).map(semAcento).some(n=>n.length>=3&&L.includes(n));});if(p&&seq[seq.length-1]!==p)seq.push(p);}
+        if(seq.length>1)rota=`<svg class="mp-rota" viewBox="0 0 1000 ${Math.round(1000*ar)}" preserveAspectRatio="none" aria-hidden="true"><defs><marker id="mpA" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0L10 5 0 10z" fill="#C00000"/></marker></defs>${seq.slice(1).map((p,i)=>{const a=seq[i];return `<line x1="${a.x*10}" y1="${a.y*10*ar}" x2="${p.x*10}" y2="${p.y*10*ar}" stroke="#C00000" stroke-width="3" stroke-dasharray="10 6" marker-end="url(#mpA)" vector-effect="non-scaling-stroke"/>`;}).join("")}</svg>`;}}
+    box.querySelector(".mp-over").innerHTML=rota+pins.map(p=>{const v=se.biblia.find(x=>x.id===p.vid);const n=cenasEm(v,sid).length;return `<button type="button" class="mpin${p.id===mapSel?" sel":""}" data-pin="${p.id}" style="left:${p.x}%;top:${p.y}%" title="${escH(v.termo)} · ${n} cena${n===1?"":"s"}"><i></i><span>${escH(v.termo)}</span></button>`;}).join("");
+    w.querySelector("#mp-list").innerHTML=lug.map(v=>{const p=pins.find(x=>x.vid===v.id);const n=cenasEm(v,sid).length;return `<button type="button" class="mpl${mapArm===v.id?" arm":""}${p&&p.id===mapSel?" sel":""}" data-mpl="${v.id}"><span>${p?"📍":"○"}</span><b>${escH(v.termo)}</b><small>${n} cena${n===1?"":"s"}</small></button>`;}).join("")||`<p class="muted" style="margin:4px">A Bíblia ainda não tem lugares. Use “Trazer lugares dos roteiros”.</p>`;
+    const info=w.querySelector("#mp-info");const sp=pins.find(p=>p.id===mapSel);
+    if(sp){const v=se.biblia.find(x=>x.id===sp.vid);const cs=cenasEm(v,sid);info.innerHTML=`<b>${escH(v.termo)}</b>${v.desc?`<div>${escH(v.desc.slice(0,240))}</div>`:""}<div class="muted">${cs.length} cena${cs.length===1?"":"s"} aqui:</div><div class="mp-cs">${cs.slice(0,40).map(c=>`<button type="button" class="lnk" data-mgo="${c.s.id}|${c.e.id}">${escH(epTag(c.s.meta))} · ${escH(String(c.label))}</button>`).join(" ")}</div><div class="row"><button type="button" class="btn sm" data-mpa="bib">Abrir na Bíblia</button><button type="button" class="btn sm" data-mpa="tirar">Tirar do mapa</button></div>`;}
+    else info.innerHTML=mapArm?`<b>Clique no mapa</b> para espetar “${escH((se.biblia.find(x=>x.id===mapArm)||{}).termo||"")}”.`:`<span class="muted">Clique num lugar da lista e depois no mapa para espetar. Arraste um alfinete para mudar de lugar.</span>`;};
+  dialog({id:"mapWin",title:`Mapa do mundo — ${se.nome}`,width:1040,modal:false,icon:"map",body:`<div class="row"><button type="button" class="btn sm" data-mpa="img">Usar uma imagem…</button><button type="button" class="btn sm" data-mpa="perg">Pergaminho em branco</button><button type="button" class="btn sm" data-mpa="traz">Trazer lugares dos roteiros</button>
+      <label class="row" style="margin-left:auto">Caminho do episódio <select id="mp-rota"><option value="">nenhum</option>${seriesEps(sid).map(s=>`<option value="${s.id}"${s.id===mapRota?" selected":""}>${escH(epTag(s.meta))} · ${escH(s.meta.titulo)}</option>`).join("")}</select></label></div>
+    <div class="mpgrid"><div class="mp-area" id="mp-area"><div class="mp-bg"></div><div class="mp-over"></div></div><div class="col"><b>Lugares da Bíblia</b><div class="listview mp-list" id="mp-list"></div><div class="mp-info" id="mp-info"></div></div></div>`,
+    onOpen:w=>{draw(w);const area=w.querySelector("#mp-area");let drag=null;
+      const pct=ev=>{const r=area.getBoundingClientRect();return {x:Math.max(0,Math.min(100,(ev.clientX-r.left)/r.width*100)),y:Math.max(0,Math.min(100,(ev.clientY-r.top)/r.height*100))};};
+      area.addEventListener("pointerdown",ev=>{const b=ev.target.closest("[data-pin]");if(b){drag={id:b.dataset.pin,moved:false,el:b};area.setPointerCapture(ev.pointerId);ev.preventDefault();return;}
+        if(mapArm){const p=pct(ev);const old=se.mapa.pins.find(x=>x.vid===mapArm);if(old){old.x=+p.x.toFixed(2);old.y=+p.y.toFixed(2);mapSel=old.id;}else{const np={id:uid("mp"),vid:mapArm,x:+p.x.toFixed(2),y:+p.y.toFixed(2)};se.mapa.pins.push(np);mapSel=np.id;}mapArm=null;markSerie(se);draw(w);}});
+      area.addEventListener("pointermove",ev=>{if(!drag)return;const p=pct(ev);drag.moved=true;drag.el.style.left=p.x+"%";drag.el.style.top=p.y+"%";drag.p=p;});
+      area.addEventListener("pointerup",()=>{if(!drag)return;if(drag.moved&&drag.p){const pin=se.mapa.pins.find(x=>x.id===drag.id);pin.x=+drag.p.x.toFixed(2);pin.y=+drag.p.y.toFixed(2);markSerie(se);}else mapSel=mapSel===drag.id?null:drag.id;drag=null;draw(w);});
+      w.querySelector("#mp-rota").onchange=e=>{mapRota=e.target.value;draw(w);};
+      w.addEventListener("click",async e=>{const l=e.target.closest("[data-mpl]");if(l){const p=se.mapa.pins.find(x=>x.vid===l.dataset.mpl);if(p&&mapArm!==l.dataset.mpl&&mapSel!==p.id){mapSel=p.id;mapArm=null;}else{mapArm=mapArm===l.dataset.mpl?null:l.dataset.mpl;mapSel=null;}draw(w);return;}
+        const g=e.target.closest("[data-mgo]");if(g){const [ep,id]=g.dataset.mgo.split("|");if(S.view!=="page")setMode("page");gotoEl(id,ep);return;}
+        const a=e.target.closest("[data-mpa]");if(!a)return;const k=a.dataset.mpa;
+        if(k==="img"){const inp=w.ownerDocument.createElement("input");inp.type="file";inp.accept="image/*";inp.onchange=async()=>{const f=inp.files[0];if(!f)return;toast("Preparando a imagem…");try{const d=await mapShrink(f);if(await mapSave(sid,d)){M=d;draw(w);toast(`Mapa guardado (${d.w}×${d.h})`);}}catch(x){toast("Não consegui ler essa imagem");}};inp.click();}
+        if(k==="perg"){if(await mapSave(sid,{img:"",w:1400,h:900,atualizado:Date.now()})){M=MAPCACHE[sid];draw(w);}}
+        if(k==="traz"){const sug=bibSuggest(sid).filter(x=>x.tipo==="Lugar");for(const x of sug)se.biblia.push({id:uid("bb"),termo:x.w,tipo:"Lugar",aliases:[],desc:"",quando:""});if(sug.length){markSerie(se);bibCache.k="";paintHighlights();}draw(w);toast(sug.length?`${sug.length} lugares trazidos dos cabeçalhos`:"Os lugares dos roteiros já estão na Bíblia");}
+        if(k==="tirar"){se.mapa.pins=se.mapa.pins.filter(x=>x.id!==mapSel);mapSel=null;markSerie(se);draw(w);}
+        if(k==="bib"){const p=se.mapa.pins.find(x=>x.id===mapSel);if(p)setTimeout(()=>bibDialog(p.vid),0);}});},
+    buttons:[{label:"Fechar"}]});}
+
+/* ================= ÁRVORE DE RELAÇÕES ================= */
+function relKind(t){t=semAcento(t||"").trim();
+  if(/^(bisav[oó]|bisavo)/.test(t))return {k:"pai",g:3};if(/^(av[oóô]|avo|avó)/.test(t))return {k:"pai",g:2};
+  if(/^(pai|mae|padrasto|madrasta|tutor|tutora)\b/.test(t))return {k:"pai",g:1};
+  if(/^(bisnet)/.test(t))return {k:"filho",g:3};if(/^(net[oa])\b/.test(t))return {k:"filho",g:2};if(/^(filh[oa]|entead[oa])\b/.test(t))return {k:"filho",g:1};
+  if(/^(irma|irmao|meio-irm|gemea|gemeo)/.test(t))return {k:"irmao"};if(/^(prim[oa])\b/.test(t))return {k:"primo"};if(/^(tio|tia)\b/.test(t))return {k:"pai",g:1,lateral:1};if(/^(sobrinh)/.test(t))return {k:"filho",g:1,lateral:1};
+  if(/(marido|esposa|mulher de|casad|noiv|viuv|conjuge)/.test(t))return {k:"casal"};
+  if(/(amante|apaixonad|namorad|\bama\b|paixao|ex-)/.test(t))return {k:"amor"};if(/(inimig|odeia|rival|matou|mata |traiu|trai |vinganca)/.test(t))return {k:"inimigo"};
+  if(/(amig|aliad|confia|parceir|protege|leal)/.test(t))return {k:"aliado"};if(/(chefe|patra|superior|mentor|professor|diretor|comanda|mestre|lider)/.test(t))return {k:"chefe"};
+  return {k:"outro"};}
+const REL_COR={amor:"#D02070",inimigo:"#C00000",aliado:"#20A040",chefe:"#3050D0",outro:"#808080",primo:"#A07000"};
+function relData(){const chars=seriesChars();const idx=new Map(chars.map(c=>[c.id,c]));const fam=[],outras=[];
+  for(const c of chars)for(const r of c.relacoes||[]){if(!idx.has(r.alvo)||r.alvo===c.id)continue;const k=relKind(r.tipo);
+    if(k.k==="pai")fam.push({a:c.id,b:r.alvo,t:"pai",g:k.g,lat:k.lateral,txt:r.tipo});else if(k.k==="filho")fam.push({a:r.alvo,b:c.id,t:"pai",g:k.g,lat:k.lateral,txt:r.tipo});
+    else if(k.k==="irmao"||k.k==="casal")fam.push({a:c.id,b:r.alvo,t:k.k,txt:r.tipo});else outras.push({a:c.id,b:r.alvo,t:k.k,txt:r.tipo});}
+  const ids=new Set([...fam,...outras].flatMap(r=>[r.a,r.b]));const gen=new Map([...ids].map(i=>[i,0]));
+  for(let it=0;it<60;it++){let ch=false;for(const r of fam){const ga=gen.get(r.a),gb=gen.get(r.b);
+      if(r.t==="pai"){const want=ga+(r.g||1);if(gb<want){gen.set(r.b,want);ch=true;}else if(gb>want&&!r.lat){gen.set(r.a,gb-(r.g||1));ch=true;}}
+      else{const m=Math.max(ga,gb);if(ga!==m){gen.set(r.a,m);ch=true;}if(gb!==m){gen.set(r.b,m);ch=true;}}}if(!ch)break;}
+  const famIds=new Set(fam.flatMap(r=>[r.a,r.b]));const min=Math.min(0,...[...gen.values()]);for(const [k,v] of gen)gen.set(k,v-min);
+  return {idx,fam,outras,ids:[...ids],gen,famIds};}
+function relDialog(){if(!cur())return;let sel=null,mostrar=true;const W=980;
+  const build=()=>{const D=relData();if(!D.ids.length)return {D,svg:""};const rows=new Map();
+    for(const id of D.ids){const g=D.famIds.has(id)?D.gen.get(id):-1;if(!rows.has(g))rows.set(g,[]);rows.get(g).push(id);}
+    const gs=[...rows.keys()].sort((a,b)=>(a<0)-(b<0)||a-b);const pos=new Map();const RH=110,top=50;
+    gs.forEach((g,ri)=>{let l=rows.get(g);
+      const casal=D.fam.filter(r=>r.t==="casal");const order=[];const used=new Set();for(const id of l){if(used.has(id))continue;order.push(id);used.add(id);for(const r of casal){const o=r.a===id?r.b:r.b===id?r.a:null;if(o&&l.includes(o)&&!used.has(o)){order.push(o);used.add(o);}}}
+      const n=order.length;order.forEach((id,i)=>pos.set(id,{x:Math.round((i+1)*W/(n+1)),y:top+ri*RH,g}));});
+    const H=top+gs.length*RH;const nm=id=>(D.idx.get(id)||{}).nome||"?";const P=id=>pos.get(id);
+    const links=D.fam.map(r=>{const a=P(r.a),b=P(r.b);if(!a||!b)return "";const on=!sel||r.a===sel||r.b===sel;const op=on?1:.2;
+      if(r.t==="pai"){const my=(a.y+b.y)/2;return `<path d="M${a.x} ${a.y+16}V${my}H${b.x}V${b.y-16}" fill="none" stroke="#000" stroke-width="1.6" opacity="${op}"${r.lat?' stroke-dasharray="5 4"':""}><title>${escH(nm(r.a))} — ${escH(r.txt)} — ${escH(nm(r.b))}</title></path>`;}
+      if(r.t==="casal")return `<g opacity="${op}"><line x1="${a.x}" y1="${a.y-3}" x2="${b.x}" y2="${b.y-3}" stroke="#D02070" stroke-width="1.6"/><line x1="${a.x}" y1="${a.y+3}" x2="${b.x}" y2="${b.y+3}" stroke="#D02070" stroke-width="1.6"/><title>${escH(nm(r.a))} — ${escH(r.txt)} — ${escH(nm(r.b))}</title></g>`;
+      return `<path d="M${a.x} ${a.y-18}Q${(a.x+b.x)/2} ${a.y-48} ${b.x} ${b.y-18}" fill="none" stroke="#000" stroke-width="1.3" stroke-dasharray="2 3" opacity="${op}"><title>${escH(nm(r.a))} — ${escH(r.txt)} — ${escH(nm(r.b))}</title></path>`;}).join("");
+    const arcs=mostrar?D.outras.map(r=>{const a=P(r.a),b=P(r.b);if(!a||!b)return "";const on=!sel||r.a===sel||r.b===sel;const mx=(a.x+b.x)/2,my=Math.min(a.y,b.y)-40-Math.abs(a.x-b.x)*.08;
+      return `<path d="M${a.x} ${a.y}Q${mx} ${my} ${b.x} ${b.y}" fill="none" stroke="${REL_COR[r.t]}" stroke-width="2" opacity="${on?.85:.12}" marker-end="url(#rA-${r.t})"><title>${escH(nm(r.a))} ${escH(r.txt)} ${escH(nm(r.b))}</title></path>`;}).join(""):"";
+    const nodes=D.ids.map(id=>{const p=P(id);const c=D.idx.get(id);const dim=sel&&sel!==id&&![...D.fam,...D.outras].some(r=>(r.a===sel&&r.b===id)||(r.b===sel&&r.a===id));const w=Math.max(70,c.nome.length*7.4+16);
+      return `<g class="rnode" data-rn="${id}" transform="translate(${p.x} ${p.y})" opacity="${dim?.3:1}" style="cursor:pointer"><rect x="${-w/2}" y="-15" width="${w}" height="30" fill="${c.cor||"#FFF8B0"}" stroke="#000" stroke-width="${id===sel?3:1}"/><text y="4" text-anchor="middle" font-size="12" font-weight="700" fill="#000" paint-order="stroke" stroke="rgba(255,255,255,.7)" stroke-width="3">${escH(c.nome)}</text></g>`;}).join("");
+    const labels=gs.map((g,ri)=>`<text x="6" y="${top+ri*RH+4}" font-size="10" fill="currentColor" opacity=".6">${g<0?"fora da família":g===0?"1ª geração":`${g+1}ª geração`}</text>`).join("");
+    const defs=`<defs>${Object.entries(REL_COR).map(([k,c])=>`<marker id="rA-${k}" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5 0 10z" fill="${c}"/></marker>`).join("")}</defs>`;
+    return {D,svg:`<svg viewBox="0 0 ${W} ${H}" width="100%" class="relsvg" role="img" aria-label="Árvore de relações">${defs}${labels}${links}${arcs}${nodes}</svg>`};};
+  const draw=w=>{const {D,svg}=build();w.querySelector("#rl-svg").innerHTML=svg||`<div class="empty">${icon("tree",32)}Nenhuma relação nas fichas ainda. Abra o Elenco › ficha › Relações e escreva “pai de”, “irmã de”, “casada com”, “inimigo de”…</div>`;
+    const info=w.querySelector("#rl-i");if(!sel){info.innerHTML=`<span class="muted">${D.fam.length} laços de família · ${D.outras.length} outras relações · ${D.ids.length} personagens. Clique num nome para ver as relações dele.</span>`;return;}
+    const c=D.idx.get(sel);const l=[...D.fam,...D.outras].filter(r=>r.a===sel||r.b===sel).map(r=>r.a===sel?`${escH(r.txt)} <b>${escH(D.idx.get(r.b).nome)}</b>`:`<b>${escH(D.idx.get(r.a).nome)}</b>: ${escH(r.txt)} ${escH(c.nome)}`);
+    info.innerHTML=`<b>${escH(c.nome)}</b>: ${l.join(" · ")} <button type="button" class="btn sm" data-rlf="${sel}">Abrir ficha</button>`;};
+  dialog({id:"relWin",title:`Árvore de relações — ${(curSerie()||{}).nome||""}`,width:1020,modal:false,icon:"tree",body:`<div class="row"><label class="chk"><input type="checkbox" id="rl-o" checked> Mostrar amor, inimizade, alianças e chefia</label>
+      <span class="relleg">${[["amor","amor"],["inimigo","inimigo"],["aliado","aliado"],["chefe","chefe ou mentor"],["outro","outra"]].map(([k,l])=>`<span><i style="background:${REL_COR[k]}"></i>${l}</span>`).join("")}<span><i style="background:#D02070;height:4px"></i>casal (linha dupla)</span><span><i style="border-top:2px dashed #000;background:none"></i>tio, sobrinho</span></span></div>
+    <div class="mapbox" id="rl-svg" style="color:var(--text);max-height:520px;overflow:auto"></div><div id="rl-i"></div>`,
+    onOpen:w=>{draw(w);w.querySelector("#rl-o").onchange=e=>{mostrar=e.target.checked;draw(w);};
+      w.addEventListener("click",e=>{const n=e.target.closest("[data-rn]");if(n){sel=sel===n.dataset.rn?null:n.dataset.rn;draw(w);return;}const f=e.target.closest("[data-rlf]");if(f){S.castSel=f.dataset.rlf;S.castSub="relacoes";setMode("cast");}});},
+    buttons:[{label:"Fechar"}]});}
+
+/* ================= VOZ DOS PERSONAGENS ================= */
+const VOZ_PARAR=new Set([...PALAVRAS_COMUNS,..."me te lhe nos vos meu minha meus minhas teu tua seus suas dele dela deles delas nosso nossa ao aos à às pra pro pela pelo pelas pelos num numa só tá tô é foi era ser ter tem tinha vai vou vamos estou está estão aí ah oh hein né tudo nada nunca sempre bem muito pouco mesmo assim ainda lá aqui isso esse essa agora ninguém alguém coisa quem qual quanto".split(" ")]);
+function vozData(scope){const sc=cur();const eps=scope==="serie"?seriesEps(sc.meta.serieId):[sc];const P=new Map();let who=null;
+  for(const s of eps)for(const e of s.els){if(e.t==="character"){who=baseName(e.x);continue;}if(e.t==="dialogue"&&who){let p=P.get(who);if(!p)P.set(who,p={nome:who,falas:[],pal:new Map(),n:0});p.falas.push(e.x);
+      for(const w of (e.x.toLowerCase().match(/[\p{L}'-]+/gu)||[])){p.n++;if(w.length>2&&!VOZ_PARAR.has(w))p.pal.set(w,(p.pal.get(w)||0)+1);}}else if(e.t!=="paren")who=null;}
+  const all=[...P.values()].filter(p=>p.falas.length>=5);const df=new Map();for(const p of all)for(const w of p.pal.keys())df.set(w,(df.get(w)||0)+1);
+  for(const p of all){const f=p.falas;const words=f.join(" ").toLowerCase().match(/[\p{L}'-]+/gu)||[];
+    p.media=words.length/f.length;p.perg=f.filter(x=>/\?/.test(x)).length/f.length;p.excl=f.filter(x=>/!/.test(x)).length/f.length;p.ret=f.filter(x=>/…|\.\.\./.test(x)).length/f.length;
+    const sample=words.slice(0,400);p.riqueza=sample.length?new Set(sample).size/sample.length:0;p.eu=words.filter(w=>w==="eu"||w==="meu"||w==="minha").length/Math.max(1,words.length)*100;
+    p.marca=[...p.pal].map(([w,c])=>[w,c*Math.log((all.length+1)/(df.get(w)||1))]).filter(([w,s])=>p.pal.get(w)>=2).sort((a,b)=>b[1]-a[1]).slice(0,6).map(x=>x[0]);
+    p.curta=[...f].sort((a,b)=>a.length-b.length).find(x=>x.length>8)||f[0];p.longa=[...f].sort((a,b)=>b.length-a.length)[0];}
+  const vec=p=>[p.media/12,p.perg*2,p.excl*2,p.ret*2,p.riqueza*2,p.eu/4];const pares=[];
+  for(let i=0;i<all.length;i++)for(let j=i+1;j<all.length;j++){const a=vec(all[i]),b=vec(all[j]);const d=Math.sqrt(a.reduce((s,x,k)=>s+(x-b[k])**2,0));
+    const A=all[i].pal,B=all[j].pal;let dot=0,na=0,nb=0;for(const [w,c] of A){na+=c*c;if(B.has(w))dot+=c*B.get(w);}for(const c of B.values())nb+=c*c;const cos=dot/Math.sqrt((na||1)*(nb||1));
+    pares.push({a:all[i].nome,b:all[j].nome,sim:Math.max(0,1-d)*.6+cos*.4});}
+  pares.sort((x,y)=>y.sim-x.sim);return {list:all.sort((a,b)=>b.falas.length-a.falas.length),pares};}
+function vozDialog(){if(!cur())return;let scope="ep",sel=null;
+  const draw=w=>{const V=vozData(scope);const max=k=>Math.max(.0001,...V.list.map(p=>p[k]));const bar=(v,m,c)=>`<span class="vbar"><i style="width:${Math.min(100,v/m*100).toFixed(0)}%;background:${c}"></i></span>`;
+    w.querySelector("#vz-t").innerHTML=V.list.length?`<table><thead><tr><th>Personagem</th><th class="num">Falas</th><th>Palavras por fala</th><th>Perguntas</th><th>Exclamações</th><th>Reticências</th><th>Vocabulário</th><th>Palavras dele</th></tr></thead><tbody>${V.list.map(p=>`<tr data-vz="${escH(p.nome)}"${p.nome===sel?' class="sel"':""}><td><b>${escH(p.nome)}</b></td><td class="num">${p.falas.length}</td>
+      <td>${bar(p.media,max("media"),"#3050D0")} ${p.media.toFixed(1).replace(".",",")}</td><td>${bar(p.perg,max("perg"),"#E07000")} ${Math.round(p.perg*100)}%</td><td>${bar(p.excl,max("excl"),"#C00000")} ${Math.round(p.excl*100)}%</td><td>${bar(p.ret,max("ret"),"#808080")} ${Math.round(p.ret*100)}%</td>
+      <td>${bar(p.riqueza,1,"#20A040")} ${Math.round(p.riqueza*100)}</td><td class="muted">${escH(p.marca.join(", "))}</td></tr>`).join("")}</tbody></table>`:`<div class="empty">${icon("voice",32)}Preciso de personagens com pelo menos 5 falas.</div>`;
+    const top=V.pares.filter(x=>x.sim>.62).slice(0,4);
+    w.querySelector("#vz-p").innerHTML=top.length?`<b>Falam parecido:</b> ${top.map(x=>`${escH(x.a)} e ${escH(x.b)} (${Math.round(x.sim*100)}%)`).join(" · ")} <span class="muted">— vale dar um jeito próprio de falar para cada um.</span>`:`<span class="muted">Nenhum par fala parecido demais. Cada voz está bem marcada.</span>`;
+    const p=V.list.find(x=>x.nome===sel);w.querySelector("#vz-d").innerHTML=p?`<b>${escH(p.nome)}</b>: ${p.eu.toFixed(1).replace(".",",")}% das palavras são “eu, meu, minha”. Fala mais curta: <i>“${escH(p.curta)}”</i> · mais longa (${p.longa.split(/\s+/).length} palavras): <i>“${escH(p.longa.slice(0,220))}${p.longa.length>220?"…":""}”</i>`:`<span class="muted">Clique num personagem para ver as falas mais curta e mais longa. “Vocabulário” mede quantas palavras diferentes ele usa; “Palavras dele” são as que ele usa e os outros quase não usam.</span>`;};
+  dialog({id:"vozWin",title:"Voz dos personagens",width:1000,modal:false,icon:"voice",body:`<div class="row"><label class="row">Analisar <select id="vz-s"><option value="ep">Este roteiro</option><option value="serie">A série inteira</option></select></label></div><div class="listview" id="vz-t" style="max-height:380px"></div><p id="vz-p" style="margin:0"></p><p id="vz-d" style="margin:0"></p>`,
+    onOpen:w=>{draw(w);w.querySelector("#vz-s").onchange=e=>{scope=e.target.value;draw(w);};w.addEventListener("click",e=>{const r=e.target.closest("[data-vz]");if(r){sel=r.dataset.vz;draw(w);}});},buttons:[{label:"Fechar"}]});}
+
+/* ================= CARTÕES DE CENA (PDF) ================= */
+const u16pdf=str=>"<FEFF"+[...String(str)].map(ch=>{const c=ch.codePointAt(0);if(c>0xFFFF){const v=c-0x10000;return ((0xD800+(v>>10)).toString(16)+(0xDC00+(v&1023)).toString(16)).toUpperCase();}return c.toString(16).padStart(4,"0").toUpperCase();}).join("")+">";
+async function pdfDoc(pagesOps,wpt,hpt,title){const enc=new TextEncoder();const objs=[];const add=s=>{objs.push(s);return objs.length;};const cat=add(null),pgs=add(null);
+  const fonts=["Courier","Courier-Bold","Courier-Oblique"].map(n=>add(`<< /Type /Font /Subtype /Type1 /BaseFont /${n} /Encoding /WinAnsiEncoding >>`));const res=`<< /Font << /F1 ${fonts[0]} 0 R /F2 ${fonts[1]} 0 R /F3 ${fonts[2]} 0 R >> >>`;const kids=[];
+  for(const ops of pagesOps){let data=enc.encode(ops),filter="";if(typeof CompressionStream!=="undefined"){try{data=new Uint8Array(await new Response(new Blob([data]).stream().pipeThrough(new CompressionStream("deflate"))).arrayBuffer());filter=" /Filter /FlateDecode";}catch(e){data=enc.encode(ops);filter="";}}
+    const c=add({head:`<< /Length ${data.length}${filter} >>\nstream\n`,data,tail:"\nendstream"});kids.push(add(`<< /Type /Page /Parent ${pgs} 0 R /MediaBox [0 0 ${wpt.toFixed(2)} ${hpt.toFixed(2)}] /Resources ${res} /Contents ${c} 0 R >>`));}
+  objs[cat-1]=`<< /Type /Catalog /Pages ${pgs} 0 R >>`;objs[pgs-1]=`<< /Type /Pages /Kids [${kids.map(k=>k+" 0 R").join(" ")}] /Count ${kids.length} >>`;const info=add(`<< /Title ${u16pdf(title)} /Creator (ScriptRoom) /Producer (ScriptRoom) >>`);
+  const parts=[enc.encode("%PDF-1.4\n%\xE2\xE3\xCF\xD3\n")];let off=parts[0].length;const offs=[];
+  objs.forEach((ob,i)=>{offs.push(off);const h=enc.encode(`${i+1} 0 obj\n`);parts.push(h);off+=h.length;if(typeof ob==="string"){const b=enc.encode(ob);parts.push(b);off+=b.length;}else{const hh=enc.encode(ob.head),t=enc.encode(ob.tail);parts.push(hh,ob.data,t);off+=hh.length+ob.data.length+t.length;}const e=enc.encode("\nendobj\n");parts.push(e);off+=e.length;});
+  parts.push(enc.encode(`xref\n0 ${objs.length+1}\n0000000000 65535 f \n`+offs.map(x=>String(x).padStart(10,"0")+" 00000 n \n").join("")+`trailer\n<< /Size ${objs.length+1} /Root ${cat} 0 R /Info ${info} 0 R >>\nstartxref\n${off}\n%%EOF\n`));
+  return new Blob(parts,{type:"application/pdf"});}
+const rgbOf=hex=>{const m=/^#?([0-9a-f]{6})$/i.exec(hex||"");if(!m)return [0.75,0.75,0.75];const n=parseInt(m[1],16);return [(n>>16&255)/255,(n>>8&255)/255,(n&255)/255].map(x=>x.toFixed(3));};
+async function cardsPDF(sc,o){const lay=paginate(sc);const list=scenesOf(sc,lay.info).filter(x=>x.n&&(!o.ato||x.act===o.ato));const PW=595.28,PH=841.89,CW=PW/2,CH=PH/2;const pages=[];let ops=null;
+  const T=(x,y,sz,f,s,col)=>{ops.push(`BT /${f} ${sz} Tf ${col||"0 0 0"} rg 1 0 0 1 ${x.toFixed(2)} ${y.toFixed(2)} Tm ${pdfStr(s)} Tj ET`);};
+  list.forEach((x,i)=>{const k=i%4;if(k===0){ops=[];pages.push(ops);ops.push(`q [4 4] 0 d 0.4 w 0.6 G ${CW} 0 m ${CW} ${PH} l S 0 ${CH} m ${PW} ${CH} l S Q`);}
+    const cx=(k%2)*CW,cy=PH-(Math.floor(k/2)+1)*CH;const M=22;const [r,g,b]=rgbOf(x.cor);
+    ops.push(`${r} ${g} ${b} rg ${cx+M} ${cy+CH-M-12} ${CW-2*M} 12 re f`);
+    let y=cy+CH-M-46;T(cx+M,y,28,"F2",String(x.label||x.n));const lab=`${x.tc?x.tcRaw.replace(/[\[\]]/g,"")+"  ":""}${e8(eighthsN(x.lines,lay.lpp))} pág.`;T(cx+CW-M-lab.length*9*.6,y+12,9,"F1",lab,"0.35 0.35 0.35");
+    y-=24;for(const ln of wrapLines(String(x.h||"").toUpperCase(),Math.floor((CW-2*M)/(11*.6))).slice(0,3)){T(cx+M,y,11,"F2",ln);y-=14;}
+    if(x.act){T(cx+M,y,8,"F3",String(x.act).toUpperCase(),"0.4 0.4 0.4");y-=14;}
+    const ch=[...x.chars].join(", ");if(ch){for(const ln of wrapLines(ch,Math.floor((CW-2*M)/(9*.6))).slice(0,2)){T(cx+M,y,9,"F1",ln,"0 0 0.5");y-=12;}y-=6;}
+    ops.push(`q 0.5 w 0.75 G ${cx+M} ${y+8} m ${cx+CW-M} ${y+8} l S Q`);y-=8;
+    const syn=String(x.syn||x.first||"").trim();const mx=Math.floor((y-(cy+M+18))/13);for(const ln of wrapLines(syn||"—",Math.floor((CW-2*M)/(10*.6))).slice(0,Math.max(1,mx))){T(cx+M,y,10,"F1",ln);y-=13;}
+    T(cx+M,cy+M,7,"F1",`${String(sc.meta.serie).toUpperCase()} · ${epCode(sc.meta)}`,"0.5 0.5 0.5");});
+  if(!pages.length)return null;return pdfDoc(pages.map(p=>p.join("\n")),PW,PH,`Cartões · ${sc.meta.serie} ${epCode(sc.meta)}`);}
+function cardsDialog(){const sc=cur();if(!sc)return;const acts=[...new Set(scenesOf(sc,paginate(sc).info).filter(x=>x.n).map(x=>x.act).filter(Boolean))];
+  dialog({title:"Cartões de cena para imprimir",width:420,body:`<p class="muted" style="margin:0">Quatro cartões por folha A4, com a cor de cada cena, cabeçalho, minutagem, personagens e resumo. É só imprimir, cortar na linha pontilhada e espalhar na mesa.</p><label class="fld"><span>Quais cenas</span><select id="cd-a"><option value="">O roteiro inteiro (${scenesOf(sc,paginate(sc).info).filter(x=>x.n).length} cenas)</option>${acts.map(a=>`<option>${escH(a)}</option>`).join("")}</select></label>`,
+    buttons:[{label:"Gerar PDF",def:1,run:async w=>{const a=w.querySelector("#cd-a").value;const bl=await cardsPDF(sc,{ato:a});if(!bl){toast("Nenhuma cena nesse trecho");return false;}await offer(fileName(sc).replace(/\.docx$/,`_cartoes${a?"_"+slug(a):""}.pdf`),bl);}},{label:"Cancelar"}]});}
+
+/* ---------- comandos e menus ---------- */
+Object.assign(CMD,{
+  mapaMundo:{label:"Mapa do mundo…",icon:"map",needs:1,run:()=>mapDialog()},
+  arvore:{label:"Árvore de relações…",icon:"tree",needs:1,run:()=>relDialog()},
+  vozes:{label:"Voz dos personagens…",icon:"voice",needs:1,run:()=>vozDialog()},
+  cartoes:{label:"Cartões de cena para imprimir…",icon:"cards",needs:1,run:()=>cardsDialog()},
+});
+{const pr=MENUS.find(m=>m[0]==="Produção")[2];pr.splice(pr.indexOf("biblia")+1,0,"mapaMundo");}
+{const ex=MENUS.find(m=>m[0]==="Exibir")[2];ex.splice(ex.indexOf("redePers")+1,0,"arvore","vozes");}
+{const a=MENUS.find(m=>m[0]==="Arquivo")[2];a.splice(a.indexOf("exportarTemporada")+1,0,"cartoes");}
+TIPS.push("Produção › Mapa do mundo: suba a imagem do mapa e espete os lugares da Bíblia. Clique num alfinete para ver todas as cenas que se passam ali.",
+  "No Mapa do mundo, escolha um episódio em “Caminho do episódio” para ver a rota das cenas desenhada no mapa.",
+  "Exibir › Árvore de relações lê o que você escreveu nas fichas (“pai de”, “irmã de”, “casada com”, “inimigo de”) e monta as gerações.",
+  "Exibir › Voz dos personagens mostra quem fala longo, quem pergunta, quem exclama, as palavras de cada um e quais personagens falam parecido demais.",
+  "Arquivo › Cartões de cena para imprimir: quatro cartões por folha, para a parede da sala de roteiro.");
+
+
+/* ---------- correções da 6.0 ---------- */
+/* janelas que mostram um episódio só fecham quando você troca de episódio (senão mostrariam o anterior) */
+const JAN_EP=["stWin","tpWin","vozWin","netWin","bdWin","revWin"],JAN_SERIE=["plWin","bibWin","mapWin","relWin"];
+const _openEp18=openEp;openEp=function(id,k){const antes=cur();_openEp18(id,k);const agora=cur();if(!antes||antes===agora)return;
+  const fecha=ids=>ids.forEach(i=>{const w=document.getElementById(i);if(w&&w._close)try{w._close();}catch(e){}});fecha(JAN_EP);if(!agora||antes.meta.serieId!==agora.meta.serieId)fecha(JAN_SERIE);};
+/* palavras que chegam de outra pessoa (sala ao vivo, sala na rede) não contam na sua meta nem no diário */
+const semContar=fn=>function(...a){const t0=DAY?totalWords():0;const r=fn.apply(this,a);if(DAY){const d=totalWords()-t0;if(d)bumpBase(d);}return r;};
+onRemoteRoteiros=semContar(onRemoteRoteiros);onLiveEl=semContar(onLiveEl);
+if(typeof lanWelcome==="function"){const _lw=lanWelcome;lanWelcome=async function(m){const t0=DAY?totalWords():0;await _lw(m);if(DAY){const d=totalWords()-t0;if(d)bumpBase(d);}};}
 
 if(IS_TOOL)bootTool(new URLSearchParams(location.search).get("janela"));else boot();
 </script>

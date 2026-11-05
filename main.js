@@ -12,7 +12,7 @@ app.setPath("userData", path.join(app.getPath("appData"), "Sala de Roteiro 95"))
 let autoUpdater = null;
 try { ({ autoUpdater } = require("electron-updater")); } catch (err) { console.error("electron-updater indisponível:", err.message); }
 
-const COLECOES = ["roteiros", "versoes", "personagens", "notas", "series", "modelos"];
+const COLECOES = ["roteiros", "versoes", "personagens", "notas", "series", "modelos", "mapas"];
 const ID_OK = /^[A-Za-z0-9_.-]{1,120}$/;
 const ACESSORIOS = {
   notas: { width: 600, height: 520, resizable: true },
@@ -107,7 +107,7 @@ ipcMain.handle("db:remove", (e, colecao, id) => {
 const net = require("net");
 const os = require("os");
 const LAN_PORTA = 4795;
-const LAN_COLS = ["roteiros", "personagens", "series"];
+const LAN_COLS = ["roteiros", "personagens", "series", "mapas"];
 const LAN_MAX = 8 * 1024 * 1024;            // uma linha (um roteiro inteiro) até 8 MB
 const LAN_MAX_PESSOAS = 16;
 const TOPICO_OK = /^[a-z][a-z0-9_.-]{0,47}$/;
