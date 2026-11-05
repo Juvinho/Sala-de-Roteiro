@@ -51,7 +51,7 @@ npm run instalador
 Quando terminar, o instalador estará em:
 
 ```
-dist\SETUP_SCRIPTROOM_5.1.0.exe
+dist\SETUP_SCRIPTROOM_5.2.0.exe
 ```
 
 Dê dois cliques nele e siga o assistente: **Avançar › Aceito › Avançar › Instalar › Concluir**.
@@ -82,6 +82,24 @@ No VS Code também dá para usar **Terminal › Run Task…**, que lista as quat
   Análise técnica mostra a folha de cada cena por departamento e exporta em .csv.
 - **Exportar PDF…** com opções: folha de rosto, marcas de revisão, só um trecho de cenas, marca
   d'água e **cópias nominais** (um PDF por pessoa, com o nome dela na marca d'água).
+
+## Para escritor de série (versão 5.2)
+
+- **Plantar e colher:** botão direito num trecho › Plantar e colher › Plantar aqui. Dê um nome
+  ("o rifle roxo brilha perto de mentira"). Onde a pista paga a conta, em qualquer episódio da
+  série: botão direito › Plantar e colher › Colher. Um 🌱 na margem mostra o que foi plantado
+  (amarelo enquanto não for colhido) e um 🌾 o que colhe. **Produção › Plantar e colher** lista o
+  que ainda falta colher na série inteira, e avisa se algo é colhido antes de ser plantado.
+- **Ferramentas › Gerador de nomes do mundo:** aprende com os nomes do seu elenco e inventa
+  nomes novos com o mesmo sotaque. Cole nomes de lugares ou de uma língua inventada para ele
+  aprender também. Clique em + para criar a ficha no Elenco.
+- **Continuidade na Revisão:** personagem em dois lugares numa cena MESMO INSTANTE, cena
+  CONTÍNUO com o tempo pulando, item da análise técnica que sumiu do texto, personagem que fala
+  antes de ser apresentado em MAIÚSCULAS (quando os episódios anteriores estão na sala) e
+  plantes esquecidos no último episódio.
+- **Ferramentas › Diário de escrita:** mapa de calor das palavras escritas em cada dia do ano,
+  sequência de dias seguidos, recorde, melhor dia e dias em que a meta foi batida.
+- **Exibir › Modo foco** (Ctrl+Shift+F): só a cena em que você está fica acesa.
 
 ## Desfazer de verdade, histórico, rede de personagens e teleprompter (versão 5.1)
 

@@ -593,6 +593,19 @@ body.popwin .titlebar{-webkit-app-region:drag;cursor:default;user-select:none}bo
 /* versões */
 .vers{background:#fff;padding:2px 6px}.vers .ver{padding:4px 0;border-bottom:1px dotted #C0C0C0}.vers .ver:last-child{border-bottom:0}
 .vers .ver ul{margin:2px 0 0;padding-left:18px}.vers .ver li{font-size:12px}.vers .ver.atual{background:#FFFFE1;margin:0 -6px;padding:4px 6px}
+/* pacote 9 */
+.plmarks{position:absolute;inset:0;pointer-events:none}
+.plk{position:absolute;right:calc(var(--mr,25.4)*0.62mm);pointer-events:auto;border:1px solid #000;background:#fff;font-size:11px;line-height:14px;padding:0 2px;cursor:pointer;box-shadow:1px 1px 0 #808080}
+.plk.pend{background:#FFF0C0}.plk.ok{background:#D8F0D0}.plk.colhe{background:#F5E6C8}
+.lnk{background:none;border:0;padding:0;color:#000080;text-decoration:underline;cursor:pointer;font:inherit}
+.ngl{display:flex;flex-wrap:wrap;gap:4px;min-height:60px;background:#fff;border:2px inset var(--face,#C0C0C0);padding:6px;align-content:flex-start}
+.ngn{display:inline-flex;align-items:center;gap:2px;border:1px solid #808080;background:#F4F4EC;padding:1px 2px 1px 6px;font:14px Tahoma,sans-serif}
+.diastats{display:grid;grid-template-columns:repeat(6,1fr);gap:4px}.diastats .stat b{font-size:16px}
+@media (max-width:700px){.diastats{grid-template-columns:repeat(3,1fr)}}
+.dl0{fill:#EBEDF0}.dl1{fill:#C6E48B}.dl2{fill:#7BC96F}.dl3{fill:#239A3B}.dl4{fill:#196127}rect.meta{stroke:#000;stroke-width:1}
+.dlk{display:inline-block;width:11px;height:11px;margin:0 1px;vertical-align:middle}.dlk.dl0{background:#EBEDF0}.dlk.dl1{background:#C6E48B}.dlk.dl2{background:#7BC96F}.dlk.dl3{background:#239A3B}.dlk.dl4{background:#196127}.dlk.meta{outline:1px solid #000}
+body.foco #sheet .el:not(.foco-on){opacity:.18;transition:opacity .25s}body.foco #sheet .el.foco-on{opacity:1;transition:opacity .25s}body.foco #sheet .pgd{opacity:.25}
+@media print{body.foco #sheet .el{opacity:1!important}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
 </style>
 
@@ -1125,7 +1138,7 @@ function reviewFindings(sc){
   const prev=Object.values(S.eps).find(x=>x.meta.codigo===m.codigo&&+x.meta.episodio===+m.episodio-1);
   if(prev&&d&&perR!=="avulsa"){const ex=nextAir(prev.meta.estreia,seR);if(ex!==m.estreia)add("warn",perR==="diaria"?"Capítulo fora da sequência":"Estreia fora da sequência semanal",`O ${epTag(prev.meta)} foi ao ar em ${fmtDate(prev.meta.estreia)}; este iria em ${fmtDate(ex)}.`,"meta");}
   if(Object.values(S.eps).some(x=>x.id!==sc.id&&x.meta.codigo===m.codigo&&+x.meta.episodio===+m.episodio))add("warn","Episódio repetido",`Existe outro ${epCode(m)} na sala.`,"meta");
-  const lay=(sc===cur()&&S.lay)?S.lay:paginate(sc);const scs=scenesOf(sc,lay.info).filter(x=>x.n);let pe=null,pn=null;
+  const lay=(sc===cur()&&S.lay&&S.lay.info.length===sc.els.length)?S.lay:paginate(sc);const scs=scenesOf(sc,lay.info).filter(x=>x.n);let pe=null,pn=null;
   for(const x of scs){
     if(!x.tc){add("warn","Cena sem minutagem",`Cena ${x.n} — ${x.h}`,x.id);continue;}
     if(x.tc.b<x.tc.a)add("err","Minutagem invertida",`Cena ${x.n}: ${x.tcRaw}`,x.tcId);else if(x.tc.b===x.tc.a)add("info","Cena com duração zero",`Cena ${x.n}: ${x.tcRaw}. Se é um corte instantâneo, está certo.`,x.tcId);
@@ -3106,6 +3119,7 @@ sheet.addEventListener("contextmenu",e=>{
   const n=e.target.closest(".el");if(!n)return;e.preventDefault();const f=findEl(n.dataset.id);if(!f)return;
   if(document.activeElement!==n){S.focusId=f.e.id;}
   const sc=cur();const items=[
+    {label:"Plantar e colher",icon:"seed",sub:plantMenu(f.e)},
     {label:"Comentar…",icon:"com",key:"Ctrl+Alt+M",run:(()=>{const q=String(getSelection()).trim();return ()=>addComment(f.e.id,q);})()},
     {label:"Nota de roteiro…",icon:"sticky",run:()=>noteDialog(f.e.id)},
     ...(f.e.t==="dialogue"?[{label:"Falas alternativas…",run:()=>altsDialog(f.e.id)}]:[]),
@@ -4435,8 +4449,9 @@ TIPS.push("Ctrl+Z agora desfaz palavra por palavra. Editar › Histórico de alt
    A cada versão nova: mude APP_VERSAO e acrescente a entrada no topo de VERSOES.
    (o empacotamento confere se APP_VERSAO bate com o package.json)
    ================================================================ */
-const APP_VERSAO="5.1.0";
+const APP_VERSAO="5.2.0";
 const VERSOES=[
+  ["5.2.0","Para escritor de série",["Plantar e colher: pistas plantadas e onde elas pagam a conta, na série inteira","Gerador de nomes do mundo, que aprende com o seu elenco","A Revisão agora confere continuidade","Diário de escrita com mapa de calor do ano","Modo foco (Ctrl+Shift+F)"]],
   ["5.1.0","Desfazer de verdade",["Ctrl+Z desfaz palavra por palavra, e o cursor volta para onde a mudança aconteceu","Editar › Histórico de alterações: volte para qualquer passo","Exibir › Rede de personagens: quem contracena com quem","Exibir › Teleprompter: rolagem, espelho e destaque das falas de um ator","Sobre mostra a versão de verdade e esta lista de novidades"]],
   ["5.0.0","Tela de começo",["O ScriptRoom abre na tela de boas-vindas, com os roteiros recentes e a busca","Arquivo › Fechar roteiro (Ctrl+F4)","No programa instalado, todas as janelas ficam soltas como o Bloco de notas"]],
   ["4.9.0","Sala na rede local",["Hospedar ou entrar numa sala pelo IP, com senha opcional","Escrever junto, ver quem está na sala e conversar no bate-papo, sem internet"]],
@@ -4470,6 +4485,152 @@ setTimeout(()=>{novidadesCheck().catch(()=>{});},2500);
 CMD.sobre.label="Sobre o ScriptRoom…";
 Object.assign(CMD,{novidades:{label:"O que há de novo…",icon:"lamp",run:async()=>{const v=await versaoAtual();dialog({id:"novWin",title:`O que há de novo — ScriptRoom ${v}`,width:460,modal:false,icon:"lamp",body:novidadesHTML(v),buttons:[{label:"OK",def:1}]});}}});
 {const aj=MENUS.find(m=>m[0]==="Ajuda")[2];aj.splice(aj.indexOf("sobre"),0,"novidades");}
+
+/* ================================================================
+   PACOTE 9: Plantar e colher · Gerador de nomes do mundo · Continuidade · Diário de escrita · Modo foco
+   ================================================================ */
+Object.assign(ICON,{
+  seed:'<path d="M8 14.5V8" stroke="#305010" stroke-width="1.4"/><path d="M8 9C8 5.5 5.5 4 2.5 4.5 2.5 8 5 9.5 8 9z" fill="#30A030" stroke="#000" stroke-width=".8"/><path d="M8 7.5c0-3 2-4.5 5.5-4-.2 3.2-2.3 4.6-5.5 4z" fill="#70D050" stroke="#000" stroke-width=".8"/><path d="M5 14.5h6" stroke="#804000" stroke-width="1.4"/>',
+  names:'<rect x="1.5" y="2.5" width="13" height="11" fill="#fff" stroke="#000"/><path d="M3.5 5.5h5M3.5 8h7M3.5 10.5h4" stroke="#000"/><path d="M11 9.5l2.5-4 1 .6-2.5 4z" fill="#FFD000" stroke="#000" stroke-width=".7"/><circle cx="12.5" cy="11.5" r=".9" fill="#C00000"/>',
+  diary:'<rect x="1.5" y="2.5" width="13" height="11" fill="#fff" stroke="#000"/><path d="M3 5h2v2H3zM6 5h2v2H6zM9 5h2v2H9zM3 8h2v2H3zM6 8h2v2H6zM12 8h2v2h-2zM6 11h2v2H6zM9 11h2v2H9z" fill="#30A030"/><path d="M9 8h2v2H9zM12 5h2v2h-2z" fill="#105010"/>',
+  focus:'<circle cx="8" cy="8" r="6.5" fill="#202020" stroke="#000"/><circle cx="8" cy="8" r="3.5" fill="#FFF8B0" stroke="#000"/><circle cx="8" cy="8" r="1.2" fill="#000"/>',
+});
+
+/* ---------- Plantar e colher ---------- */
+function plantsAll(sid){const out=[];for(const s of seriesEps(sid)){const lay=paginate(s);let scn=null;s.els.forEach((e,i)=>{if(e.t==="scene")scn=lay.info[i].label||lay.info[i].num;
+    if(e.plant)out.push({kind:"p",id:e.plant.id,nome:e.plant.nome,ep:s,el:e,i,scn});if(e.colhe)for(const pid of e.colhe)out.push({kind:"c",id:pid,ep:s,el:e,i,scn});});}return out;}
+function plantIndex(sid){const all=plantsAll(sid);const P=new Map();const order=new Map(sortedEps().map((s,i)=>[s.id,i]));
+  for(const x of all)if(x.kind==="p")P.set(x.id,{id:x.id,nome:x.nome,where:x,colhe:[]});
+  for(const x of all)if(x.kind==="c"){const p=P.get(x.id);if(p)p.colhe.push(x);}
+  for(const p of P.values()){const po=[order.get(p.where.ep.id),p.where.i];p.antes=p.colhe.filter(c=>{const co=[order.get(c.ep.id),c.i];return co[0]<po[0]||(co[0]===po[0]&&co[1]<po[1]);});}
+  return [...P.values()];}
+function plantHere(id,q){const sc=cur();const f=findEl(id);if(!f)return;
+  dialog({title:"Plantar",width:420,body:`<p class="muted" style="margin:0">Dê um nome curto para o que está sendo plantado. Depois, onde isso for usado (neste ou em outro episódio), clique com o botão direito › Plantar e colher › Colher.</p><label class="fld"><span>O que é plantado</span><input type="text" id="pl-n" value="${escH(q||"")}" placeholder="ex.: o rifle roxo brilha perto de mentira" maxlength="80" autofocus></label>`,
+    buttons:[{label:"Plantar",def:1,run:w=>{const n=w.querySelector("#pl-n").value.trim();if(!n){toast("Dê um nome ao plante");return false;}f.e.plant={id:uid("pl"),nome:n};touch(true);if(document.getElementById("plWin"))plantDraw();toast(`Plantado: “${n}”. Agora marque onde ele é colhido.`);}},{label:"Cancelar"}]});}
+function plantHarvest(id,pid){const f=findEl(id);if(!f)return;f.e.colhe=[...new Set([...(f.e.colhe||[]),pid])];touch(true);if(document.getElementById("plWin"))plantDraw();const p=plantIndex(cur().meta.serieId).find(x=>x.id===pid);toast(`Colhido: “${p?p.nome:"plante"}”`);}
+function plantClear(id){const f=findEl(id);if(!f)return;delete f.e.plant;delete f.e.colhe;touch(true);if(document.getElementById("plWin"))plantDraw();toast("Marca de plantar e colher tirada");}
+function plantMenu(e){const sc=cur();const idx=plantIndex(sc.meta.serieId);const sel=String(getSelection()).trim().slice(0,80);
+  const sub=[{label:e.plant?`Plantado aqui: “${e.plant.nome}”`:"Plantar aqui…",icon:"seed",run:()=>e.plant?plantDialog():plantHere(e.id,sel)}];
+  const aberta=idx.filter(p=>p.where.el.id!==e.id);if(aberta.length){sub.push("-");for(const p of aberta.slice(0,14))sub.push({label:`Colher: ${p.nome.slice(0,40)}${p.colhe.length?"":" (pendente)"}`,check:()=>(e.colhe||[]).includes(p.id),run:()=>plantHarvest(e.id,p.id)});}
+  if(e.plant||(e.colhe&&e.colhe.length))sub.push("-",{label:"Tirar a marca",run:()=>plantClear(e.id)});
+  sub.push("-",{label:"Ver tudo o que foi plantado…",run:()=>plantDialog()});return sub;}
+function placePlantMarks(){const sc=cur();let box=document.getElementById("plmarks");if(!sc||S.view!=="page"){if(box)box.innerHTML="";return;}
+  if(!box||box.parentElement!==sheet){box=document.createElement("div");box.id="plmarks";box.className="plmarks";sheet.appendChild(box);}
+  const idx=new Map(plantIndex(sc.meta.serieId).map(p=>[p.id,p]));let h="";
+  for(const e of sc.els){if(!e.plant&&!(e.colhe&&e.colhe.length))continue;const n=nodeOf(e.id);if(!n)continue;
+    if(e.plant){const p=idx.get(e.plant.id);const ok=p&&p.colhe.length;h+=`<button type="button" class="plk ${ok?"ok":"pend"}" data-plk="1" style="top:${n.offsetTop}px" title="Plantado: ${escH(e.plant.nome)}${ok?` · colhido ${p.colhe.length}×`:" · ainda não colhido"}">🌱</button>`;}
+    if(e.colhe&&e.colhe.length){const ns=e.colhe.map(id=>idx.get(id)).filter(Boolean).map(p=>p.nome);h+=`<button type="button" class="plk colhe" data-plk="1" style="top:${n.offsetTop+(e.plant?18:0)}px" title="Colhe: ${escH(ns.join(" · "))}">🌾</button>`;}}
+  box.innerHTML=h;}
+sheet.addEventListener("click",e=>{if(e.target.closest("[data-plk]")){e.preventDefault();plantDialog();}});
+const _paintHi15=paintHighlights;paintHighlights=function(){_paintHi15();placePlantMarks();};
+let plFilt="pend";
+function plantDraw(){const box=document.getElementById("pl-l");if(!box)return;const sc=cur();if(!sc)return;const idx=plantIndex(sc.meta.serieId);
+  const pend=idx.filter(p=>!p.colhe.length).length;const l=idx.filter(p=>plFilt==="todos"||!p.colhe.length);const where=x=>`${epTag(x.ep.meta)} · cena ${x.scn||"–"}`;
+  box.innerHTML=`<table><thead><tr><th>Plantado</th><th>Onde</th><th>Colhido em</th></tr></thead><tbody>${l.map(p=>`<tr><td><b>${escH(p.nome)}</b>${p.antes.length?` <span class="late" title="Colhido antes de ser plantado">⚠ colhido antes</span>`:""}</td><td><button type="button" class="lnk" data-plgo="${p.where.ep.id}|${p.where.el.id}">${escH(where(p.where))}</button></td>
+    <td>${p.colhe.length?p.colhe.map(c=>`<button type="button" class="lnk" data-plgo="${c.ep.id}|${c.el.id}">${escH(where(c))}</button>`).join(", "):`<span class="late">ainda não colhido</span>`}</td></tr>`).join("")||`<tr><td colspan="3" class="muted">${idx.length?"Tudo o que foi plantado já foi colhido.":"Nada plantado ainda. Botão direito num trecho › Plantar e colher › Plantar aqui."}</td></tr>`}</tbody></table>`;
+  const s=document.getElementById("pl-s");if(s)s.textContent=`${idx.length} plantado${idx.length===1?"":"s"} na série · ${pend} esperando colheita`;}
+function plantDialog(){if(!cur())return;
+  dialog({id:"plWin",title:`Plantar e colher — ${(S.series[cur().meta.serieId]||{}).nome||"série"}`,width:620,modal:false,icon:"seed",body:`<div class="row"><label class="row">Mostrar <select id="pl-f"><option value="pend"${plFilt==="pend"?" selected":""}>Só o que falta colher</option><option value="todos"${plFilt==="todos"?" selected":""}>Tudo</option></select></label><span class="muted" id="pl-s"></span></div><div class="listview" id="pl-l" style="max-height:340px"></div>
+    <p class="muted" style="margin:0">Plante uma pista, um objeto ou uma promessa num episódio e marque onde ela paga a conta. O ScriptRoom avisa o que ficou esquecido.</p>`,
+    onOpen:w=>{plantDraw();w.querySelector("#pl-f").onchange=e=>{plFilt=e.target.value;plantDraw();};w.addEventListener("click",e=>{const b=e.target.closest("[data-plgo]");if(!b)return;const [ep,id]=b.dataset.plgo.split("|");if(S.view!=="page")setMode("page");gotoEl(id,ep);});},buttons:[{label:"Fechar"}]});}
+
+/* ---------- Gerador de nomes do mundo (cadeia de Markov de letras) ---------- */
+function nameCorpus(extra){const set=new Set();for(const c of Object.values(S.chars))if(c.nome)set.add(c.nome);for(const s of Object.values(S.eps))for(const c of charStats(s))set.add(c.name);
+  for(const w of String(extra||"").split(/[\s,;\n]+/))if(w.trim())set.add(w.trim());
+  return [...set].map(n=>n.replace(/\(.*?\)/g,"").trim()).filter(n=>n&&!/^(TODOS|VOZ|ALUN[AO]S?|HOMEM|MULHER|POLICIAL|NARRADOR|LOCUTOR|SEGURANÇA|MÃE|PAI|ZELADOR|MENINO|MENINA|GUARDA)\b/i.test(n)).flatMap(n=>n.split(/\s+/)).map(w=>w.toLowerCase()).filter(w=>/^[\p{L}'-]{3,16}$/u.test(w));}
+function nameModel(words){const Ms=[null];for(let k=1;k<=4;k++){const M=new Map();for(const w of words){const t="^".repeat(k)+w+"$";for(let i=0;i<t.length-k;i++){const key=t.slice(i,i+k),nx=t[i+k];if(!M.has(key))M.set(key,new Map());const m=M.get(key);m.set(nx,(m.get(nx)||0)+1);}}Ms.push(M);}return Ms;}
+function nameGen(Ms,k,known,min,max,rnd){const mix={2:.45,3:.3,4:.2}[k]||.3;
+  for(let tries=0;tries<400;tries++){let out="";for(let i=0;i<max+2;i++){let kk=k;if(rnd()<mix)kk=Math.max(1,k-1-(rnd()<.3?1:0));let m=null;
+      while(kk>=1){const key=("^".repeat(kk)+out).slice(-kk);m=Ms[kk].get(key);if(m)break;kk--;}if(!m)break;
+      let tot=0;for(const v of m.values())tot+=v;let r=rnd()*tot,ch="$";for(const [c,v] of m){r-=v;if(r<=0){ch=c;break;}}if(ch==="$"){if(out.length>=min)break;else continue;}out+=ch;}
+    if(out.length>=min&&out.length<=max&&!known.has(out)&&!/(.)\1\1/.test(out)&&!/[^aeiouyàáâãéêíóôõúäëïöü]{4}/.test(out)&&/[aeiouyàáâãéêíóôõúäëïöü]/.test(out))return out;}return null;}
+const capName=w=>w.replace(/(^|[-'])(\p{L})/gu,(a,b,c)=>b+c.toUpperCase());
+function namesDialog(){let seed=Date.now()%2147483647||7;const rnd=()=>{seed=(seed*16807)%2147483647;return seed/2147483647;};
+  const gen=w=>{const extra=w.querySelector("#ng-x").value;prefs.nomesExtra=extra;savePrefs();const words=nameCorpus(extra);const k=+w.querySelector("#ng-k").value;const [mn,mx]=w.querySelector("#ng-t").value.split("-").map(Number);
+    const box=w.querySelector("#ng-l");if(words.length<4){box.innerHTML=`<p class="muted">Preciso de pelo menos 4 nomes para aprender. Crie fichas no Elenco ou cole nomes de exemplo abaixo.</p>`;return;}
+    const M=nameModel(words);const known=new Set(words);const out=new Set();for(let i=0;i<120&&out.size<24;i++){const n=nameGen(M,k,known,mn,mx,rnd);if(n)out.add(n);}
+    w.querySelector("#ng-c").textContent=`aprendeu com ${words.length} nomes: ${words.slice(0,8).map(capName).join(", ")}${words.length>8?"…":""}`;
+    box.innerHTML=[...out].map(n=>`<span class="ngn"><b>${escH(capName(n))}</b><button type="button" class="ib" data-ngcp="${escH(capName(n))}" title="Copiar" aria-label="Copiar ${escH(capName(n))}">⎘</button><button type="button" class="ib" data-ngnew="${escH(n.toUpperCase())}" title="Criar ficha no elenco" aria-label="Criar ficha de ${escH(capName(n))}">+</button></span>`).join("")||`<p class="muted">Não saiu nenhum nome novo com essas regras. Tente outro tamanho ou menos semelhança.</p>`;};
+  dialog({id:"ngWin",title:"Gerador de nomes do mundo",width:560,modal:false,icon:"names",body:`<p class="muted" style="margin:0">Aprende com os nomes do seu elenco e inventa nomes novos com o mesmo sotaque. Nenhum nome sai repetido do que já existe.</p>
+    <div class="row"><label class="row">Semelhança <select id="ng-k"><option value="2">Livre</option><option value="3" selected>Parecida</option><option value="4">Bem parecida</option></select></label><label class="row">Tamanho <select id="ng-t"><option value="3-5">Curto</option><option value="5-8" selected>Médio</option><option value="7-12">Longo</option></select></label><button type="button" class="btn def" id="ng-g">Gerar</button></div>
+    <div class="ngl" id="ng-l" aria-live="polite"></div><p class="status" id="ng-c" style="margin:0"></p>
+    <label class="fld"><span>Aprender também com (nomes de lugares, de uma língua inventada, de outra obra…)</span><textarea id="ng-x" rows="2" placeholder="Tencri Varguelia Catatunia Westerhalt Ferrasten">${escH(prefs.nomesExtra||"")}</textarea></label>`,
+    onOpen:w=>{gen(w);w.querySelector("#ng-g").onclick=()=>gen(w);
+      w.addEventListener("click",async e=>{const c=e.target.closest("[data-ngcp]");if(c){try{await navigator.clipboard.writeText(c.dataset.ngcp);toast(`“${c.dataset.ngcp}” copiado`);}catch(x){toast(c.dataset.ngcp);}return;}
+        const n=e.target.closest("[data-ngnew]");if(n&&typeof newChar==="function"){const ch=newChar(n.dataset.ngnew);S.chars[ch.id]=ch;if(typeof markChar==="function")markChar(ch);else{S.dirtyC.add(ch.id);markChanged();}toast(`Ficha de ${capName(n.dataset.ngnew.toLowerCase())} criada no Elenco`);n.disabled=true;}});},
+    buttons:[{label:"Fechar"}]});}
+
+/* ---------- Continuidade (entra na Revisão) ---------- */
+function continuity(sc){const out=[];const add=(sev,title,det,id)=>out.push({sev,title:"Continuidade: "+title,det,id,ep:sc.id});
+  const lay=(sc===cur()&&S.lay&&S.lay.info.length===sc.els.length)?S.lay:paginate(sc);const list=scenesOf(sc,lay.info);let prev=null,afterAct=true;
+  const MESMO=/MESMO INSTANTE|AO MESMO TEMPO|SIMULT/;const CONT=/^CONT[ÍI]NUO/;
+  for(const x of list){if(!x.n){afterAct=true;continue;}const p=locParse(x.h);
+    if(CONT.test(p.tod)&&afterAct&&!prev)add("warn","cena CONTÍNUO abrindo o roteiro",`Cena ${x.label||x.n} — ${x.h}: contínuo a quê?`,x.id);
+    if(prev){const pp=locParse(prev.h);
+      if(MESMO.test(p.tod)&&pp.loc!==p.loc){const both=[...x.chars].filter(c=>prev.chars.has(c));if(both.length)add("err","personagem em dois lugares ao mesmo tempo",`${both.join(", ")} fala${both.length>1?"m":""} na cena ${prev.label||prev.n} (${pp.loc}) e na ${x.label||x.n} (${p.loc}), marcada como ${p.tod}.`,x.id);}
+      if(CONT.test(p.tod)&&prev.tc&&x.tc&&x.tc.a!==prev.tc.b)add("warn","cena contínua com tempo pulando",`A cena ${x.label||x.n} é CONTÍNUO, mas começa em ${mmss(x.tc.a)} e a anterior termina em ${mmss(prev.tc.b)}.`,x.tcId||x.id);
+      const dn=t=>/NOITE|MADRUGADA|ANOITECER/.test(t)?"N":/DIA|MANHÃ|TARDE|AMANHECER/.test(t)?"D":"";
+      if(CONT.test(p.tod)&&pp.ie&&p.ie&&dn(pp.tod)&&/\(.*(DIA|NOITE).*\)/.test(p.tod))add("info","CONTÍNUO com horário entre parênteses",`Cena ${x.label||x.n}: ${p.tod}. Confira se o horário bate com a cena ${prev.label||prev.n} (${pp.tod}).`,x.id);}
+    prev=x;afterAct=false;}
+  // análise técnica que não aparece mais no texto da cena
+  const bySid=new Map();let sid=null;for(const e of sc.els){if(e.t==="scene")sid=e.id;if(sid){bySid.set(sid,(bySid.get(sid)||"")+" "+e.x.toLowerCase());}}
+  for(const a of sc.meta.analise||[]){const t=bySid.get(a.sid);if(t===undefined){add("warn","item da análise numa cena que não existe mais",`“${a.item}” (${bdCat(a.cat)[1]}).`,"meta");continue;}if(!t.includes(String(a.item).toLowerCase()))add("info","item da análise sumiu do texto",`“${a.item}” (${bdCat(a.cat)[1]}) não aparece mais na cena onde foi marcado. Reescreveu?`,a.sid);}
+  // personagem que fala antes de ser apresentado em maiúsculas numa ação
+  const serAll=seriesEps(sc.meta.serieId),nums=new Set(serAll.map(z=>+z.meta.episodio));let completo=true;for(let k=1;k<+sc.meta.episodio;k++)if(!nums.has(k)){completo=false;break;}
+  const seen=new Set(),warned=new Set();let who=null;if(completo)
+  for(const e of sc.els){if(e.t==="action"||e.t==="scene"){for(const m of e.x.matchAll(/\b[\p{Lu}][\p{Lu}'-]{2,}\b/gu))seen.add(m[0]);}
+    if(e.t==="character"){who=baseName(e.x);const first=who.split(/\s+/)[0];if(!seen.has(first)&&!seen.has(who)&&!warned.has(who)&&!/^(TODOS|VOZ|NARRADOR|LOCUTOR)/.test(who)){warned.add(who);
+      const anyEp=sortedEps().filter(s=>s.meta.serieId===sc.meta.serieId&&(+s.meta.episodio<+sc.meta.episodio)).some(s=>s.els.some(z=>z.t==="character"&&baseName(z.x)===who));
+      if(!anyEp)add("info",`${who} fala antes de ser apresentado`,`Na primeira vez, o costume é escrever o nome em MAIÚSCULAS numa ação (ex.: “${who}, 40 anos, entra.”).`,e.id);}}}
+  // plantado e não colhido (só avisa no último episódio da série)
+  const ser=seriesEps(sc.meta.serieId);if(ser.length&&ser[ser.length-1].id===sc.id){for(const p of plantIndex(sc.meta.serieId)){if(!p.colhe.length)add("info",`“${p.nome}” foi plantado e ainda não foi colhido`,`Plantado em ${epTag(p.where.ep.meta)}, cena ${p.where.scn||"–"}.`,p.where.ep.id===sc.id?p.where.el.id:"meta");else if(p.antes.length)add("warn",`“${p.nome}” é colhido antes de ser plantado`,`Plantado em ${epTag(p.where.ep.meta)}; colhido antes em ${p.antes.map(c=>epTag(c.ep.meta)).join(", ")}.`,"meta");}}
+  return out;}
+const _reviewFindings15=reviewFindings;
+reviewFindings=function(sc){const r=_reviewFindings15(sc);try{r.push(...continuity(sc));}catch(e){}return r;};
+
+/* ---------- Diário de escrita ---------- */
+const LS_DIARIO="varguelia.sala.diario.v1";
+const diario=()=>{try{return JSON.parse(localStorage.getItem(LS_DIARIO)||"{}")||{};}catch(e){return {};}};
+let diarioT=null;const _updGoal15=updGoal;
+updGoal=function(){_updGoal15();if(!DAY)return;clearTimeout(diarioT);diarioT=setTimeout(()=>{const d=diario();const w=wordsToday();if((d[DAY.d]||0)!==w){d[DAY.d]=w;try{localStorage.setItem(LS_DIARIO,JSON.stringify(d));}catch(e){}}},1500);};
+function diarioDialog(){const d=diario();if(DAY)d[DAY.d]=Math.max(d[DAY.d]||0,wordsToday());const meta=prefs.meta||1000;
+  const key=t=>`${t.getFullYear()}-${pad2(t.getMonth()+1)}-${pad2(t.getDate())}`;const today=new Date();today.setHours(12,0,0,0);
+  const start=new Date(today);start.setDate(start.getDate()-7*52-start.getDay());
+  const vals=Object.values(d).filter(v=>v>0).sort((a,b)=>a-b);const q=p=>vals.length?vals[Math.min(vals.length-1,Math.floor(p*vals.length))]:1;const lv=v=>!v?0:v<q(.25)?1:v<q(.5)?2:v<q(.8)?3:4;
+  let cells="",col=0,months="";const CW=13;for(let t=new Date(start);t<=today;t.setDate(t.getDate()+1)){const k=key(t),v=d[k]||0,dow=t.getDay();
+    if(dow===0&&t.getDate()<=7)months+=`<text x="${30+col*CW}" y="10" font-size="9" fill="currentColor">${MESES_L[t.getMonth()].slice(0,3)}</text>`;
+    cells+=`<rect x="${30+col*CW}" y="${16+dow*CW}" width="11" height="11" class="dl${lv(v)}${v>=meta?" meta":""}"><title>${t.toLocaleDateString("pt-BR",{weekday:"long",day:"numeric",month:"long"})}: ${fmtN(v)} palavras</title></rect>`;if(dow===6)col++;}
+  const days=Object.keys(d).filter(k=>d[k]>0).sort();let best=0,run=0,prevK=null;for(const k of days){const t=new Date(k+"T12:00:00");if(prevK){const p=new Date(prevK+"T12:00:00");p.setDate(p.getDate()+1);run=key(p)===k?run+1:1;}else run=1;best=Math.max(best,run);prevK=k;}
+  let cur_=0;{const t=new Date(today);if(!(d[key(t)]>0))t.setDate(t.getDate()-1);while(d[key(t)]>0){cur_++;t.setDate(t.getDate()-1);}}
+  const ano=days.filter(k=>k>=key(new Date(today.getFullYear(),0,1))).reduce((s,k)=>s+d[k],0);const top=days.reduce((a,k)=>d[k]>(d[a]||0)?k:a,days[0]);const metaDias=days.filter(k=>d[k]>=meta).length;
+  dialog({id:"diaWin",title:"Diário de escrita",width:760,modal:false,icon:"diary",body:`<div class="diastats">${[["sequência atual",`${cur_} dia${cur_===1?"":"s"}`],["maior sequência",`${best} dia${best===1?"":"s"}`],["palavras em "+today.getFullYear(),fmtN(ano)],["dias com escrita",fmtN(days.length)],["meta batida",`${metaDias} dia${metaDias===1?"":"s"}`],["melhor dia",top?`${fmtN(d[top])} · ${new Date(top+"T12:00:00").toLocaleDateString("pt-BR")}`:"—"]].map(([l,v])=>`<div class="stat"><b>${escH(v)}</b><span>${escH(l)}</span></div>`).join("")}</div>
+    <div class="mapbox" style="overflow-x:auto"><svg viewBox="0 0 ${30+(col+1)*CW} ${16+7*CW}" width="${30+(col+1)*CW}" role="img" aria-label="Palavras escritas por dia no último ano" style="color:var(--text)">${months}${["","seg","","qua","","sex",""].map((l,i)=>l?`<text x="0" y="${25+i*CW}" font-size="9" fill="currentColor">${l}</text>`:"").join("")}${cells}</svg></div>
+    <div class="row muted" style="font-size:11px">menos <span class="dlk dl0"></span><span class="dlk dl1"></span><span class="dlk dl2"></span><span class="dlk dl3"></span><span class="dlk dl4"></span> mais · <span class="dlk dl3 meta"></span> meta do dia (${fmtN(meta)} palavras) batida</div>
+    <p class="muted" style="margin:0">Conta as palavras que você escreve nos roteiros (importações não contam). ${window.salaNative?"Fica guardado neste computador.":"Fica guardado neste navegador."}</p>`,buttons:[{label:"Mudar a meta…",run:()=>{setTimeout(goalDialog,0);}},{label:"Fechar",def:1}]});}
+
+/* ---------- Modo foco ---------- */
+function focusTick(){if(!prefs.foco||!cur())return;const f=S.focusId&&findEl(S.focusId);sheet.querySelectorAll(".el.foco-on").forEach(n=>n.classList.remove("foco-on"));if(!f)return;
+  const els=cur().els;let a=f.i;while(a>0&&!["scene","act"].includes(els[a].t))a--;let b=f.i+1;while(b<els.length&&!["scene","act"].includes(els[b].t))b++;
+  for(let k=a;k<b;k++){const n=nodeOf(els[k].id);if(n)n.classList.add("foco-on");}}
+sheet.addEventListener("focusin",()=>setTimeout(focusTick,0));
+const _renderSheet15=renderSheet;renderSheet=function(){_renderSheet15();document.body.classList.toggle("foco",!!prefs.foco);focusTick();};
+function toggleFoco(){prefs.foco=!prefs.foco;savePrefs();document.body.classList.toggle("foco",prefs.foco);focusTick();toast(prefs.foco?"Modo foco: só a cena em que você está fica acesa (Ctrl+Shift+F desliga)":"Modo foco desligado");}
+document.addEventListener("keydown",e=>{if(e.ctrlKey&&e.shiftKey&&e.code==="KeyF"&&!IS_TOOL){e.preventDefault();toggleFoco();}});
+
+Object.assign(CMD,{
+  plantar:{label:"Plantar e colher…",icon:"seed",needs:1,run:()=>plantDialog()},
+  nomes:{label:"Gerador de nomes do mundo…",icon:"names",run:()=>namesDialog()},
+  diario:{label:"Diário de escrita…",icon:"diary",run:()=>diarioDialog()},
+  foco:{label:"Modo foco",icon:"focus",key:"Ctrl+Shift+F",check:()=>!!prefs.foco,run:()=>toggleFoco()},
+});
+{const pr=MENUS.find(m=>m[0]==="Produção")[2];pr.splice(pr.indexOf("analise"),0,"plantar");}
+{const fe=MENUS.find(m=>m[0]==="Ferramentas")[2];fe.splice(fe.indexOf("notepad"),0,"nomes","diario","-");}
+{const ex=MENUS.find(m=>m[0]==="Exibir")[2];ex.splice(ex.indexOf("maquina")+1,0,"foco");}
+TIPS.push("Botão direito num trecho › Plantar e colher: marque a pista num episódio e onde ela paga a conta. Produção › Plantar e colher mostra o que ficou esquecido.",
+  "Ferramentas › Gerador de nomes do mundo aprende com o seu elenco e inventa nomes novos com o mesmo sotaque.",
+  "A Revisão agora confere continuidade: personagem em dois lugares ao mesmo tempo, cena CONTÍNUO com o tempo pulando, item da análise que sumiu do texto.",
+  "Ferramentas › Diário de escrita mostra um mapa de calor das palavras que você escreveu em cada dia do ano.",
+  "Ctrl+Shift+F liga o modo foco: só a cena em que você está fica acesa.");
 
 if(IS_TOOL)bootTool(new URLSearchParams(location.search).get("janela"));else boot();
 </script>
