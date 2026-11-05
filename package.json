@@ -72,7 +72,7 @@
       "releaseType": "release"
     }
   },
-  "repository": "https://github.com/SEU-USUARIO/sala-de-roteiro-95",
+  "repository": "https://github.com/Juvinho/sala-de-roteiro",
   "dependencies": {
     "electron-updater": "6.3.9"
   }
