@@ -49,7 +49,7 @@ npm run instalador
 Quando terminar, o instalador estará em:
 
 ```
-dist\SETUP_SALA95_4.4.0.exe
+dist\SETUP_SALA95_4.6.0.exe
 ```
 
 Dê dois cliques nele e siga o assistente: **Avançar › Aceito › Avançar › Instalar › Concluir**.
@@ -80,6 +80,51 @@ No VS Code também dá para usar **Terminal › Run Task…**, que lista as quat
   Análise técnica mostra a folha de cada cena por departamento e exporta em .csv.
 - **Exportar PDF…** com opções: folha de rosto, marcas de revisão, só um trecho de cenas, marca
   d'água e **cópias nominais** (um PDF por pessoa, com o nome dela na marca d'água).
+
+## Comentários e plano de filmagem (versão 4.6)
+
+- **Comentários com autor:** selecione um trecho e aperte **Ctrl+Alt+M** (ou botão direito ›
+  Comentar…). O trecho fica grifado em amarelo e ganha um balão na margem esquerda. Clique no
+  balão para responder, resolver ou excluir. A aba **Notas** lista todos, com filtro de abertos e
+  resolvidos e exportação em .txt.
+- **Comentários no Word:** os comentários abertos vão para o .docx como comentários de verdade do
+  Word, com as respostas. Se o diretor comentar no Word e devolver o arquivo, importe o .docx:
+  os comentários dele aparecem na Sala.
+- **Oitavos de página:** o painel de cenas mostra o tamanho de cada cena como a produção conta
+  (1 3/8 pág.).
+- **Plano de filmagem** (Produção ou Exibir): cada cena vira uma faixa colorida (branco interior
+  de dia, amarelo exterior de dia, azul interior de noite, verde exterior de noite) com local,
+  oitavos e o número de cada personagem do elenco.
+  - Arraste as faixas (ou use ▲▼) e coloque as divisões **Fim do dia**.
+  - **Montar os dias…** faz isso sozinho: junta as cenas do mesmo local, grava o dia antes da
+    noite e respeita o limite de páginas por dia.
+  - **Diárias do elenco:** em que dias cada personagem grava (I início, T trabalho, F fim, E espera).
+  - **Ordem do dia:** data, chamada, cenas, elenco, locais e as necessidades tiradas da análise
+    técnica, com exportação em .docx de um dia ou de todos.
+
+## Recursos do Final Draft (versão 4.5)
+
+- **Diálogo simultâneo:** botão direito no nome do segundo personagem, logo depois da fala do
+  primeiro › **Diálogo simultâneo**. As duas falas ficam lado a lado na tela, no PDF, no .docx
+  (tabela de duas colunas sem borda) e no Fountain (o `^` depois do nome).
+- **(MAIS) e (CONT.):** uma fala comprida que chega no pé da página é dividida: a página termina
+  com (MAIS) e a seguinte começa com o nome do personagem e (CONT.). Desliga em Formatar ›
+  Dividir falas longas entre páginas.
+- **SmartType completo:** na cena, depois do “ — ”, o autocompletar oferece NOITE, MADRUGADA,
+  CONTÍNUO…; no personagem, abra um parêntese para ver (V.O.), (O.S.), (NA FITA)…; na transição,
+  a lista aparece assim que você entra nela. Ferramentas › Listas do SmartType… edita as listas.
+- **Destaques na página:** o que você marcou na análise técnica fica pintado com a cor de cada
+  departamento (Exibir › Mostrar a análise técnica na página). No painel Personagens, a caixinha
+  ao lado de cada nome pinta todas as falas dele, ótimo para ensaiar um papel.
+- **Estrutura do episódio** (Exibir): as cenas numa linha do tempo, cada uma do tamanho da
+  duração, com os atos, a porcentagem de cada ato e os pontos de virada. Marque os pontos com o
+  botão direito no cabeçalho da cena › Ponto de estrutura (Gancho, Incidente, Clímax…). Eles
+  também aparecem nos cartões do quadro.
+- **Página nova a partir daqui:** botão direito em qualquer elemento. Vale para a tela, o PDF, o
+  .docx e o Fountain (`===`).
+- **Cabeçalho das páginas editável** em Formatar › Página e margens, com {serie} {codigo}
+  {titulo} {episodio} {pagina}.
+- **PDF de filmagem:** a opção “Número da cena nas duas margens” no Exportar PDF.
 
 ## Página, margens e PDF
 

@@ -475,6 +475,51 @@ body.tool{overflow:hidden}
 .bdt{color:#fff;font-weight:700;padding:2px 6px;text-shadow:1px 1px 0 rgba(0,0,0,.4)}
 .bdi{display:flex;justify-content:space-between;align-items:center;gap:4px;padding:2px 6px;border-bottom:1px dotted var(--light);overflow-wrap:anywhere}
 @media (max-width:760px){.bdwrap{grid-template-columns:minmax(0,1fr)}}
+/* pacote Final Draft 2 */
+.el.dual-l,.el.dual-r{box-sizing:border-box;width:calc((var(--pw,210) - var(--ml,38.1) - var(--mr,25.4))*.5mm - 2mm)!important;margin-left:0!important;margin-right:0!important;padding-right:0;position:relative}
+.el.dual-r{margin-left:calc((var(--pw,210) - var(--ml,38.1) - var(--mr,25.4))*.5mm + 2mm)!important}
+.el.e-character.dual-l,.el.e-character.dual-r{padding-left:calc((var(--pw,210) - var(--ml,38.1) - var(--mr,25.4))*.125mm - .5mm)}
+.el.e-paren.dual-l,.el.e-paren.dual-r{padding-left:calc((var(--pw,210) - var(--ml,38.1) - var(--mr,25.4))*.025mm)}
+.el[data-quebra]{border-top:2px dotted #000080;padding-top:2px}
+.el[data-quebra]::after{content:"↧ página nova";position:absolute;right:calc(var(--mr,25.4)*-1mm + 2mm);margin-top:-14px;font:9px Tahoma,sans-serif;color:#000080}
+.el.e-scene[data-ponto]{box-shadow:inset 3px 0 0 #C00000}
+.el.e-scene[data-ponto]::after{content:"◆ " attr(data-ponto);position:absolute;right:calc(var(--mr,25.4)*-1mm + 2mm);font:bold 9px Tahoma,sans-serif;color:#C00000;white-space:nowrap}
+.e-scene,.el[data-quebra]{position:relative}
+::highlight(sr-hi){background-color:#C8E0FF;color:inherit}
+.chr-row{display:flex;align-items:center;gap:4px}.chr-row .chr{flex:1;min-width:0}
+.hi-t{font-size:11px;white-space:nowrap}
+.icard .pt{display:inline-block;margin-left:4px;padding:0 4px;background:#C00000;color:#fff;font:bold 9px/14px Tahoma,sans-serif;white-space:nowrap}
+.stb{cursor:pointer}.stb:hover{stroke-width:2;stroke:#000080}
+#st-pts tr{cursor:pointer}#st-pts tr:hover{background:#000080;color:#fff}
+.abar{display:inline-block;width:80px;height:8px;border:1px solid #808080;background:#fff;vertical-align:middle}.abar i{display:block;height:100%;background:#000080}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}@media (max-width:640px){.grid3{grid-template-columns:1fr}}
+@media print{.el[data-quebra]{border-top:0}.el[data-quebra]::after,.el.e-scene[data-ponto]::after{display:none}}
+/* pacote 3 */
+.commarks{position:absolute;inset:0;pointer-events:none}
+.cmk{position:absolute;left:calc(var(--ml,38.1)*0.3mm);pointer-events:auto;display:flex;align-items:center;gap:1px;padding:1px 2px;background:#FFF8B0;border:1px solid #000;box-shadow:1px 1px 0 #808080;cursor:pointer;font:bold 9px Tahoma,sans-serif}
+.cmk:hover,.cmk:focus-visible{background:#FFE860;outline:1px dotted #000}
+::highlight(sr-com){background-color:#FFF3A0;text-decoration:underline dotted #A07800}
+.cq{margin:0;padding:4px 8px;border-left:4px solid #E0C000;background:#FFFCE0;font-family:var(--f-type);font-size:12px}
+.cthread{max-height:240px;overflow:auto;background:#fff;border:2px inset var(--face,#C0C0C0);padding:4px}
+.cmsg{padding:4px;border-bottom:1px dotted #808080}.cmsg:last-child{border-bottom:0}
+.hit.com{border-left:4px solid #E0C000}.hit.com.ok{border-left-color:#808080;opacity:.75}
+.plano .strips td,.plano .strips th{white-space:nowrap}
+.plano tr.strip td{background:var(--sc,#fff);color:#000}
+.plano tr.strip td.syn{white-space:normal;min-width:200px;font-size:11px}
+.plano tr.strip.omit td{text-decoration:line-through;opacity:.6}
+.plano tr.strip.sel td{outline:2px solid #000080;outline-offset:-2px}
+.plano tr.daybr td{background:#000;color:#fff;font:bold 11px Tahoma,sans-serif;padding:3px 6px}
+.plano tr.daybr .ib{color:#000}
+.plano td.grip{cursor:grab;color:#555;width:14px;user-select:none}
+.plano tr.dragging{opacity:.4}
+.plano tr.drop-b td{box-shadow:inset 0 3px 0 #C00000}.plano tr.drop-a td{box-shadow:inset 0 -3px 0 #C00000}
+.plano td.ids{font-family:var(--f-type);font-size:11px}
+.plano td.loc{max-width:260px;overflow:hidden;text-overflow:ellipsis}
+table.dood td.dd{text-align:center;font:bold 11px var(--f-type);min-width:28px}
+table.dood .d-I,table.dood .d-IF{background:#7CD07C}table.dood .d-F{background:#F09090}table.dood .d-T{background:#C8E0FF}table.dood .d-E{background:#FFE860}
+.callsheet{background:#fff;color:#000;border:2px inset var(--face,#C0C0C0);padding:10px;display:flex;flex-direction:column;gap:8px}
+.callsheet h3{margin:0;font:bold 14px Tahoma,sans-serif;text-align:center}.callsheet>p{margin:0;text-align:center}
+.callsheet tr.strip td{background:var(--sc,#fff)}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
 </style>
 
@@ -604,7 +649,7 @@ function paginate(sc){
   for(let i=0;i<els.length;i++){const f=info[i];
     if(f.keepNext&&y>0){let h=f.before+f.lines+f.after,j=i+1;
       while(j<els.length&&info[j].keepNext&&h<=LP){h+=info[j].before+info[j].lines+info[j].after;j++;}
-      if(j<els.length)h+=info[j].before+(info[j].keepLines?info[j].lines:1);
+      if(j<els.length)h+=info[j].before+(typeof tailH==="function"?tailH(els[j],info[j]):(info[j].keepLines?info[j].lines:1));
       if(h<=LP&&y+h>LP){page++;y=0;breaks.push({i,pos:"before",page});}}
     else if(f.keepLines&&y>0&&y+f.before+f.lines>LP&&f.lines<=LP){page++;y=0;breaks.push({i,pos:"before",page});}
     if(y>0)y+=f.before;
@@ -773,7 +818,7 @@ sheet.addEventListener("input",e=>{
   if(f.e.t==="action"&&/^(INT|EXT|INT\.\/EXT)\.\s/i.test(f.e.x)){setType(f.e.id,"scene");}
   else if(f.e.t==="dialogue"&&f.e.x==="("){f.e.x="()";n.textContent="()";setType(f.e.id,"paren");setCaret(nodeOf(f.e.id),1);}
   touch(false);
-  if(f.e.t==="character"||f.e.t==="scene")showAC(f.e.id);else hideAC();
+  if(f.e.t==="character"||f.e.t==="scene"||f.e.t==="trans")showAC(f.e.id);else hideAC();
 });
 sheet.addEventListener("focusin",e=>{const n=e.target.closest(".el");if(!n)return;S.focusId=n.dataset.id;renderTypebar();markSceneInSide();});
 sheet.addEventListener("focusout",e=>{const n=e.target.closest(".el");if(!n)return;setTimeout(()=>{const a=document.activeElement;if(a&&a.dataset&&a.dataset.id&&a.dataset.id===acFor)return;if(!a||!a.closest||!a.closest(".ac"))hideAC();},120);
@@ -868,10 +913,11 @@ function parseText(txt){
   let L=txt.replace(/\r/g,"").split("\n").map(s=>s.replace(/\s+$/,""));parseText.meta=null;
   if(/^(Title|Credit|Author|Episode|Draft date|Notes|Contact)\s*:/i.test(L[0]||"")){const meta={};let k=0;while(k<L.length&&L[k].trim()){const m=/^([^:]+):\s*(.*)$/.exec(L[k]);if(m)meta[m[1].toLowerCase().trim()]=m[2];k++;}L=L.slice(k);parseText.meta=meta;}
   const out=[];let prev=null;
-  const E2=(t,x)=>{const e={id:uid(),t,x};out.push(e);prev=e;return e;};
+  let pq=false;const E2=(t,x)=>{const e={id:uid(),t,x};if(pq){e.quebra=true;pq=false;}out.push(e);prev=e;return e;};
   const caps=s=>/\p{Lu}/u.test(s)&&!/\p{Ll}/u.test(s.replace(/\(.*?\)/g,""))&&s.length<=48&&!/[.!?…:]$/.test(s.replace(/\(.*?\)$/,"").trim());
   for(let k=0;k<L.length;k++){
     let s=L[k].trim();if(!s){prev=null;continue;}let m;
+    if(/^={3,}$/.test(s)){pq=true;prev=null;continue;}
     if((m=/^>\s*(.+?)\s*<$/.exec(s))){E2("act",m[1].toUpperCase());continue;}
     if((m=/^>\s*(.+)$/.exec(s))){E2("trans",m[1].toUpperCase());continue;}
     if(/^(CORTA|CORTE|FUSÃO|FADE|CONGELA)[A-ZÀ-Ý .]*:$/.test(s)){E2("trans",s);continue;}
@@ -886,8 +932,8 @@ function parseText(txt){
     if(prev&&(prev.t==="character"||prev.t==="paren")){E2("dialogue",s);continue;}
     if(prev&&prev.t==="dialogue"){prev.x+=" "+s;continue;}
     const nextLine=(L[k+1]||"").trim();
-    if((m=/^@(.+)$/.exec(s))){E2("character",m[1].trim().replace(/\s*\(CONT\.?\)\s*$/i,""));continue;}
-    if(caps(s)&&nextLine&&(!prev||prev.t!=="action")){E2("character",s.replace(/\s*\(CONT\.?\)\s*$/i,""));continue;}
+    if((m=/^@(.+)$/.exec(s))){const c2=E2("character",m[1].trim().replace(/\s*\^$/,"").replace(/\s*\(CONT\.?\)\s*$/i,""));if(/\^$/.test(m[1].trim()))c2.dual=true;continue;}
+    if(caps(s)&&nextLine&&(!prev||prev.t!=="action")){const c2=E2("character",s.replace(/\s*\^$/,"").replace(/\s*\(CONT\.?\)\s*$/i,""));if(/\^$/.test(s))c2.dual=true;continue;}
     if(prev&&prev.t==="action"){prev.x+=" "+s;continue;}
     E2("action",s.replace(/^!/,""));
   }
@@ -898,7 +944,7 @@ function parseText(txt){
 function renderSide(){
   const sc=cur();
   if(!sc){side.innerHTML=`<div class="empty"><strong>A sala está vazia</strong>Importe os roteiros em .docx ou comece um episódio.<div class="actions"><button class="btn primary" type="button" data-act="import">Importar .docx</button><button class="btn" type="button" data-act="new">Novo episódio</button></div></div>`;return;}
-  const tabs=[["cenas","Cenas"],["personagens","Personagens"],["revisao","Revisão"],["buscar","Buscar"],["versoes","Versões"],["notas","Notas"],["episodio","Episódio"],["ajuda","Atalhos"]];
+  const tabs=[["cenas","Cenas"],["personagens","Personagens"],["revisao","Revisão"],["buscar","Buscar"],["versoes","Versões"],["notas","Notas"+(typeof comBadge==="function"?comBadge(sc):"")],["episodio","Episódio"],["ajuda","Atalhos"]];
   const head=`<div class="ptabs" role="group" aria-label="Painel">${tabs.map(([k,l])=>`<button type="button" data-tool="${k}" aria-pressed="${S.tool===k}">${l}${k==="revisao"?revBadge(sc):""}</button>`).join("")}</div>`;
   let body="";
   if(S.tool==="cenas")body=cenasHTML(sc);
@@ -934,7 +980,7 @@ function cenasHTML(sc){
     let bad=false;if(x.tc){if(prevEnd!=null&&x.tc.a!==prevEnd)bad=true;if(x.tc.b<x.tc.a)bad=true;prevEnd=x.tc.b;}
     const est=(x.lines/LPP);
     return `<div class="scn-wrap"><button type="button" class="scn" data-goto="${x.id}"><span class="no">${x.cor?`<i class="sw" style="background:${x.cor}"></i>`:""}${escH(x.label||x.n)}</span><span class="h">${escH(x.h||"(sem cabeçalho)")}</span><span class="tc${bad||!x.tc?" bad":""}">${x.tc?escH(x.tcRaw.replace(/[\[\]]/g,"")):"sem minutagem"}</span>
-      <span class="m">${[...x.chars].slice(0,6).map(escH).join(", ")||"sem falas"}${x.chars.size>6?` +${x.chars.size-6}`:""} · ${est.toFixed(1).replace(".",",")} pág.</span></button>
+      <span class="m">${[...x.chars].slice(0,6).map(escH).join(", ")||"sem falas"}${x.chars.size>6?` +${x.chars.size-6}`:""} · ${typeof e8==="function"?e8(eighthsN(x.lines,(S.lay&&S.lay.lpp)||LPP)):est.toFixed(1).replace(".",",")} pág.</span></button>
       <span class="mv"><button class="ib" type="button" data-mv="up" data-id="${x.id}" title="Subir cena" aria-label="Subir cena ${x.n}">▲</button><button class="ib" type="button" data-mv="down" data-id="${x.id}" title="Descer cena" aria-label="Descer cena ${x.n}">▼</button></span></div>`;
   }).join("");
   return `<div class="panel"><div class="stats">
@@ -1145,7 +1191,9 @@ function scriptXML(sc){
   x+=pX(`<w:spacing w:after="960"/><w:jc w:val="center"/>`,rX(estreiaLine(m),{sz:22}));
   (m.notas||[]).forEach((n,k,a)=>x+=pX(`<w:spacing w:after="${k===a.length-1?0:80}"/><w:jc w:val="center"/>`,rX(n,{sz:20,i:1,color:"444444"})));
   x+=`<w:p><w:r><w:br w:type="page"/></w:r></w:p>`;
-  sc.els.forEach((e,i)=>{const f=lay.info[i];const t=e.x;
+  const pairs=new Map(dualPairs(sc).map(q=>[q.L[0],q]));let skipTo=-1;
+  sc.els.forEach((e,i)=>{if(i<skipTo)return;const f=lay.info[i];const t=e.x;const x0=x.length;const pr=pairs.get(i);
+    if(pr){x+=dualTbl(sc,lay,pr,GG);skipTo=pr.R[1];if(e.quebra)x=x.slice(0,x0)+withPB(x.slice(x0));return;}
     switch(e.t){
       case"act":x+=pX(`<w:keepNext/><w:spacing w:before="480" w:after="240" ${EX}/><w:jc w:val="center"/>`,rX(t.toUpperCase(),{b:1}));break;
       case"scene":x+=pX(`<w:keepNext/><w:spacing w:before="480" w:after="0" ${EX}/>`,rX(`CENA ${f.label||f.num} — ${t.toUpperCase()}`,{b:1}));break;
@@ -1156,20 +1204,20 @@ function scriptXML(sc){
       case"paren":x+=pX(`<w:keepNext/><w:spacing w:after="0" ${EX}/><w:ind w:left="${tw_(GG.p.ipl)}" w:right="${tw_(GG.p.ipr)}"/>`,rX(t));break;
       case"dialogue":x+=f.end?pX(`<w:keepNext w:val="false"/><w:keepLines/><w:spacing w:after="240" ${EX}/><w:ind w:left="${tw_(GG.p.idl)}" w:right="${tw_(GG.p.idr)}"/>`,rX(t)):pX(`<w:keepNext/><w:keepLines/><w:spacing w:after="0" ${EX}/><w:ind w:left="${tw_(GG.p.idl)}" w:right="${tw_(GG.p.idr)}"/>`,rX(t));break;
       default:x+=pX(`<w:spacing w:after="240" ${EX}/>`,rX(t));
-    }});
+    }if(e.quebra)x=x.slice(0,x0)+withPB(x.slice(x0));if(typeof docxComWrap==="function")x=x.slice(0,x0)+docxComWrap(e,x.slice(x0));});
   return `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:document ${NS}><w:body>${x}<w:sectPr><w:headerReference w:type="default" r:id="rId4"/><w:headerReference w:type="first" r:id="rId5"/><w:pgSz w:w="${tw_(GG.paper.w)}" w:h="${tw_(GG.paper.h)}"/><w:pgMar w:top="${tw_(GG.p.mt)}" w:right="${tw_(GG.p.mr)}" w:bottom="${tw_(GG.p.mb)}" w:left="${tw_(GG.p.ml)}" w:header="708" w:footer="708" w:gutter="0"/><w:titlePg/><w:docGrid w:linePitch="360"/></w:sectPr></w:body></w:document>`;
 }
 async function exportDocx(sc){
   const m=sc.meta;const hr={sz:18,color:"666666"};
-  const head=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:hdr ${NS}><w:p><w:pPr><w:jc w:val="right"/></w:pPr>${rX(`${String(m.serie).toUpperCase()} · ${epCode(m)} · `,hr)}<w:r><w:rPr>${FONT}<w:color w:val="666666"/><w:sz w:val="18"/></w:rPr><w:fldChar w:fldCharType="begin"/></w:r><w:r><w:rPr>${FONT}<w:color w:val="666666"/><w:sz w:val="18"/></w:rPr><w:instrText xml:space="preserve"> PAGE </w:instrText></w:r><w:r><w:rPr>${FONT}<w:color w:val="666666"/><w:sz w:val="18"/></w:rPr><w:fldChar w:fldCharType="separate"/></w:r><w:r><w:rPr>${FONT}<w:color w:val="666666"/><w:sz w:val="18"/></w:rPr><w:t>2</w:t></w:r><w:r><w:rPr>${FONT}<w:color w:val="666666"/><w:sz w:val="18"/></w:rPr><w:fldChar w:fldCharType="end"/></w:r></w:p></w:hdr>`;
+  const head=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:hdr ${NS}><w:p><w:pPr><w:jc w:val="right"/></w:pPr>${rX(headParts(sc)[0],hr)}<w:r><w:rPr>${FONT}<w:color w:val="666666"/><w:sz w:val="18"/></w:rPr><w:fldChar w:fldCharType="begin"/></w:r><w:r><w:rPr>${FONT}<w:color w:val="666666"/><w:sz w:val="18"/></w:rPr><w:instrText xml:space="preserve"> PAGE </w:instrText></w:r><w:r><w:rPr>${FONT}<w:color w:val="666666"/><w:sz w:val="18"/></w:rPr><w:fldChar w:fldCharType="separate"/></w:r><w:r><w:rPr>${FONT}<w:color w:val="666666"/><w:sz w:val="18"/></w:rPr><w:t>2</w:t></w:r><w:r><w:rPr>${FONT}<w:color w:val="666666"/><w:sz w:val="18"/></w:rPr><w:fldChar w:fldCharType="end"/></w:r>${headParts(sc)[1]?rX(headParts(sc)[1],hr):""}</w:p></w:hdr>`;
   const head0=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:hdr ${NS}><w:p/></w:hdr>`;
   const styles=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:styles ${NS}><w:docDefaults><w:rPrDefault><w:rPr>${FONT}<w:sz w:val="24"/><w:szCs w:val="24"/><w:lang w:val="pt-BR"/></w:rPr></w:rPrDefault><w:pPrDefault><w:pPr><w:spacing w:after="0" w:line="240" w:lineRule="auto"/></w:pPr></w:pPrDefault></w:docDefaults><w:style w:type="paragraph" w:default="1" w:styleId="Normal"><w:name w:val="Normal"/><w:qFormat/></w:style><w:style w:type="paragraph" w:styleId="Header"><w:name w:val="header"/><w:basedOn w:val="Normal"/></w:style></w:styles>`;
   const settings=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:settings ${NS}><w:defaultTabStop w:val="720"/><w:compat><w:compatSetting w:name="compatibilityMode" w:uri="http://schemas.microsoft.com/office/word" w:val="15"/></w:compat></w:settings>`;
   const core=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><cp:coreProperties xmlns:cp="http://schemas.openxmlformats.org/package/2006/metadata/core-properties" xmlns:dc="http://purl.org/dc/elements/1.1/"><dc:title>${escX(`${m.serie} ${epCode(m)} “${m.titulo}”`)}</dc:title><dc:creator>Sala de Roteiro</dc:creator></cp:coreProperties>`;
-  const ct=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/><Override PartName="/word/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.styles+xml"/><Override PartName="/word/settings.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.settings+xml"/><Override PartName="/word/header1.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.header+xml"/><Override PartName="/word/header2.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.header+xml"/><Override PartName="/docProps/core.xml" ContentType="application/vnd.openxmlformats-package.core-properties+xml"/></Types>`;
+  const ct=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/><Override PartName="/word/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.styles+xml"/><Override PartName="/word/settings.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.settings+xml"/><Override PartName="/word/header1.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.header+xml"/><Override PartName="/word/header2.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.header+xml"/><Override PartName="/docProps/core.xml" ContentType="application/vnd.openxmlformats-package.core-properties+xml"/><Override PartName="/word/comments.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.comments+xml"/></Types>`;
   const rels=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="word/document.xml"/><Relationship Id="rId2" Type="http://schemas.openxmlformats.org/package/2006/relationships/metadata/core-properties" Target="docProps/core.xml"/></Relationships>`;
-  const drels=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/><Relationship Id="rId3" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/settings" Target="settings.xml"/><Relationship Id="rId4" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/header" Target="header1.xml"/><Relationship Id="rId5" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/header" Target="header2.xml"/></Relationships>`;
-  return makeZip([["[Content_Types].xml",ct],["_rels/.rels",rels],["docProps/core.xml",core],["word/document.xml",scriptXML(sc)],["word/_rels/document.xml.rels",drels],["word/styles.xml",styles],["word/settings.xml",settings],["word/header1.xml",head],["word/header2.xml",head0]]);
+  const drels=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/><Relationship Id="rId3" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/settings" Target="settings.xml"/><Relationship Id="rId4" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/header" Target="header1.xml"/><Relationship Id="rId5" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/header" Target="header2.xml"/><Relationship Id="rId6" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/comments" Target="comments.xml"/></Relationships>`;
+  return makeZip([["[Content_Types].xml",ct],["_rels/.rels",rels],["docProps/core.xml",core],["word/document.xml",scriptXML(sc)],["word/_rels/document.xml.rels",drels],["word/styles.xml",styles],["word/settings.xml",settings],["word/header1.xml",head],["word/header2.xml",head0],["word/comments.xml",comXML()]]);
 }
 const slug=s=>String(s).normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/[^A-Za-z0-9]+/g,"_").replace(/^_|_$/g,"").slice(0,40);
 const fileName=sc=>`${sc.meta.codigo}_${epTag(sc.meta)}_${slug(String(sc.meta.titulo).replace(/[.“”]/g,""))||"roteiro"}.docx`;
@@ -1186,9 +1234,10 @@ function pInfo(p){
   return {text,first,pageBr,indL:+(ind?(wa(ind,"left")||wa(ind,"start")||0):0),jc:wa(jc,"val")||""};
 }
 async function importDocx(buf,fname){
-  const z=readZip(buf);const xml=await z.text("word/document.xml");if(!xml)throw new Error("documento vazio");
+  const z=readZip(buf);const xml=await z.text("word/document.xml");const wcoms=await readDocxComments(z);const cIds=n=>[...n.getElementsByTagNameNS(WNS,"commentRangeStart")].map(r=>r.getAttributeNS(WNS,"id")||r.getAttribute("w:id"));if(!xml)throw new Error("documento vazio");
   const dom=new DOMParser().parseFromString(xml,"application/xml");const body=dom.getElementsByTagNameNS(WNS,"body")[0];
-  const ps=[...body.children].filter(e=>e.localName==="p").map(pInfo);
+  const ps=[];for(const ch of body.children){if(ch.localName==="p"){const q=pInfo(ch);q.coms=cIds(ch);q.pb=ch.getElementsByTagNameNS(WNS,"pageBreakBefore").length>0;ps.push(q);}
+    else if(ch.localName==="tbl"){for(const tr of ch.getElementsByTagNameNS(WNS,"tr"))[...tr.children].filter(c=>c.localName==="tc").forEach((tc,ci)=>[...tc.children].filter(c=>c.localName==="p").forEach((p,j)=>{const q=pInfo(p);q.coms=cIds(p);q.cell=ci+1;q.cellFirst=j===0;q.pb=p.getElementsByTagNameNS(WNS,"pageBreakBefore").length>0;ps.push(q);}));}}
   const meta={serie:"FUNDAÇÃO VARGUELIA",codigo:"ANS001",temporada:1,episodio:0,titulo:"",duracao:"cerca de 60 minutos",estreia:"",canal:"C2",notas:[]};
   let k=0;const brAt=ps.findIndex(p=>p.pageBr);
   if(brAt>=0&&brAt<20){
@@ -1214,8 +1263,9 @@ async function importDocx(buf,fname){
     else if(f.b&&f.sz>=24&&/^(INT|EXT)/i.test(x))type="scene";
     else if(f.i&&f.sz<=20)type="time";
     else if(f.i&&f.sz<=22)type="note";
+    if(p.cell)type=p.cellFirst?"character":/^\(.*\)$/.test(x)?"paren":"dialogue";
     if(type==="character")x=x.replace(/\s*\(CONT\.?\)\s*$/i,"");
-    els.push({id:uid(),t:type,x});}
+    {const ne={id:uid(),t:type,x};if(p.cell===2&&p.cellFirst)ne.dual=true;if(p.pb)ne.quebra=true;els.push(ne);for(const cid of p.coms||[]){const c=wcoms.get(cid);if(c){meta.coment=meta.coment||[];meta.coment.push(Object.assign({id:uid("cm"),eid:ne.id,q:"",a:0},c));}}}}
   return {id:uid("ep"),meta,atualizado:Date.now(),els};
 }
 
@@ -1602,7 +1652,7 @@ function renderBoard(){
   S.lay=paginate(sc);const list=scenesOf(sc,S.lay.info);
   b.innerHTML=list.map(x=>{if(!x.n)return `<div class="actsep" data-act="${x.id}">${escH(x.act||"—")}</div>`;
     const ph=(x.first||"Escreva a sinopse da cena").slice(0,140);
-    return `<article class="icard${x.cor?"":" nocor"}" draggable="true" data-sid="${x.id}" style="${x.cor?`--cor:${x.cor}`:""}" aria-label="Cena ${x.n}"><header><span class="cn">${escH(x.label||x.n)}</span><span class="ch" title="${escH(x.h)}">${escH(x.h||"(sem cabeçalho)")}</span><button type="button" class="cbtn" data-colors="${x.id}" title="Cor do cartão" aria-label="Cor do cartão"></button></header>
+    return `<article class="icard${x.cor?"":" nocor"}" draggable="true" data-sid="${x.id}" style="${x.cor?`--cor:${x.cor}`:""}" aria-label="Cena ${x.n}"><header><span class="cn">${escH(x.label||x.n)}</span><span class="ch" title="${escH(x.h)}">${escH(x.h||"(sem cabeçalho)")}</span>${cur().els[x.i]&&cur().els[x.i].ponto?`<span class="pt" title="Ponto de estrutura">${escH(cur().els[x.i].ponto)}</span>`:""}<button type="button" class="cbtn" data-colors="${x.id}" title="Cor do cartão" aria-label="Cor do cartão"></button></header>
       <textarea data-syn="${x.id}" placeholder="${escH(ph)}" aria-label="Sinopse da cena ${x.n}">${escH(x.syn||"")}</textarea>
       <footer><span>${x.tc?escH(x.tcRaw.replace(/[\[\]]/g,"")):"sem minutagem"}</span><span>${(x.lines/LPP).toFixed(1).replace(".",",")} pág.</span><span title="${escH([...x.chars].join(", "))}">${x.chars.size} pers.</span></footer></article>`;}).join("")+`<button type="button" class="addcard" data-cmd="insCena">+ nova cena</button>`;
 }
@@ -1720,12 +1770,12 @@ document.getElementById("traySom").onclick=()=>runCmd("som");
 /* ---------- Fountain ---------- */
 function toFountain(sc){
   const m=sc.meta;const lay=paginate(sc);let o=`Title: ${m.titulo}\nCredit: ${m.serie}\nEpisode: ${epCode(m)}\nDraft date: ${estreiaLine(m)}\n${(m.notas||[]).length?`Notes: ${m.notas.join(" / ")}\n`:""}\n`;
-  sc.els.forEach((e,i)=>{const f=lay.info[i];switch(e.t){
+  sc.els.forEach((e,i)=>{const f=lay.info[i];if(e.quebra)o+="===\n\n";switch(e.t){
     case"act":o+=`> ${e.x.toUpperCase()} <\n\n`;break;
     case"scene":o+=`${/^(INT|EXT)[.\/]/i.test(e.x)?"":"."}${e.x.toUpperCase()} #${f.label||f.num}#\n\n`;break;
     case"time":o+=`[[${e.x.replace(/^\[|\]$/g,"")}]]\n\n`;break;
     case"note":o+=`[[${e.x}]]\n\n`;break;
-    case"character":o+=`${e.x.toUpperCase()}${f.cont?" (CONT.)":""}\n`;break;
+    case"character":o+=`${e.x.toUpperCase()}${f.cont?" (CONT.)":""}${e.dual?" ^":""}\n`;break;
     case"trans":o+=`> ${e.x.toUpperCase()}\n\n`;break;
     case"paren":o+=`${e.x}\n`;break;
     case"dialogue":o+=`${e.x}\n${f.end?"\n":""}`;break;
@@ -2701,6 +2751,7 @@ function pageSetupDialog(){
       <fieldset><legend>Margens da página</legend><div class="grid2">${num("mt","Superior")}${num("mb","Inferior")}${num("ml","Esquerda")}${num("mr","Direita")}</div></fieldset>
       <fieldset><legend>Recuos a partir da margem</legend><div class="grid2">${num("ic","Personagem")}<span></span>${num("ipl","Rubrica, esquerda")}${num("ipr","Rubrica, direita")}${num("idl","Fala, esquerda")}${num("idr","Fala, direita")}</div></fieldset>
       <p class="muted" id="pg-info" style="margin:0"></p>
+      <label class="fld"><span>Cabeçalho das páginas. Use {serie} {codigo} {titulo} {episodio} {pagina}</span><input type="text" id="pg-cab" value="${escH(st.cabecalho||HEAD_PADRAO)}" style="font-family:var(--f-type)"></label>
       <fieldset><legend>Aplicar a</legend><label class="radio"><input type="radio" name="pg-to" value="serie"${own?"":" checked"}><span>Todos os roteiros de ${escH(se?se.nome:"desta série")}</span></label><label class="radio"><input type="radio" name="pg-to" value="ep"${own?" checked":""}><span>Só a este roteiro (${escH(epTag(sc.meta))})</span></label></fieldset></div>
     <div class="col"><b>Prévia</b><div class="pgprev"><div class="mini scale" id="pg-mini"><div class="sheet">${sample}</div></div></div></div></div>`,
     onOpen:w=>{
@@ -2715,7 +2766,7 @@ function pageSetupDialog(){
       w.addEventListener("input",e=>{const k=e.target.dataset.pk;if(!k)return;const v=parseFloat(String(e.target.value).replace(",","."));if(isNaN(v))return;st[k]=Math.max(0,Math.min(150,v*10));pick("personalizado");});
       w.querySelector("#pg-papel").onchange=e=>{st.papel=e.target.value;pick("personalizado");};
       setTimeout(draw,0);},
-    buttons:[{label:"OK",def:1,run:w=>{const to=w.querySelector('input[name="pg-to"]:checked').value;const val=Object.assign({},st,{preset:presetKey});delete val.label;delete val.desc;
+    buttons:[{label:"OK",def:1,run:w=>{st.cabecalho=w.querySelector("#pg-cab").value.trim()||HEAD_PADRAO;if(st.cabecalho===HEAD_PADRAO)delete st.cabecalho;const to=w.querySelector('input[name="pg-to"]:checked').value;const val=Object.assign({},st,{preset:presetKey});delete val.label;delete val.desc;
         if(to==="ep"){sc.meta.pagina=val;markChanged(sc);}else{delete sc.meta.pagina;markChanged(sc);if(se){se.pagina=val;markSerie(se);}else sc.meta.pagina=val;}
         renderSheet();toast(`Página: ${PAGE_PRESETS[presetKey]?PAGE_PRESETS[presetKey].label:"personalizada"} · ${S.lay.pages} páginas`);}},{label:"Cancelar"}]});
 }
@@ -2981,10 +3032,14 @@ sheet.addEventListener("contextmenu",e=>{
   const n=e.target.closest(".el");if(!n)return;e.preventDefault();const f=findEl(n.dataset.id);if(!f)return;
   if(document.activeElement!==n){S.focusId=f.e.id;}
   const sc=cur();const items=[
+    {label:"Comentar…",icon:"com",key:"Ctrl+Alt+M",run:(()=>{const q=String(getSelection()).trim();return ()=>addComment(f.e.id,q);})()},
     {label:"Nota de roteiro…",icon:"sticky",run:()=>noteDialog(f.e.id)},
     ...(f.e.t==="dialogue"?[{label:"Falas alternativas…",run:()=>altsDialog(f.e.id)}]:[]),
     {label:"Marcar para análise técnica",icon:"tag",sub:BD_CATS.map(([k,l])=>({label:l,run:()=>tagSelection(f.e.id,k)}))},
     {label:"Estilo",sub:ORDER.map(t=>({label:TYPES[t].label,key:"Alt+"+TYPES[t].key,check:()=>f.e.t===t,run:()=>setType(f.e.id,t)}))},
+    ...(f.e.t==="character"?[{label:"Diálogo simultâneo",icon:"dual",check:()=>!!f.e.dual,run:()=>toggleDual(f.e.id)}]:[]),
+    ...(f.e.t==="scene"?[{label:"Ponto de estrutura",icon:"struct",sub:[...PONTOS.map(p=>({label:p,check:()=>f.e.ponto===p,run:()=>setPonto(f.e.id,p)})),"-",{label:"Nenhum",run:()=>setPonto(f.e.id,"")}]}]:[]),
+    {label:"Página nova a partir daqui",check:()=>!!f.e.quebra,run:()=>toggleQuebra(f.e.id)},
     "-",
     ...(f.e.t==="scene"&&sc.meta.cenasTravadas?[{label:"Omitir esta cena",run:()=>omitScene(f.e.id)}]:[]),
     {label:"Revisões…",icon:"rev",run:()=>revisionsDialog()},
@@ -3008,7 +3063,7 @@ async function scriptPDF(sc,o){
     center(`${m.temporada}ª temporada · ${m.unidade||"episódio"} ${m.episodio} · ${m.duracao}`,11,"r",0,4);center(estreiaLine(m),11,"r",0,48);(m.notas||[]).forEach(n=>center(n,10,"i",1,4));
     if(sets.size&&o.rev){const s=[...sets.values()].pop();center(`${s.nome} · ${new Date(s.data).toLocaleDateString("pt-BR")}`,10,"b",1,0);}}
   const lay=paginate(sc),info=lay.info,LP=g.lpp;let row=0,pageNo=1,sIdx=0;
-  const nextPage=()=>{pageNo++;newPage(false);pg.no=pageNo;row=0;};
+  const nextPage=()=>{pageNo++;newPage(false);pg.no=pageNo;pg.fi=curI;row=0;};let curI=0;
   nextPage();
   const styleOf=e=>{switch(e.t){case"act":return {f:"b",size:12,x:0,center:1};case"scene":return {f:"b",size:12,x:0};case"time":return {f:"i",size:10,x:0,gray:1};case"note":return {f:"i",size:11,x:0,gray:1};
     case"trans":return {f:"r",size:12,x:0,right:1};case"character":return {f:"r",size:12,x:p.ic};case"paren":return {f:"r",size:12,x:p.ipl};case"dialogue":return {f:"r",size:12,x:p.idl};default:return {f:"r",size:12,x:0};}};
@@ -3016,18 +3071,35 @@ async function scriptPDF(sc,o){
     if(st.center)x=ml+(g.tw*PT-line.length*cw)/2;if(st.right)x=ml+g.tw*PT-line.length*cw;
     if(e.t==="note"&&isFirst){const mm=/^([^:]{2,40}:)/.exec(line);if(mm){txt(x,base,st.size,"bi",1,mm[1]);txt(x+mm[1].length*cw,base,st.size,"i",1,line.slice(mm[1].length));return base;}}
     txt(x,base,st.size,st.f,st.gray,line);return base;};
-  for(let i=0;i<sc.els.length;i++){const e=sc.els[i],f=info[i];if(e.t==="scene")sIdx++;
+  const half=halfW(g),pairs=new Map(dualPairs(sc).map(q=>[q.L[0],q]));const yAt=()=>ph-mt-(row+1)*12+2.6;
+  const star=(y,rv)=>{if(rv){txt(pw-mr*0.55,y,12,"b",0,"*");pg.revs.add(rv);}};
+  for(let i=0;i<sc.els.length;i++){const e=sc.els[i],f=info[i];curI=i;if(e.t==="scene")sIdx++;
+    if(e.quebra&&row>0)nextPage();
     if(f.keepNext&&row>0){let h=f.before+f.lines+f.after,j=i+1;while(j<sc.els.length&&info[j].keepNext&&h<=LP){h+=info[j].before+info[j].lines+info[j].after;j++;}
-      if(j<sc.els.length)h+=info[j].before+(info[j].keepLines?info[j].lines:1);if(h<=LP&&row+h>LP)nextPage();}
-    else if(f.keepLines&&row>0&&row+f.before+f.lines>LP&&f.lines<=LP)nextPage();
+      if(j<sc.els.length)h+=info[j].before+tailH(sc.els[j],info[j]);if(h<=LP&&row+h>LP)nextPage();}
+    else if(f.keepLines&&!f.split&&row>0&&row+f.before+f.lines>LP&&f.lines<=LP)nextPage();
     if(row>0)row+=f.before;
+    const pr=pairs.get(i);
+    if(pr){const colW=g.tw/2-2;
+      const side=(a,b,base)=>{const out=[];for(let k=a;k<b;k++){const ek=sc.els[k],fk=info[k];let t=ek.x,x=base,w=half.dialogue;
+          if(ek.t==="character"){t=t.toUpperCase()+(fk.cont?" (CONT.)":"");x=base+colW*0.25;w=half.character;}else if(ek.t==="paren"){x=base+colW*0.05;w=half.paren;}
+          const rv=o.rev&&ek.rev&&sets.has(ek.rev)?ek.rev:null;for(const ln of wrapLines(t,w))out.push({ln,x,rv});}return out;};
+      const A=side(pr.L[0],pr.L[1],0),B=side(pr.R[0],pr.R[1],g.tw/2+2);const n=Math.max(A.length,B.length);
+      if(row>0&&row+n>LP)nextPage();
+      for(let k=0;k<n;k++){const y=yAt();for(const it of [A[k],B[k]]){if(!it)continue;txt(ml+it.x*PT,y,12,"r",0,it.ln);star(y,it.rv);}pg.scenes.add(sIdx);row++;}
+      row+=1;if(row>=LP&&pr.R[1]<sc.els.length)nextPage();i=pr.R[1]-1;continue;}
     let text=e.x;if(e.t==="scene")text=`CENA ${f.label||f.num} — ${e.x.toUpperCase()}`;if(e.t==="character")text=e.x.toUpperCase()+(f.cont?" (CONT.)":"");if(e.t==="act"||e.t==="trans")text=e.x.toUpperCase();
-    const st=styleOf(e);const lines=wrapLines(text,g.wch[e.t]||g.wch.action);const revd=o.rev&&e.rev&&sets.has(e.rev);
-    lines.forEach((ln,k)=>{if(row>=LP)nextPage();const y=draw(e,ln,k===0,st);pg.scenes.add(sIdx);if(revd){txt(pw-mr*0.55,y,12,"b",0,"*");pg.revs.add(e.rev);}row++;});
+    const st=styleOf(e);const lines=wrapLines(text,g.wch[e.t]||g.wch.action);const rv=o.rev&&e.rev&&sets.has(e.rev)?e.rev:null;
+    let who="";if(f.split){const w0=sc.els[speechStart(sc.els,i)];who=w0?w0.x.toUpperCase().replace(/\s*\(CONT\.?\)\s*$/i,""):"";}
+    lines.forEach((ln,k)=>{
+      if(f.split&&k===f.split){txt(ml+p.ic*PT,yAt(),12,"r",0,"(MAIS)");nextPage();txt(ml+p.ic*PT,yAt(),12,"r",0,who+" (CONT.)");row++;}
+      if(row>=LP)nextPage();const y=draw(e,ln,k===0,st);pg.scenes.add(sIdx);star(y,rv);
+      if(k===0&&e.t==="scene"&&o.numMargens){const lab=String(f.label||f.num);txt(ml-(lab.length+2)*7.2,y,12,"b",0,lab);txt(pw-mr+10,y,12,"b",0,lab);}
+      row++;});
     row+=f.after;if(row>=LP&&i<sc.els.length-1)nextPage();
   }
-  const headTxt=`${String(m.serie).toUpperCase()} · ${epCode(m)} · `;
-  for(const q of pages){if(q.title)continue;pg=q;let s=headTxt+q.no;const rv=[...q.revs].map(id=>sets.get(id)).filter(Boolean);
+  const hp=headParts(sc);
+  for(const q of pages){if(q.title)continue;pg=q;let s=hp[0]+q.no+hp[1];const rv=[...q.revs].map(id=>sets.get(id)).filter(Boolean);
     if(rv.length){const last=rv.sort((a,b)=>a.data-b.data).pop();s=`(${revCor(last.cor)[1].toUpperCase()} ${new Date(last.data).toLocaleDateString("pt-BR")})  `+s;}
     txt(pw-mr-s.length*9*0.6,ph-35.4-9,9,"r",1,s);}
   // intervalo de cenas: mantém a numeração original das páginas, como nos programas profissionais
@@ -3052,18 +3124,18 @@ async function scriptPDF(sc,o){
     const end=enc.encode("\nendobj\n");parts.push(end);off+=end.length;});
   const xref=`xref\n0 ${objs.length+1}\n0000000000 65535 f \n`+offs.map(x=>String(x).padStart(10,"0")+" 00000 n \n").join("");
   parts.push(enc.encode(xref+`trailer\n<< /Size ${objs.length+1} /Root ${catalog} 0 R /Info ${info2} 0 R >>\nstartxref\n${off}\n%%EOF\n`));
-  return {blob:new Blob(parts,{type:"application/pdf"}),pages:out.length};
+  return {blob:new Blob(parts,{type:"application/pdf"}),pages:out.length,starts:pages.filter(q=>!q.title).map(q=>q.fi)};
 }
 function pdfDialog(){
   const sc=cur();histCommit();const hasRev=((sc.meta.rev||{}).sets||[]).length>0;
-  dialog({title:"Exportar PDF",width:500,body:`<fieldset><legend>Incluir</legend><div class="col"><label class="chk"><input type="checkbox" id="pd-t" checked> Folha de rosto</label><label class="chk"><input type="checkbox" id="pd-r"${hasRev?" checked":""}${hasRev?"":" disabled"}> Marcas de revisão (*) e cor da revisão no cabeçalho</label></div></fieldset>
+  dialog({title:"Exportar PDF",width:500,body:`<fieldset><legend>Incluir</legend><div class="col"><label class="chk"><input type="checkbox" id="pd-t" checked> Folha de rosto</label><label class="chk"><input type="checkbox" id="pd-r"${hasRev?" checked":""}${hasRev?"":" disabled"}> Marcas de revisão (*) e cor da revisão no cabeçalho</label><label class="chk"><input type="checkbox" id="pd-nm"> Número da cena nas duas margens (roteiro de filmagem)</label></div></fieldset>
     <fieldset><legend>Cenas</legend><div class="col"><label class="radio"><input type="radio" name="pd-i" value="tudo" checked><span>O roteiro inteiro</span></label><label class="radio"><input type="radio" name="pd-i" value="trecho"><span>Só as páginas das cenas <input type="text" id="pd-de" style="width:56px" placeholder="12"> até <input type="text" id="pd-ate" style="width:56px" placeholder="14A"><small>A numeração das páginas continua a original.</small></span></label></div></fieldset>
     <fieldset><legend>Contra vazamentos</legend><div class="col"><label class="fld"><span>Marca d'água em todas as páginas</span><input type="text" id="pd-m" placeholder="CONFIDENCIAL"></label>
     <label class="fld"><span>Cópias nominais (um nome por linha: cada pessoa recebe um PDF com o próprio nome na marca d'água)</span><textarea id="pd-n" rows="3" placeholder="ODELINE FERRASTEN&#10;CAIO WESTERHALT"></textarea></label>
     <span class="muted">Se o roteiro aparecer num jornal de Tencri, você sabe de qual cópia saiu.</span></div></fieldset>`,
     onOpen:w=>{w.querySelectorAll("#pd-de,#pd-ate").forEach(i=>i.addEventListener("focus",()=>{w.querySelector('input[name="pd-i"][value="trecho"]').checked=true;}));},
     buttons:[{label:"Exportar",def:1,run:async w=>{const trecho=w.querySelector('input[name="pd-i"]:checked').value==="trecho";
-      const base={titulo:w.querySelector("#pd-t").checked,rev:w.querySelector("#pd-r").checked,marca:w.querySelector("#pd-m").value.trim(),de:trecho?w.querySelector("#pd-de").value:"",ate:trecho?w.querySelector("#pd-ate").value:""};
+      const base={titulo:w.querySelector("#pd-t").checked,rev:w.querySelector("#pd-r").checked,numMargens:w.querySelector("#pd-nm").checked,marca:w.querySelector("#pd-m").value.trim(),de:trecho?w.querySelector("#pd-de").value:"",ate:trecho?w.querySelector("#pd-ate").value:""};
       const nomes=w.querySelector("#pd-n").value.split("\n").map(s=>s.trim()).filter(Boolean);const nome=fileName(sc).replace(/\.docx$/,"");
       toast("Montando o PDF…");
       if(nomes.length){const ents=[];let k=0;for(const n of nomes){k++;const marca=`CÓPIA ${pad2(k)} · ${n.toUpperCase()}`;const r=await scriptPDF(sc,Object.assign({},base,{marca:base.marca?`${base.marca} · ${marca}`:marca}));ents.push([`${nome}_copia${pad2(k)}_${slug(n)}.pdf`,new Uint8Array(await r.blob.arrayBuffer())]);}
@@ -3104,6 +3176,473 @@ TIPS.push("Produção › Revisões põe um * na margem de tudo o que mudou, com
   "Clique com o botão direito no roteiro para notas, falas alternativas e análise técnica.",
   "Exportar PDF › Cópias nominais gera um PDF por pessoa, com o nome dela na marca d'água.",
   "Alt+9 cria uma transição: CORTA PARA:, FUSÃO:, alinhada à direita.");
+
+/* ================================================================
+   PACOTE "FINAL DRAFT" 2: diálogo simultâneo · (MAIS)/(CONT.) · SmartType · destaques
+   estrutura do episódio · quebra de página · cabeçalho editável · números de cena nas margens
+   ================================================================ */
+Object.assign(ICON,{
+  dual:'<rect x="1.5" y="2.5" width="6" height="11" fill="#fff" stroke="#000"/><rect x="8.5" y="2.5" width="6" height="11" fill="#fff" stroke="#000"/><path d="M3 5h3M3 7h3M3 9h2M10 5h3M10 7h3M10 9h2" stroke="#000080"/>',
+  struct:'<rect x="1.5" y="6.5" width="13" height="4" fill="#fff" stroke="#000"/><rect x="2" y="7" width="3" height="3" fill="#3050D0"/><rect x="5" y="7" width="5" height="3" fill="#E04040"/><rect x="10" y="7" width="4" height="3" fill="#30A030"/><path d="M7 2v4M7 2l3 1.5L7 5" fill="#FFD000" stroke="#000" stroke-width=".8"/>',
+  smart:'<rect x="1.5" y="3.5" width="13" height="9" fill="#fff" stroke="#000"/><path d="M3.5 6h6M3.5 8h9M3.5 10h4" stroke="#000"/><path d="M11 5.5l1.5-1.5 1 1L12 6.5z" fill="#FFD000" stroke="#000" stroke-width=".6"/>',
+});
+
+/* ---------- diálogo simultâneo ---------- */
+function speechStart(els,i){let k=i;while(k>=0&&["dialogue","paren"].includes(els[k].t))k--;return k>=0&&els[k].t==="character"?k:-1;}
+function speechEnd(els,i){let k=i+1;while(k<els.length&&["dialogue","paren"].includes(els[k].t))k++;return k;}
+function dualPairs(sc){const els=sc.els,out=[];for(let i=1;i<els.length;i++){const e=els[i];if(e.t!=="character"||!e.dual)continue;const a=speechStart(els,i-1);if(a<0||els[a].dual)continue;if(!["dialogue","paren"].includes(els[i-1].t))continue;out.push({L:[a,i],R:[i,speechEnd(els,i)]});}return out;}
+function dualAt(sc,i){return dualPairs(sc).find(p=>p.L[0]===i)||null;}
+function canDual(sc,i){const els=sc.els;if(!els[i]||els[i].t!=="character"||i<1)return false;if(!["dialogue","paren"].includes(els[i-1].t))return false;const a=speechStart(els,i-1);return a>=0&&!els[a].dual;}
+function toggleDual(id){const sc=cur();const f=findEl(id);if(!f)return;if(!f.e.dual&&!canDual(sc,f.i)){toast("O diálogo simultâneo precisa de outra fala logo antes");return;}
+  if(f.e.dual)delete f.e.dual;else f.e.dual=true;markRev(f.e);touch(true);renderSheet();toast(f.e.dual?"As duas falas vão lado a lado":"Falas voltaram a ficar uma embaixo da outra");}
+const halfW=g=>{const c=mm=>Math.max(8,Math.floor(mm/25.4*10+1e-6));const col=g.tw/2-2;return {character:c(col*0.75),paren:c(col*0.9),dialogue:c(col)};};
+const _layout6=layout;
+layout=function(sc){
+  const info=_layout6(sc);const els=sc.els;const half=halfW(geomOf(sc));
+  for(const pr of dualPairs(sc)){
+    const calc=(a,b)=>{let s=0;for(let k=a;k<b;k++){const e=els[k];let t=e.x;if(e.t==="character"&&info[k].cont)t+=" (CONT.)";info[k].lines=wrapCount(t,half[e.t]||half.dialogue);s+=info[k].lines+info[k].after;}return s;};
+    const Ls=calc(pr.L[0],pr.L[1]),Rs=calc(pr.R[0],pr.R[1]);
+    for(let k=pr.L[0];k<pr.L[1];k++){info[k].keepNext=true;info[k].inDual="L";}info[pr.L[0]].dualL=true;
+    for(let k=pr.R[0];k<pr.R[1];k++){info[k].inDual="R";info[k].lines=0;info[k].after=0;info[k].keepLines=false;info[k].keepNext=k<pr.R[1]-1;}
+    info[pr.R[0]].dualR=true;info[pr.R[1]-1].lines=Math.max(0,Rs-Ls);
+  }
+  return info;
+};
+function positionDual(){
+  const sc=cur();if(!sc)return;sheet.querySelectorAll(".dual-l,.dual-r").forEach(n=>{n.classList.remove("dual-l","dual-r");n.style.marginTop="";n.style.marginBottom="";});
+  for(const pr of dualPairs(sc)){const L=[],R=[];for(let k=pr.L[0];k<pr.L[1];k++){const n=nodeOf(sc.els[k].id);if(n){n.classList.add("dual-l");L.push(n);}}
+    for(let k=pr.R[0];k<pr.R[1];k++){const n=nodeOf(sc.els[k].id);if(n){n.classList.add("dual-r");R.push(n);}}
+    if(!L.length||!R.length)continue;const h=a=>a.reduce((s,n)=>s+n.offsetHeight,0);const Lh=h(L),Rh=h(R);
+    R[0].style.marginTop=(-Lh)+"px";if(Lh>Rh)R[R.length-1].style.marginBottom=(Lh-Rh)+"px";}
+}
+
+/* ---------- (MAIS)/(CONT.) e quebra de página forçada ---------- */
+const splittable=(e,f)=>(typeof prefs==="undefined"||prefs.dividirFalas!==false)&&e.t==="dialogue"&&!f.inDual&&f.lines>=4;
+const tailH=(e,f)=>f.keepLines?(splittable(e,f)?3:f.lines):1;
+paginate=function(sc){
+  const LP=geomOf(sc).lpp;const info=layout(sc),els=sc.els;let y=0,page=2;const breaks=[];const canSplit=(typeof prefs==="undefined"||prefs.dividirFalas!==false);
+  for(let i=0;i<els.length;i++){const f=info[i],e=els[i];f.split=0;
+    if(e.quebra&&y>0){page++;y=0;breaks.push({i,pos:"before",page});}
+    if(f.keepNext&&y>0){let h=f.before+f.lines+f.after,j=i+1;
+      while(j<els.length&&info[j].keepNext&&h<=LP){h+=info[j].before+info[j].lines+info[j].after;j++;}
+      if(j<els.length)h+=info[j].before+(typeof tailH==="function"?tailH(els[j],info[j]):(info[j].keepLines?info[j].lines:1));
+      if(h<=LP&&y+h>LP){page++;y=0;breaks.push({i,pos:"before",page});}}
+    else if(f.keepLines&&y>0&&y+f.before+f.lines>LP&&f.lines<=LP){
+      const room=LP-y-f.before;let first=room-1;if(f.lines-first<2)first=f.lines-2;
+      if(canSplit&&splittable(e,f)&&first>=2){f.split=first;f.page=page;page++;breaks.push({i,pos:"after",page,split:1});y=1+(f.lines-first)+f.after;if(y>=LP&&i<els.length-1){page++;y=0;breaks.push({i,pos:"after",page});}continue;}
+      page++;y=0;breaks.push({i,pos:"before",page});}
+    if(y>0)y+=f.before;
+    f.page=page;let L=f.lines;
+    while(y+L>LP){L-=(LP-y);page++;y=0;breaks.push({i,pos:"after",page});}
+    y+=L+f.after;
+    if(y>=LP&&i<els.length-1){page++;y=0;breaks.push({i,pos:"after",page});}
+  }
+  const seen=new Set();
+  return {info,breaks:breaks.filter(b=>!seen.has(b.page)&&seen.add(b.page)),pages:y>0?page:page-1,lpp:LP};
+};
+function toggleQuebra(id){const f=findEl(id);if(!f)return;if(f.e.quebra)delete f.e.quebra;else f.e.quebra=true;touch(true);decor();toast(f.e.quebra?"Este trecho começa numa página nova":"Quebra de página removida");}
+const _elFlags6=elFlags;
+elFlags=function(n,e){_elFlags6(n,e);if(e.quebra)n.dataset.quebra="1";else delete n.dataset.quebra;};
+
+/* ---------- cabeçalho editável ---------- */
+const HEAD_PADRAO="{serie} · {codigo} · {pagina}";
+function headerText(sc,n){const m=sc.meta;const tpl=pageOf(sc).cabecalho||HEAD_PADRAO;
+  return tpl.replace(/\{serie\}/g,String(m.serie).toUpperCase()).replace(/\{codigo\}/g,epCode(m)).replace(/\{titulo\}/g,String(m.titulo).toUpperCase()).replace(/\{episodio\}/g,String(m.episodio)).replace(/\{pagina\}/g,String(n));}
+function headParts(sc){const s=headerText(sc,"\u0001");const i=s.indexOf("\u0001");return i<0?[s+" · ",""]:[s.slice(0,i),s.slice(i+1)];}
+placeBreaks=function(){
+  sheet.querySelectorAll(".pgd").forEach(d=>d.remove());const sc=cur();if(!sc)return;
+  const mk=(p,extra)=>{const d=document.createElement("div");d.className="pgd";d.setAttribute("aria-hidden","true");d.innerHTML=`<span>${extra?escH(extra)+"  ·  ":""}${escH(headerText(sc,p))}</span>`;return d;};
+  const tp=document.getElementById("titlePage");if(tp)tp.after(mk(2));
+  for(const b of S.lay.breaks){const e=sc.els[b.i];if(!e)continue;const n=nodeOf(e.id);if(!n)continue;if(b.pos==="before")n.before(mk(b.page));else n.after(mk(b.page,b.split?"a fala continua: (MAIS) / (CONT.)":""));}
+  sc.els.forEach(e=>{const n=nodeOf(e.id);if(!n)return;if(e.quebra)n.dataset.quebra="1";else delete n.dataset.quebra;if(e.t==="scene"){if(e.ponto)n.dataset.ponto=e.ponto;else delete n.dataset.ponto;}});
+  positionDual();paintHighlights();
+};
+
+/* ---------- SmartType completo ---------- */
+const SMART_PADRAO={
+  tod:["NOITE","DIA","MANHÃ","TARDE","FIM DE TARDE","MADRUGADA","AMANHECER","ANOITECER","CONTÍNUO","MESMO INSTANTE","POUCO DEPOIS","MAIS TARDE","NOITE (LEMBRANÇA)"],
+  ext:["V.O.","O.S.","NA FITA","AO TELEFONE","NO RÁDIO","NA TV","SUSSURRANDO","CANTANDO","CONT."],
+  trans:["CORTA PARA:","CORTE SECO PARA:","CORTE SECO PARA PRETO.","FUSÃO:","FADE IN:","FADE OUT.","CONGELA.","ESCURECE.","PASSAGEM DE TEMPO:"],
+};
+const smartLists=()=>Object.assign({},SMART_PADRAO,prefs.smart||{});
+showAC=function(id){
+  const f=findEl(id);if(!f)return hideAC();const raw=f.e.x;const up=raw.toUpperCase();const q=up.trim();const SL=smartLists();let list=[];
+  if(f.e.t==="scene"){const m=/^(.*\s[—–-]\s)([^—–-]*)$/.exec(up);
+    if(m){const part=m[2].trim();const tods=new Map();SL.tod.forEach(t=>tods.set(t,0));for(const [h,c] of acSource("scene")){const seg=h.split(/\s[—–-]\s/);if(seg.length>1){const t=seg.pop().trim();tods.set(t,(tods.get(t)||0)+c);}}
+      list=[...tods].filter(([t])=>t.startsWith(part)&&t!==part).sort((a,b)=>b[1]-a[1]).slice(0,8).map(([t,c])=>[t,c?c+"×":"lista",m[1]+t]);}
+    else if(q&&q.length<=4&&!/^(INT|EXT)\./.test(q))list=["INT. ","EXT. ","INT./EXT. "].filter(x=>x.startsWith(q)&&x.trim()!==q).map(x=>[x.trim(),"local",x]);
+    if(!list.length&&q)list=[...acSource("scene").entries()].filter(([k])=>k.startsWith(q)&&k!==q).sort((a,b)=>b[1]-a[1]).slice(0,7).map(([k,c])=>[k,c+"×",k]);}
+  else if(f.e.t==="character"){const m=/^(.*?\()([^)]*)$/.exec(up);
+    if(m){const part=m[2].trim();list=SL.ext.filter(x=>x.startsWith(part)&&x!==part).map(x=>[`(${x})`,"extensão",m[1]+x+")"]);}
+    else if(q)list=[...acSource("character").entries()].filter(([k])=>k.startsWith(q)&&k!==q).sort((a,b)=>b[1]-a[1]).slice(0,7).map(([k,c])=>[k,c?c+"×":"ficha",k]);}
+  else if(f.e.t==="trans")list=SL.trans.filter(x=>x.startsWith(q)&&x!==q).slice(0,9).map(x=>[x,"transição",x]);
+  acList=list;if(!acList.length){hideAC();return;}acFor=id;acIdx=0;
+  if(!acEl){acEl=document.createElement("div");acEl.className="ac";acEl.setAttribute("role","listbox");document.body.appendChild(acEl);
+    acEl.addEventListener("mousedown",ev=>{ev.preventDefault();const b=ev.target.closest("button");if(b){acIdx=+b.dataset.i;acAccept();}});}
+  acEl.innerHTML=acList.map(([k,c],i)=>`<button type="button" role="option" data-i="${i}" aria-selected="${i===acIdx}">${escH(k)}<small>${escH(c)}</small></button>`).join("");
+  const r=nodeOf(id).getBoundingClientRect();acEl.style.top=Math.min(r.bottom+4,innerHeight-acEl.offsetHeight-8)+"px";acEl.style.left=Math.max(16,Math.min(r.left,innerWidth-acEl.offsetWidth-16))+"px";
+};
+acAccept=function(){const f=findEl(acFor);if(!f)return hideAC();const it=acList[acIdx];const v=it[2]||it[0];f.e.x=v;markRev(f.e);const n=nodeOf(f.e.id);n.textContent=v;hideAC();setCaret(n,"end");touch(false);};
+sheet.addEventListener("focusin",e=>{const n=e.target.closest&&e.target.closest(".e-trans");if(n){const f=findEl(n.dataset.id);if(f&&!f.e.x.trim())setTimeout(()=>showAC(f.e.id),30);}});
+function smartDialog(){
+  const SL=smartLists();const ta=(k,l)=>`<label class="fld"><span>${l}</span><textarea id="sl-${k}" rows="8" style="font-family:var(--f-type)">${escH(SL[k].join("\n"))}</textarea></label>`;
+  dialog({title:"Listas do SmartType",width:640,body:`<p class="muted" style="margin:0">O que o autocompletar oferece. Uma opção por linha. Os locais e personagens já usados nos roteiros entram sozinhos.</p><div class="grid3">${ta("tod","Horário (depois do — na cena)")}${ta("ext","Extensões do personagem")}${ta("trans","Transições")}</div>`,
+    buttons:[{label:"OK",def:1,run:w=>{const rd=k=>w.querySelector("#sl-"+k).value.split("\n").map(s=>s.trim().toUpperCase()).filter(Boolean);prefs.smart={tod:rd("tod"),ext:rd("ext").map(x=>x.replace(/^\(|\)$/g,"")),trans:rd("trans")};savePrefs();toast("Listas do SmartType salvas");}},
+      {label:"Restaurar padrão",run:w=>{for(const k of ["tod","ext","trans"])w.querySelector("#sl-"+k).value=SMART_PADRAO[k].join("\n");return false;}},{label:"Cancelar"}]});
+}
+
+/* ---------- destaques na página (sem mexer no texto) ---------- */
+S.hiChars=new Set();
+function paintHighlights(){
+  if(typeof CSS==="undefined"||!CSS.highlights||typeof Highlight==="undefined")return;
+  for(const k of [...CSS.highlights.keys()])if(String(k).startsWith("sr-"))CSS.highlights.delete(k);
+  const sc=cur();if(!sc||S.view!=="page")return;
+  if(prefs.verAnalise!==false&&(sc.meta.analise||[]).length){const by=new Map(),sceneEls=new Map();let sid=null;
+    sc.els.forEach(e=>{if(e.t==="scene")sid=e.id;if(sid){if(!sceneEls.has(sid))sceneEls.set(sid,[]);sceneEls.get(sid).push(e);}});
+    for(const a of sc.meta.analise){const q=String(a.item||"").toLowerCase();if(!q)continue;for(const e of sceneEls.get(a.sid)||[]){const n=nodeOf(e.id);const t=n&&n.firstChild;if(!t||t.nodeType!==3)continue;
+      const hay=t.data.toLowerCase();let p=hay.indexOf(q);while(p>=0){const r=new Range();r.setStart(t,p);r.setEnd(t,p+q.length);if(!by.has(a.cat))by.set(a.cat,[]);by.get(a.cat).push(r);p=hay.indexOf(q,p+q.length);}}}
+    for(const [cat,rs] of by)CSS.highlights.set("sr-bd-"+cat,new Highlight(...rs));}
+  if(S.hiChars.size){const rs=[];let who=null;for(const e of sc.els){if(e.t==="character")who=baseName(e.x);else if(!["dialogue","paren"].includes(e.t))who=null;
+      if(who&&S.hiChars.has(who)){const n=nodeOf(e.id);if(n&&n.firstChild){const r=new Range();r.selectNodeContents(n);rs.push(r);}}}
+    if(rs.length)CSS.highlights.set("sr-hi",new Highlight(...rs));}
+}
+persHTML=function(sc){
+  const cs=charStats(sc);const max=cs[0]?cs[0].falas:1;
+  return `<div class="panel"><div class="row"><button type="button" class="btn sm" data-cmd="verElenco">Abrir fichas (Elenco)…</button><button type="button" class="btn sm" data-hiclear="1"${S.hiChars.size?"":" hidden"}>Tirar destaques</button></div>
+    <p class="status" style="margin:0">Clique num nome para ir à próxima fala. Marque a caixinha ao lado para pintar as falas dele na página.</p>
+    ${cs.map(c=>`<div class="chr-row"><button type="button" class="chr" data-char="${escH(c.name)}"><b>${escH(c.name)}</b><span class="n">${c.falas} falas · ${fmtN(c.palavras)} pal. · ${c.cenas.size} cenas</span><span class="bar"><i style="width:${(c.falas/max*100).toFixed(1)}%"></i></span></button><label class="hi-t" title="Destacar as falas de ${escH(c.name)} na página"><input type="checkbox" data-hichar="${escH(c.name)}" aria-label="Destacar ${escH(c.name)}"${S.hiChars.has(c.name)?" checked":""}></label></div>`).join("")||`<p class="status">Ninguém fala ainda.</p>`}</div>`;
+};
+side.addEventListener("change",e=>{const t=e.target;if(t.dataset.hichar===undefined)return;if(t.checked)S.hiChars.add(t.dataset.hichar);else S.hiChars.delete(t.dataset.hichar);paintHighlights();const hb=side.querySelector("[data-hiclear]");if(hb)hb.hidden=!S.hiChars.size;if(S.hiChars.size&&!CSS.highlights)toast("Este navegador não mostra destaques; atualize-o");});
+side.addEventListener("click",e=>{if(e.target.closest("[data-hiclear]")){S.hiChars.clear();paintHighlights();renderSide();}});
+
+/* ---------- estrutura do episódio ---------- */
+const PONTOS=["Gancho","Incidente","Primeira virada","Ponto sem volta","Virada da metade","Crise","Clímax","Resolução","Gancho final"];
+function setPonto(id,v){const f=findEl(id);if(!f)return;if(v)f.e.ponto=v;else delete f.e.ponto;touch(true);if(S.view==="board")renderBoard();toast(v?`Cena marcada como “${v}”`:"Ponto de estrutura removido");}
+function structureDialog(){
+  const sc=cur();const lay=paginate(sc);const list=scenesOf(sc,lay.info).map(x=>x.n?Object.assign(x,{ponto:sc.els[x.i].ponto}):x);let modo="cor";
+  const draw=w=>{
+    const scenes=list.filter(x=>x.n);const useTc=scenes.length&&scenes.every(x=>x.tc);
+    const dur=x=>useTc?Math.max(1,x.tc.b-x.tc.a):x.lines;const total=scenes.reduce((s,x)=>s+dur(x),0)||1;
+    const W=900,X0=10,BW=W-20;let acc=0;const blocks=[],acts=[],pts=[];let curAct=null;
+    for(const x of list){if(!x.n){curAct={label:x.act,start:acc,cenas:0,dur:0};acts.push(curAct);continue;}
+      const w=dur(x)/total*BW;const p=locParse(x.h);let fill=x.cor||"#C0C0C0";
+      if(modo==="dia")fill=/NOITE|MADRUGADA|ANOITECER/.test(p.tod)?"#1E2A6B":/MANHÃ|AMANHECER/.test(p.tod)?"#F0D060":/TARDE/.test(p.tod)?"#E89040":/DIA/.test(p.tod)?"#F8E890":"#A0A0A0";
+      if(modo==="ie")fill=p.ie==="INT"?"#3050D0":p.ie==="EXT"?"#30A030":"#B040B0";
+      blocks.push({x:X0+acc/total*BW,w,fill,x0:x});if(x.ponto)pts.push({x:X0+(acc+dur(x)/2)/total*BW,label:x.ponto,s:x});
+      if(curAct){curAct.cenas++;curAct.dur+=dur(x);}acc+=dur(x);}
+    const ticks=[];if(useTc){for(let t=0;t<=total;t+=300)ticks.push({x:X0+t/total*BW,l:`${t/60}′`});}else{for(let t=0;t<=total;t+=lay.lpp*5)ticks.push({x:X0+t/total*BW,l:`${Math.round(t/lay.lpp)} p`});}
+    const svg=`<svg viewBox="0 0 ${W} 168" width="100%" role="img" aria-label="Linha do tempo do episódio" style="display:block;color:var(--text)">
+      ${pts.map((p,k)=>`<g><line x1="${p.x.toFixed(1)}" y1="${28+(k%2)*14}" x2="${p.x.toFixed(1)}" y2="62" stroke="#C00000" stroke-width="1.5"/><path d="M${p.x.toFixed(1)} ${20+(k%2)*14}l6 4-6 4z" fill="#C00000"/><text x="${(p.x+8).toFixed(1)}" y="${27+(k%2)*14}" font-size="11" fill="currentColor" font-weight="700">${escH(p.label)}</text></g>`).join("")}
+      ${blocks.map(b=>`<rect class="stb" data-goto="${b.x0.id}" x="${b.x.toFixed(1)}" y="62" width="${Math.max(1,b.w-1).toFixed(1)}" height="46" fill="${b.fill}" stroke="#000" stroke-width=".6"><title>Cena ${escH(b.x0.label||b.x0.n)} — ${escH(b.x0.h)}${b.x0.tc?" · "+escH(b.x0.tcRaw):""}</title></rect>`).join("")}
+      ${(()=>{let lastEnd=-1e9,lane=0;return acts.map(a=>{const ax=X0+a.start/total*BW;lane=ax<lastEnd?lane+1:0;lastEnd=ax+a.label.length*6.2+8;const ty=121+(lane%2)*12;
+        return `<line x1="${ax.toFixed(1)}" y1="56" x2="${ax.toFixed(1)}" y2="${ty+2}" stroke="currentColor" stroke-dasharray="3 2"/><text x="${(ax+3).toFixed(1)}" y="${ty}" font-size="10" fill="currentColor">${escH(a.label)}</text>`;}).join("");})()}
+      ${ticks.map(t=>`<line x1="${t.x.toFixed(1)}" y1="142" x2="${t.x.toFixed(1)}" y2="148" stroke="currentColor"/><text x="${t.x.toFixed(1)}" y="160" font-size="10" text-anchor="middle" fill="currentColor">${t.l}</text>`).join("")}
+      <line x1="${X0}" y1="142" x2="${X0+BW}" y2="142" stroke="currentColor"/></svg>`;
+    const actRows=acts.map(a=>`<tr><td>${escH(a.label)}</td><td class="num">${a.cenas}</td><td class="num">${useTc?mmss(Math.round(a.dur)):(a.dur/lay.lpp).toFixed(1).replace(".",",")+" p"}</td><td class="num">${Math.round(a.dur/total*100)}%</td><td><span class="abar"><i style="width:${(a.dur/total*100).toFixed(1)}%"></i></span></td></tr>`).join("");
+    w.querySelector("#st-svg").innerHTML=svg;
+    w.querySelector("#st-acts").innerHTML=actRows||`<tr><td colspan="5">Sem atos marcados.</td></tr>`;
+    w.querySelector("#st-pts").innerHTML=pts.map(p=>`<tr data-goto="${p.s.id}"><td><b>${escH(p.label)}</b></td><td>Cena ${escH(p.s.label||p.s.n)}</td><td>${escH(p.s.h)}</td><td>${p.s.tc?escH(p.s.tcRaw):""}</td></tr>`).join("")||`<tr><td colspan="4">Nenhum ponto marcado. Botão direito no cabeçalho de uma cena › Ponto de estrutura.</td></tr>`;};
+  dialog({id:"stWin",title:`Estrutura — ${epCode(sc.meta)} “${sc.meta.titulo}”`,width:960,body:`<div class="row"><label class="row">Colorir por <select id="st-m"><option value="cor">Cor do cartão</option><option value="dia">Dia e noite</option><option value="ie">Interior e exterior</option></select></label><span class="muted">Cada bloco é uma cena, do tamanho da duração dela. Clique para ir até ela.</span></div>
+    <div class="mapbox" id="st-svg"></div><div class="grid2"><div><b>Atos</b><div class="listview" style="max-height:220px"><table><thead><tr><th>Ato</th><th class="num">Cenas</th><th class="num">Duração</th><th class="num">%</th><th></th></tr></thead><tbody id="st-acts"></tbody></table></div></div>
+    <div><b>Pontos de estrutura</b><div class="listview" style="max-height:220px"><table><tbody id="st-pts"></tbody></table></div></div></div>`,
+    onOpen:(w,close)=>{draw(w);w.querySelector("#st-m").onchange=e=>{modo=e.target.value;draw(w);};
+      w.addEventListener("click",e=>{const g=e.target.closest("[data-goto]");if(!g)return;close();setMode("page");setTimeout(()=>gotoEl(g.dataset.goto),0);});},
+    buttons:[{label:"Fechar",def:1}]});
+}
+
+/* ---------- comandos, menus e dicas ---------- */
+Object.assign(CMD,{
+  dualCmd:{label:"Diálogo simultâneo",icon:"dual",needs:1,check:()=>{const f=S.focusId&&findEl(S.focusId);return !!(f&&f.e.dual);},run:()=>{const f=S.focusId&&findEl(S.focusId);if(!f||f.e.t!=="character"){toast("Clique no nome do segundo personagem, logo depois da fala do primeiro");return;}toggleDual(f.e.id);}},
+  dividirFalas:{label:"Dividir falas longas entre páginas (MAIS)",check:()=>prefs.dividirFalas!==false,run:()=>{prefs.dividirFalas=prefs.dividirFalas===false;savePrefs();if(cur())renderSheet();}},
+  quebraCmd:{label:"Quebra de página aqui",needs:1,run:()=>{if(S.focusId&&findEl(S.focusId))toggleQuebra(S.focusId);else toast("Clique primeiro no elemento que deve abrir a página");}},
+  estrutura:{label:"Estrutura do episódio…",icon:"struct",needs:1,run:()=>structureDialog()},
+  verAnalise:{label:"Mostrar a análise técnica na página",check:()=>prefs.verAnalise!==false,run:()=>{prefs.verAnalise=prefs.verAnalise===false;savePrefs();paintHighlights();}},
+  smartLists:{label:"Listas do SmartType…",icon:"smart",run:()=>smartDialog()},
+});
+MENUS.find(m=>m[0]==="Formatar")[2].push("dualCmd","dividirFalas");
+MENUS.find(m=>m[0]==="Inserir")[2].push("quebraCmd");
+{const ex=MENUS.find(m=>m[0]==="Exibir")[2];ex.splice(ex.indexOf("verTemporada")+1,0,"estrutura");ex.splice(ex.indexOf("verRegua")+1,0,"verAnalise");}
+{const fe=MENUS.find(m=>m[0]==="Ferramentas")[2];fe.splice(fe.indexOf("meta"),0,"smartLists","-");}
+TIPS.push("Botão direito no nome do segundo personagem › Diálogo simultâneo põe as duas falas lado a lado.",
+  "Fala comprida no pé da página? A Sala divide com (MAIS) e continua na página seguinte com (CONT.), como no Final Draft.",
+  "Na cena, depois do “ — ”, o autocompletar oferece NOITE, MADRUGADA… No personagem, abra um parêntese para ver (V.O.), (NA FITA)…",
+  "Exibir › Estrutura do episódio mostra as cenas numa linha do tempo, com os atos e os pontos de virada.");
+
+/* ---------- .docx: diálogo simultâneo em tabela de duas colunas sem borda, quebra de página ---------- */
+function withPB(xml){return xml.replace(/^(<w:p><w:pPr>(?:<w:keepNext[^>]*\/>)?(?:<w:keepLines\/>)?)/,"$1<w:pageBreakBefore/>");}
+function dualTbl(sc,lay,pr,GG){const tw_=mm=>Math.round(mm*56.6929);const W=tw_(GG.tw/2);const colW=GG.tw/2-2;
+  const cell=(a,b)=>{let s="";for(let k=a;k<b;k++){const e=sc.els[k],f=lay.info[k];let pp=`<w:keepNext/><w:spacing w:after="0" ${EX}/>`,t=e.x;
+      if(e.t==="character"){pp+=`<w:ind w:left="${tw_(colW*0.25)}"/>`;t=t.toUpperCase()+(f.cont?" (CONT.)":"");}else if(e.t==="paren")pp+=`<w:ind w:left="${tw_(colW*0.05)}" w:right="${tw_(colW*0.05)}"/>`;
+      s+=pX(pp,rX(t));}return s;};
+  const tc=(a,b)=>`<w:tc><w:tcPr><w:tcW w:w="${W}" w:type="dxa"/></w:tcPr>${cell(a,b)}</w:tc>`;
+  return `<w:tbl><w:tblPr><w:tblW w:w="${W*2}" w:type="dxa"/><w:tblLayout w:type="fixed"/><w:tblCellMar><w:left w:w="0" w:type="dxa"/><w:right w:w="113" w:type="dxa"/></w:tblCellMar></w:tblPr><w:tblGrid><w:gridCol w:w="${W}"/><w:gridCol w:w="${W}"/></w:tblGrid><w:tr><w:trPr><w:cantSplit/></w:trPr>${tc(pr.L[0],pr.L[1])}${tc(pr.R[0],pr.R[1])}</w:tr></w:tbl>`+pX(`<w:spacing w:after="0" ${EX}/>`,"");}
+{const st=document.createElement("style");st.textContent=BD_CATS.map(([k,,c])=>`::highlight(sr-bd-${k}){background-color:${c}38}`).join("\n");document.head.appendChild(st);}
+
+/* ================================================================
+   PACOTE 3: comentários com autor (e no Word) · oitavos de página · plano de filmagem
+   diárias do elenco · ordem do dia
+   ================================================================ */
+Object.assign(ICON,{
+  com:'<path d="M2.5 3.5h11v7h-6l-3 2.5v-2.5h-2z" fill="#FFF8B0" stroke="#000"/><path d="M4.5 6h7M4.5 8h5" stroke="#000"/>',
+  strip:'<rect x="1.5" y="2.5" width="13" height="2.5" fill="#fff" stroke="#000"/><rect x="1.5" y="5.5" width="13" height="2.5" fill="#FFE860" stroke="#000"/><rect x="1.5" y="8.5" width="13" height="2" fill="#000"/><rect x="1.5" y="11" width="13" height="2.5" fill="#7C9CF0" stroke="#000"/>',
+});
+const fmtDT=d=>new Date(d).toLocaleString("pt-BR",{day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit"});
+
+/* ---------- oitavos de página ---------- */
+const eighthsN=(lines,lpp)=>Math.max(1,Math.round(lines/lpp*8));
+const e8=n=>{const p=Math.floor(n/8),r=n%8;return p&&r?`${p} ${r}/8`:p?String(p):r?`${r}/8`:"0";};
+
+/* ---------- comentários ---------- */
+const autor=()=>String(prefs.autor||"").trim();
+const comList=sc=>sc.meta.coment||(sc.meta.coment=[]);
+function comAnchor(sc,c){const e=sc.els.find(x=>x.id===c.eid);if(!e)return null;let a=-1;
+  if(c.q){a=e.x.indexOf(c.q,Math.max(0,(c.a||0)-40));if(a<0)a=e.x.indexOf(c.q);}
+  return {e,a:a<0?0:a,b:a<0?e.x.length:a+c.q.length,lost:a<0&&!!c.q};}
+function sceneLabelOf(sc,eid){const lay=S.lay&&sc===cur()?S.lay:paginate(sc);const i=sc.els.findIndex(e=>e.id===eid);for(let k=i;k>=0;k--)if(sc.els[k].t==="scene")return lay.info[k].label||lay.info[k].num;return "–";}
+function addComment(id,q){
+  const sc=cur();const f=id&&findEl(id);if(!f){toast("Clique primeiro no trecho que quer comentar");return;}
+  q=String(q||"").trim().slice(0,200);let a=q?f.e.x.indexOf(q):0;if(a<0){q="";a=0;}
+  dialog({title:"Novo comentário",width:460,body:`${q?`<blockquote class="cq">${escH(q)}</blockquote>`:`<p class="muted" style="margin:0">Sobre ${TYPES[f.e.t].label.toLowerCase()} inteiro. Dica: selecione as palavras antes de comentar.</p>`}
+    <label class="fld"><span>Seu nome</span><input type="text" id="cm-a" value="${escH(autor())}" placeholder="ex.: DIREÇÃO, JUAN, PRODUÇÃO"></label>
+    <label class="fld"><span>Comentário</span><textarea id="cm-t" rows="4" autofocus></textarea></label>`,
+    onOpen:w=>{setTimeout(()=>{const t=w.querySelector(autor()?"#cm-t":"#cm-a");if(t)t.focus();},30);},
+    buttons:[{label:"Comentar",def:1,run:w=>{const t=w.querySelector("#cm-t").value.trim();const au=w.querySelector("#cm-a").value.trim()||"Sem nome";if(!t){toast("Escreva o comentário");return false;}
+      prefs.autor=au;savePrefs();comList(sc).push({id:uid("cm"),eid:f.e.id,q,a,autor:au,txt:t,data:Date.now(),resp:[],ok:false});touch(true);if(S.tool==="notas")renderSide();toast("Comentário adicionado");}},{label:"Cancelar"}]});
+}
+function comThread(cid){
+  const sc=cur();const c=comList(sc).find(x=>x.id===cid);if(!c)return;const an=comAnchor(sc,c);
+  const msg=(au,t,d)=>`<div class="cmsg"><b>${escH(au)}</b> <small class="muted">${fmtDT(d)}</small><div>${escH(t).replace(/\n/g,"<br>")}</div></div>`;
+  const back=()=>{touch(true);if(S.tool==="notas")renderSide();};
+  dialog({id:"comWin",title:`Comentário · cena ${sceneLabelOf(sc,c.eid)}${c.ok?" · resolvido":""}`,width:500,body:`${c.q?`<blockquote class="cq">${escH(c.q)}</blockquote>`:""}${!an?`<p class="late" style="margin:0">O trecho comentado foi apagado do roteiro.</p>`:an.lost?`<p class="late" style="margin:0">O trecho comentado foi reescrito; o comentário ficou no elemento inteiro.</p>`:""}
+    <div class="cthread">${msg(c.autor,c.txt,c.data)}${c.resp.map(r=>msg(r.autor,r.txt,r.data)).join("")}</div>
+    <label class="fld"><span>Responder como ${escH(autor()||"Sem nome")}</span><textarea id="cm-r" rows="3"></textarea></label>`,
+    buttons:[{label:"Responder",def:1,run:w=>{const t=w.querySelector("#cm-r").value.trim();if(!t){toast("Escreva a resposta");return false;}c.resp.push({autor:autor()||"Sem nome",txt:t,data:Date.now()});back();toast("Resposta enviada");}},
+      {label:c.ok?"Reabrir":"Resolver",run:()=>{c.ok=!c.ok;back();toast(c.ok?"Comentário resolvido":"Comentário reaberto");}},
+      ...(an?[{label:"Ir até o trecho",run:()=>{setTimeout(()=>{if(S.view!=="page")setMode("page");gotoEl(c.eid);},0);}}]:[]),
+      {label:"Excluir",run:()=>{setTimeout(()=>dialog({title:"Excluir comentário",width:360,body:`<p style="margin:0">Excluir o comentário de ${escH(c.autor)} e as ${c.resp.length} respostas?</p>`,buttons:[{label:"Excluir",def:1,run:()=>{const l=comList(sc);l.splice(l.indexOf(c),1);back();toast("Comentário excluído");}},{label:"Cancelar"}]}),0);}},
+      {label:"Fechar"}]});
+}
+function placeComMarks(){
+  const sc=cur();if(!sc)return;let box=document.getElementById("commarks");
+  if(!box||box.parentElement!==sheet){box=document.createElement("div");box.id="commarks";box.className="commarks";sheet.appendChild(box);}
+  if(prefs.verComent===false){box.innerHTML="";return;}
+  const by=new Map();for(const c of comList(sc)){if(c.ok)continue;const an=comAnchor(sc,c);if(!an)continue;if(!by.has(c.eid))by.set(c.eid,[]);by.get(c.eid).push(c);}
+  let h="";for(const [eid,l] of by){const n=nodeOf(eid);if(!n)continue;
+    h+=`<button type="button" class="cmk" data-com="${l[0].id}" style="top:${n.offsetTop}px" title="${escH(l.map(c=>c.autor+": "+c.txt).join("\n").slice(0,400))}" aria-label="${l.length} comentário${l.length>1?"s":""} de ${escH(l[0].autor)}">${icon("com")}${l.length>1?`<b>${l.length}</b>`:""}</button>`;}
+  box.innerHTML=h;
+}
+const _paintHi7=paintHighlights;
+paintHighlights=function(){_paintHi7();if(typeof CSS==="undefined"||!CSS.highlights||typeof Highlight==="undefined")return;CSS.highlights.delete("sr-com");
+  const sc=cur();if(!sc||S.view!=="page"||prefs.verComent===false)return;const rs=[];
+  for(const c of comList(sc)){if(c.ok)continue;const an=comAnchor(sc,c);if(!an)continue;const n=nodeOf(c.eid);const t=n&&n.firstChild;if(!t||t.nodeType!==3)continue;
+    const r=new Range();try{r.setStart(t,Math.min(an.a,t.length));r.setEnd(t,Math.min(an.b,t.length));rs.push(r);}catch(e){}}
+  if(rs.length)CSS.highlights.set("sr-com",new Highlight(...rs));
+  placeComMarks();};
+sheet.addEventListener("click",e=>{const b=e.target.closest(".cmk");if(b){e.preventDefault();comThread(b.dataset.com);}});
+const comBadge=sc=>{const n=comList(sc).filter(c=>!c.ok).length;return n?`<span class="cnt">${n}</span>`:"";};
+const _notasHTML7=notasHTML;
+notasHTML=function(sc){
+  const all=comList(sc);const f=S.comFilt||"abertos";const nA=all.filter(c=>!c.ok).length,nR=all.length-nA;
+  const l=all.filter(c=>f==="todos"||(f==="abertos"?!c.ok:c.ok));
+  return `<div class="panel"><div class="row"><b>Comentários</b><select data-comf aria-label="Mostrar"><option value="abertos"${f==="abertos"?" selected":""}>Abertos (${nA})</option><option value="resolvidos"${f==="resolvidos"?" selected":""}>Resolvidos (${nR})</option><option value="todos"${f==="todos"?" selected":""}>Todos (${all.length})</option></select>
+    <button type="button" class="btn sm" data-comexp="1"${all.length?"":" disabled"}>Exportar…</button></div>
+    <p class="status" style="margin:0">Selecione um trecho e aperte Ctrl+Alt+M (ou botão direito › Comentar). Os comentários abertos vão para o .docx como comentários do Word.</p>
+    ${l.map(c=>`<button type="button" class="hit com${c.ok?" ok":""}" data-com="${c.id}"><small>${escH(c.autor)} · cena ${escH(String(sceneLabelOf(sc,c.eid)))} · ${fmtDT(c.data)}${c.resp.length?` · ${c.resp.length} resposta${c.resp.length>1?"s":""}`:""}${c.ok?" · resolvido":""}</small><span><b>${escH(c.txt.slice(0,160))}</b></span>${c.q?`<span class="muted" style="font-family:var(--f-type)">“${escH(c.q.slice(0,90))}”</span>`:""}</button>`).join("")||`<p class="status">Nenhum comentário ${f==="resolvidos"?"resolvido":f==="abertos"?"aberto":""}.</p>`}</div>`+_notasHTML7(sc);
+};
+side.addEventListener("click",e=>{const b=e.target.closest("[data-com]");if(b){const sc=cur();const c=comList(sc).find(x=>x.id===b.dataset.com);if(c&&comAnchor(sc,c)){if(S.view!=="page")setMode("page");gotoEl(c.eid);}comThread(b.dataset.com);return;}
+  if(e.target.closest("[data-comexp]"))exportComments();});
+side.addEventListener("change",e=>{if(e.target.matches("[data-comf]")){S.comFilt=e.target.value;renderSide();}});
+async function exportComments(){const sc=cur();const m=sc.meta;let o=`COMENTÁRIOS — ${String(m.serie).toUpperCase()} ${epCode(m)} “${m.titulo}”\r\nExportado em ${fmtDT(Date.now())}\r\n\r\n`;
+  for(const c of comList(sc)){const an=comAnchor(sc,c);o+=`CENA ${sceneLabelOf(sc,c.eid)} · ${an?TYPES[an.e.t].label:"trecho apagado"}${c.ok?" · RESOLVIDO":""}\r\n${c.q?`“${c.q}”\r\n`:""}${c.autor} (${fmtDT(c.data)}): ${c.txt}\r\n${c.resp.map(r=>`   ↳ ${r.autor} (${fmtDT(r.data)}): ${r.txt}\r\n`).join("")}\r\n`;}
+  await offer(fileName(sc).replace(/\.docx$/,"_comentarios.txt"),new Blob([o],{type:"text/plain"}));}
+document.addEventListener("keydown",e=>{if(e.ctrlKey&&e.altKey&&!e.shiftKey&&e.code==="KeyM"&&!IS_TOOL){e.preventDefault();e.stopPropagation();if(!cur())return;addComment(S.focusId,String(getSelection()).trim());}},true);
+
+/* comentários no .docx (ida e volta com o Word) */
+const _scriptXML7=scriptXML;
+scriptXML=function(sc){S._dcom=[];S._dsc=sc;return _scriptXML7(sc);};
+function docxComWrap(e,px){
+  const sc=S._dsc;const l=(sc&&sc.els.includes(e)?comList(sc):[]).filter(c=>!c.ok&&c.eid===e.id);if(!l.length||!S._dcom)return px;
+  const ids=l.map(c=>S._dcom.push(c)-1);const i=px.indexOf("</w:pPr>")+8;const j=px.lastIndexOf("</w:p>");if(i<8||j<0)return px;
+  return px.slice(0,i)+ids.map(k=>`<w:commentRangeStart w:id="${k}"/>`).join("")+px.slice(i,j)+ids.map(k=>`<w:commentRangeEnd w:id="${k}"/><w:r><w:commentReference w:id="${k}"/></w:r>`).join("")+px.slice(j);
+}
+function comXML(){const ini=s=>String(s).split(/\s+/).filter(Boolean).map(w=>w[0]).join("").slice(0,3).toUpperCase();
+  const para=t=>String(t).split("\n").map(l=>`<w:p><w:r><w:t xml:space="preserve">${escX(l)}</w:t></w:r></w:p>`).join("");
+  return `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:comments ${NS}>${(S._dcom||[]).map((c,k)=>`<w:comment w:id="${k}" w:author="${escX(c.autor)}" w:date="${new Date(c.data).toISOString().slice(0,19)}Z" w:initials="${escX(ini(c.autor))}">${para(c.txt)}${c.resp.map(r=>para(`↳ ${r.autor}: ${r.txt}`)).join("")}</w:comment>`).join("")}</w:comments>`;}
+async function readDocxComments(z){const xml=await z.text("word/comments.xml");if(!xml)return new Map();const dom=new DOMParser().parseFromString(xml,"application/xml");const out=new Map();
+  for(const c of dom.getElementsByTagNameNS(WNS,"comment")){const id=c.getAttributeNS(WNS,"id")||c.getAttribute("w:id");const lines=[...c.getElementsByTagNameNS(WNS,"p")].map(p=>[...p.getElementsByTagNameNS(WNS,"t")].map(t=>t.textContent).join("")).filter(s=>s.trim());
+    const resp=[];const txt=[];for(const l of lines){const m=/^↳\s*([^:]{1,60}):\s*(.*)$/.exec(l);if(m)resp.push({autor:m[1].trim(),txt:m[2],data:Date.now()});else if(resp.length)resp[resp.length-1].txt+="\n"+l;else txt.push(l);}
+    const d=Date.parse(c.getAttributeNS(WNS,"date")||c.getAttribute("w:date")||"");out.set(id,{autor:(c.getAttributeNS(WNS,"author")||c.getAttribute("w:author")||"Word").trim(),txt:txt.join("\n")||"(comentário vazio)",data:isNaN(d)?Date.now():d,resp,ok:false});}
+  return out;}
+
+/* ---------- plano de filmagem ---------- */
+const STRIP_COR={"INT|D":"#FFFFFF","EXT|D":"#FFE860","INT|N":"#7C9CF0","EXT|N":"#7CD07C"};
+const STRIP_NOME={"INT|D":"Interior · dia","EXT|D":"Exterior · dia","INT|N":"Interior · noite","EXT|N":"Exterior · noite"};
+const dnOf=tod=>/NOITE|MADRUGADA|ANOITECER|MEIA-NOITE/.test(tod)?"N":/AMANHECER|MANHÃ|DIA|TARDE|ALVORADA|ENTARDECER/.test(tod)?"D":"?";
+function planData(sc){
+  const lay=S.lay&&sc===cur()?S.lay:paginate(sc);const cs=charStats(sc);const ids=new Map(cs.map((c,i)=>[c.name,i+1]));let last="D";
+  const list=scenesOf(sc,lay.info).filter(x=>x.n).map(x=>{const p=locParse(x.h);let d=dnOf(p.tod);if(d==="?")d=last;else last=d;const e=sc.els[x.i];
+    const ie=p.ie.startsWith("EXT")||p.ie==="INT/EXT"?"EXT":"INT";
+    return Object.assign(x,{ie:p.ie==="?"?"INT":p.ie,loc:p.loc,tod:p.tod,dn:d,key:ie+"|"+d,e8:eighthsN(x.lines,lay.lpp),omit:!!e.omit,syn:(e.syn||x.first||"").trim(),cast:[...x.chars].map(n=>ids.get(n)).filter(Boolean).sort((a,b)=>a-b)});});
+  const pl=sc.meta.plano||(sc.meta.plano={ordem:[],dias:{}});pl.dias=pl.dias||{};
+  const have=new Set(list.map(x=>x.id));const o=(pl.ordem||[]).filter(k=>k.startsWith("dia:")||have.has(k));const seen=new Set(o);for(const x of list)if(!seen.has(x.id))o.push(x.id);pl.ordem=o;
+  const byId=new Map(list.map(x=>[x.id,x]));const days=[];let curD={scenes:[]};
+  for(const k of o){if(k.startsWith("dia:")){curD.k=k;days.push(curD);curD={scenes:[]};}else curD.scenes.push(byId.get(k));}
+  const unsched=curD.scenes;days.forEach((d,i)=>{d.n=i+1;d.info=pl.dias[d.k]||(pl.dias[d.k]={data:"",chamada:"07:00",obs:""});d.e8=d.scenes.reduce((s,x)=>s+x.e8,0);});
+  return {lay,cs,ids,list,byId,pl,days,unsched};
+}
+const planEl=()=>{let el=document.getElementById("plano");if(!el){el=document.createElement("div");el.className="season plano";el.id="plano";el.hidden=S.view!=="plano";document.getElementById("season").after(el);planBind(el);}return el;};
+S.planTab="faixas";S.planSel=null;
+function stripRow(x,P){const cor=STRIP_COR[x.key]||"#fff";
+  return `<tr class="strip${x.omit?" omit":""}${S.planSel===x.id?" sel":""}" draggable="true" data-k="${x.id}" style="--sc:${cor}" title="${escH(STRIP_NOME[x.key]||"")}">
+    <td class="grip" aria-hidden="true">⋮⋮</td><td class="num"><b>${escH(String(x.label||x.n))}</b></td><td>${escH(x.ie)}</td><td class="loc">${escH(x.loc)}</td><td>${x.dn==="N"?"NOITE":"DIA"}</td>
+    <td class="num">${e8(x.e8)}</td><td class="ids">${x.cast.join(", ")||"—"}</td><td class="syn">${escH(x.syn.slice(0,120))}</td>
+    <td class="mv"><button class="ib" type="button" data-pmv="-1" data-k="${x.id}" aria-label="Subir cena ${escH(String(x.label))}">▲</button><button class="ib" type="button" data-pmv="1" data-k="${x.id}" aria-label="Descer cena ${escH(String(x.label))}">▼</button></td></tr>`;}
+function renderPlano(){
+  const el=planEl();const sc=cur();if(!sc){el.innerHTML=`<div class="desk-empty">Abra um roteiro para planejar a filmagem.</div>`;return;}
+  const P=planData(sc);const tot=P.list.reduce((s,x)=>s+x.e8,0);const sch=P.days.reduce((s,d)=>s+d.scenes.length,0);
+  const tabs=[["faixas","Faixas"],["diarias","Diárias do elenco"],["ordem","Ordem do dia"]];
+  let body="";
+  if(S.planTab==="faixas"){let rows="";
+    for(const d of P.days){rows+=d.scenes.map(x=>stripRow(x,P)).join("");
+      rows+=`<tr class="daybr" draggable="true" data-k="${d.k}"><td class="grip" aria-hidden="true">⋮⋮</td><td colspan="7"><b>FIM DO ${d.n}º DIA</b> · ${d.scenes.length} cena${d.scenes.length===1?"":"s"} · ${e8(d.e8)} pág. ${d.info.data?`· ${escH(isoToBR(d.info.data))}`:""}</td>
+        <td class="mv"><button class="ib" type="button" data-pmv="-1" data-k="${d.k}" aria-label="Subir fim do ${d.n}º dia">▲</button><button class="ib" type="button" data-pmv="1" data-k="${d.k}" aria-label="Descer fim do ${d.n}º dia">▼</button><button class="ib" type="button" data-pdel="${d.k}" aria-label="Tirar fim do ${d.n}º dia" title="Tirar esta divisão">×</button></td></tr>`;}
+    rows+=P.unsched.map(x=>stripRow(x,P)).join("");
+    body=`<div class="row"><button type="button" class="btn sm" data-pa="dia">+ Fim do dia</button><button type="button" class="btn sm" data-pa="auto">Montar os dias…</button><button type="button" class="btn sm" data-pa="roteiro">Voltar à ordem do roteiro</button><button type="button" class="btn sm" data-pa="csv">Exportar faixas (.csv)</button>
+        <span class="chips" style="margin-left:auto">${Object.entries(STRIP_COR).map(([k,c])=>`<span class="chip95"><i style="background:${c}"></i>${STRIP_NOME[k]}</span>`).join("")}</span></div>
+      <div class="listview plan strips" style="max-height:none"><table><thead><tr><th></th><th class="num">Cena</th><th>I/E</th><th>Local</th><th>D/N</th><th class="num">Págs.</th><th>Elenco</th><th>Resumo</th><th></th></tr></thead><tbody>${rows}</tbody></table></div>
+      ${P.unsched.length&&P.days.length?`<p class="muted" style="margin:0">As faixas depois do último “fim do dia” ainda não têm dia de gravação.</p>`:""}
+      <p class="muted" style="margin:0"><b>Elenco:</b> ${P.cs.map((c,i)=>`${i+1}. ${escH(c.name)}`).join(" · ")||"ninguém fala"}</p>`;}
+  else if(S.planTab==="diarias"){
+    const nD=P.days.length;
+    if(!nD)body=`<div class="empty">${icon("strip",32)}Divida as faixas em dias primeiro (aba Faixas › + Fim do dia ou Montar os dias).</div>`;
+    else{const rows=P.cs.map((c,ci)=>{const w=P.days.map(d=>d.scenes.some(x=>x.chars.has(c.name)));const f=w.indexOf(true),l=w.lastIndexOf(true);if(f<0)return "";
+        let tr=0,es=0;const cells=w.map((on,k)=>{let v="";if(on){tr++;v=f===l?"IF":k===f?"I":k===l?"F":"T";}else if(k>f&&k<l){es++;v="E";}return `<td class="dd ${v?"d-"+v:""}">${v}</td>`;}).join("");
+        return `<tr><td class="num">${ci+1}</td><td><b>${escH(c.name)}</b></td>${cells}<td class="num">${tr}</td><td class="num">${es}</td><td class="num">${l-f+1}</td></tr>`;}).join("");
+      body=`<p class="muted" style="margin:0">Em que dias cada personagem grava. <b>I</b> início · <b>T</b> trabalho · <b>F</b> fim · <b>IF</b> entra e sai no mesmo dia · <b>E</b> espera (pago sem gravar, entre o primeiro e o último dia). Menos “E” sai mais barato.</p>
+        <div class="listview plan" style="max-height:none"><table class="dood"><thead><tr><th class="num">Nº</th><th>Personagem</th>${P.days.map(d=>`<th class="num">${d.n}º${d.info.data?`<br><small>${escH(isoToBR(d.info.data).slice(0,5))}</small>`:""}</th>`).join("")}<th class="num">Trab.</th><th class="num">Esp.</th><th class="num">Total</th></tr></thead><tbody>${rows}</tbody></table></div>
+        <div class="row"><button type="button" class="btn sm" data-pa="doodcsv">Exportar diárias (.csv)</button></div>`;}}
+  else{const nD=P.days.length;
+    if(!nD)body=`<div class="empty">${icon("strip",32)}Divida as faixas em dias primeiro para montar a ordem do dia.</div>`;
+    else{const k=Math.min(Math.max(1,S.planDay||1),nD);S.planDay=k;const d=P.days[k-1];const cs=callSheet(sc,P,d);
+      body=`<div class="row"><label class="row">Dia <select data-pday>${P.days.map(x=>`<option value="${x.n}"${x.n===k?" selected":""}>${x.n}º dia${x.info.data?" · "+escH(isoToBR(x.info.data)):""}</option>`).join("")}</select></label>
+          <label class="row">Data ${dpHTML("pdd-"+k,d.info.data,'data-pinfo="data"')}</label><label class="row">Chamada <input type="text" data-pinfo="chamada" value="${escH(d.info.chamada||"")}" style="width:64px" aria-label="Horário de chamada"></label>
+          <button type="button" class="btn sm" data-pa="callsheet">Ordem do dia (.docx)</button><button type="button" class="btn sm" data-pa="callall">Todos os dias (.docx)</button></div>
+        <div class="callsheet"><h3>${escH(String(sc.meta.serie).toUpperCase())} · ${escH(epCode(sc.meta))} · ORDEM DO DIA ${k} DE ${nD}</h3>
+          <p>${d.info.data?escH(dataLonga(d.info.data)):"<i>sem data</i>"} · chamada geral ${escH(d.info.chamada||"—")} · ${d.scenes.length} cenas · ${e8(d.e8)} páginas</p>
+          <div class="listview" style="max-height:none"><table><thead><tr><th class="num">Cena</th><th>I/E</th><th>Local</th><th>D/N</th><th class="num">Págs.</th><th>Elenco</th><th>Resumo</th></tr></thead><tbody>${d.scenes.map(x=>`<tr style="--sc:${STRIP_COR[x.key]}" class="strip"><td class="num"><b>${escH(String(x.label))}</b></td><td>${escH(x.ie)}</td><td>${escH(x.loc)}</td><td>${x.dn==="N"?"NOITE":"DIA"}</td><td class="num">${e8(x.e8)}</td><td>${x.cast.join(", ")}</td><td class="syn">${escH(x.syn.slice(0,140))}</td></tr>`).join("")}</tbody></table></div>
+          <div class="grid2"><div><b>Elenco do dia</b><div class="listview" style="max-height:none"><table><thead><tr><th class="num">Nº</th><th>Personagem</th><th>Cenas</th></tr></thead><tbody>${cs.elenco.map(r=>`<tr><td class="num">${r[0]}</td><td>${escH(r[1])}</td><td>${escH(r[2])}</td></tr>`).join("")||`<tr><td colspan="3">Ninguém fala neste dia.</td></tr>`}</tbody></table></div></div>
+            <div><b>Necessidades (da análise técnica)</b><div class="listview" style="max-height:none"><table><tbody>${cs.necess.map(r=>`<tr><td><b>${escH(r[0])}</b></td><td>${escH(r[1])}</td></tr>`).join("")||`<tr><td>Nada marcado na análise técnica destas cenas.</td></tr>`}</tbody></table></div>
+            <b>Locais</b><p style="margin:2px 0">${cs.locais.map(escH).join(" · ")}</p></div></div>
+          <label class="fld"><span>Observações para a equipe</span><textarea data-pinfo="obs" rows="3">${escH(d.info.obs||"")}</textarea></label></div>`;}}
+  el.innerHTML=`<div class="castwin"><div class="titlebar"><span data-icon="strip"></span><span class="ttl">Plano de filmagem — ${escH(epCode(sc.meta))} “${escH(sc.meta.titulo)}”</span><button class="tb-btn" type="button" data-cmd="verPagina" aria-label="Fechar plano de filmagem">×</button></div>
+    <div class="col" style="padding:8px"><div class="row"><div class="chips"><span class="chip95">${P.list.length} cenas · ${e8(tot)} páginas</span><span class="chip95">${P.days.length} dia${P.days.length===1?"":"s"} de gravação</span><span class="chip95">${sch} cenas com dia · ${P.list.length-sch} sem dia</span>${P.days.length?`<span class="chip95">média ${e8(Math.round(P.days.reduce((s,d)=>s+d.e8,0)/P.days.length))} pág. por dia</span>`:""}</div></div>
+    <div class="ptabs" role="group" aria-label="Plano">${tabs.map(([k,l])=>`<button type="button" data-ptab="${k}" aria-pressed="${S.planTab===k}">${l}</button>`).join("")}</div>
+    ${body}</div></div>`;
+  paintIcons(el);
+}
+const MESES_L=["janeiro","fevereiro","março","abril","maio","junho","julho","agosto","setembro","outubro","novembro","dezembro"];
+const DIAS_L=["domingo","segunda-feira","terça-feira","quarta-feira","quinta-feira","sexta-feira","sábado"];
+function dataLonga(iso){const d=parseISO(iso);if(!d)return iso;return `${DIAS_L[d.getUTCDay()]}, ${d.getUTCDate()} de ${MESES_L[d.getUTCMonth()]} de ${d.getUTCFullYear()}`;}
+function callSheet(sc,P,d){
+  const el=new Map();for(const x of d.scenes)for(const n of x.chars){if(!el.has(n))el.set(n,[]);el.get(n).push(String(x.label));}
+  const elenco=[...el].map(([n,l])=>[P.ids.get(n)||"",n,l.join(", ")]).sort((a,b)=>a[0]-b[0]);
+  const sids=new Set(d.scenes.map(x=>x.id));const nec=new Map();for(const a of sc.meta.analise||[]){if(!sids.has(a.sid))continue;const c=bdCat(a.cat)[1];if(!nec.has(c))nec.set(c,new Set());nec.get(c).add(a.item);}
+  return {elenco,necess:[...nec].map(([c,s])=>[c,[...s].join(", ")]),locais:[...new Set(d.scenes.map(x=>`${x.ie}. ${x.loc}`))]};
+}
+function planMove(sc,k,dir){const o=sc.meta.plano.ordem;const i=o.indexOf(k);const j=i+dir;if(i<0||j<0||j>=o.length)return;[o[i],o[j]]=[o[j],o[i]];markChanged(sc);}
+function planBind(el){
+  let drag=null;
+  el.addEventListener("click",async e=>{const sc=cur();if(!sc)return;
+    const t=e.target.closest("[data-ptab]");if(t){S.planTab=t.dataset.ptab;renderPlano();return;}
+    const mv=e.target.closest("[data-pmv]");if(mv){planMove(sc,mv.dataset.k,+mv.dataset.pmv);renderPlano();const b=el.querySelector(`[data-pmv="${mv.dataset.pmv}"][data-k="${mv.dataset.k}"]`);if(b)b.focus();return;}
+    const dl=e.target.closest("[data-pdel]");if(dl){const o=sc.meta.plano.ordem;o.splice(o.indexOf(dl.dataset.pdel),1);delete sc.meta.plano.dias[dl.dataset.pdel];markChanged(sc);renderPlano();return;}
+    const a=e.target.closest("[data-pa]");
+    if(!a){const r=e.target.closest("tr.strip[data-k]");if(r&&!e.target.closest("button")){S.planSel=S.planSel===r.dataset.k?null:r.dataset.k;el.querySelectorAll("tr.strip.sel").forEach(x=>x.classList.remove("sel"));if(S.planSel)r.classList.add("sel");}return;}
+    const P=planData(sc);const o=P.pl.ordem;
+    if(a.dataset.pa==="dia"){const k="dia:"+uid("d");let at=S.planSel?o.indexOf(S.planSel)+1:o.length;if(at<=0)at=o.length;o.splice(at,0,k);markChanged(sc);renderPlano();toast(S.planSel?"Fim do dia depois da cena selecionada":"Fim do dia no final. Arraste ou use ▲▼ para posicionar.");}
+    if(a.dataset.pa==="roteiro")dialog({title:"Voltar à ordem do roteiro",width:380,body:`<p style="margin:0">As faixas voltam para a ordem das cenas no roteiro e as divisões de dia são apagadas.</p>`,buttons:[{label:"Voltar",def:1,run:()=>{sc.meta.plano={ordem:[],dias:{}};markChanged(sc);renderPlano();}},{label:"Cancelar"}]});
+    if(a.dataset.pa==="auto")autoDays(sc);
+    if(a.dataset.pa==="csv"){const q=v=>{const s=String(v==null?"":v);return /[;"\n]/.test(s)?`"${s.replace(/"/g,'""')}"`:s;};const rows=[["Dia","Cena","I/E","Local","D/N","Oitavos","Páginas","Elenco","Resumo"]];
+      const put=(d,x)=>rows.push([d,x.label,x.ie,x.loc,x.dn==="N"?"NOITE":"DIA",x.e8,e8(x.e8),x.cast.map(n=>`${n}. ${P.cs[n-1].name}`).join(", "),x.syn]);
+      P.days.forEach(d=>d.scenes.forEach(x=>put(d.n,x)));P.unsched.forEach(x=>put("",x));
+      await offer(fileName(sc).replace(/\.docx$/,"_plano.csv"),new Blob(["﻿"+rows.map(r=>r.map(q).join(";")).join("\r\n")],{type:"text/csv"}));}
+    if(a.dataset.pa==="doodcsv"){const q=v=>{const s=String(v==null?"":v);return /[;"\n]/.test(s)?`"${s.replace(/"/g,'""')}"`:s;};const rows=[["Nº","Personagem",...P.days.map(d=>d.n+"º dia"),"Trabalho","Espera"]];
+      el.querySelectorAll("table.dood tbody tr").forEach(tr=>{const c=[...tr.children].map(td=>td.textContent);rows.push(c.slice(0,c.length-1));});
+      await offer(fileName(sc).replace(/\.docx$/,"_diarias.csv"),new Blob(["﻿"+rows.map(r=>r.map(q).join(";")).join("\r\n")],{type:"text/csv"}));}
+    if(a.dataset.pa==="callsheet"){const d=P.days[(S.planDay||1)-1];await offer(fileName(sc).replace(/\.docx$/,`_ordem_do_dia_${pad2(d.n)}.docx`),await callSheetDocx(sc,P,[d]));}
+    if(a.dataset.pa==="callall")await offer(fileName(sc).replace(/\.docx$/,"_ordens_do_dia.docx"),await callSheetDocx(sc,P,P.days));
+  });
+  el.addEventListener("change",e=>{const t=e.target;if(t.matches("[data-pday]")){S.planDay=+t.value;renderPlano();}});
+  el.addEventListener("input",e=>{const t=e.target;const k=t.dataset.pinfo;if(!k)return;const sc=cur();const P=planData(sc);const d=P.days[(S.planDay||1)-1];if(!d)return;
+    if(k==="data"){const iso=brToISO(t.value);if(!iso&&t.value.trim())return;d.info.data=iso||"";}else d.info[k]=t.value;markChanged(sc);});
+  el.addEventListener("dragstart",e=>{const r=e.target.closest("tr[data-k]");if(!r)return;drag=r.dataset.k;r.classList.add("dragging");e.dataTransfer.effectAllowed="move";try{e.dataTransfer.setData("text/plain",drag);}catch(x){}});
+  el.addEventListener("dragend",()=>{drag=null;el.querySelectorAll(".dragging,.drop-a,.drop-b").forEach(x=>x.classList.remove("dragging","drop-a","drop-b"));});
+  el.addEventListener("dragover",e=>{if(!drag)return;const r=e.target.closest("tr[data-k]");if(!r)return;e.preventDefault();const b=r.getBoundingClientRect();const after=e.clientY>b.top+b.height/2;
+    el.querySelectorAll(".drop-a,.drop-b").forEach(x=>x.classList.remove("drop-a","drop-b"));r.classList.add(after?"drop-a":"drop-b");});
+  el.addEventListener("drop",e=>{if(!drag)return;const r=e.target.closest("tr[data-k]");if(!r)return;e.preventDefault();const sc=cur();const o=sc.meta.plano.ordem;const k=drag;const b=r.getBoundingClientRect();const after=e.clientY>b.top+b.height/2;
+    if(r.dataset.k===k)return;o.splice(o.indexOf(k),1);let at=o.indexOf(r.dataset.k)+(after?1:0);o.splice(at,0,k);drag=null;markChanged(sc);renderPlano();});
+}
+function autoDays(sc){
+  dialog({title:"Montar os dias de gravação",width:440,body:`<p class="muted" style="margin:0">A Sala reorganiza as faixas e coloca as divisões de dia. Depois você ajusta à mão.</p>
+    <label class="fld"><span>Páginas por dia (no máximo)</span><input type="number" id="ad-p" min="1" max="30" step="0.5" value="${prefs.paginasDia||5}"></label>
+    <label class="chk"><input type="checkbox" id="ad-l" checked> Juntar as cenas do mesmo local (menos mudança de set)</label>
+    <label class="chk"><input type="checkbox" id="ad-n" checked> No mesmo local, gravar o dia antes da noite</label>`,
+    buttons:[{label:"Montar",def:1,run:w=>{const lim=Math.max(1,parseFloat(String(w.querySelector("#ad-p").value).replace(",","."))||5);prefs.paginasDia=lim;savePrefs();
+      const P=planData(sc);let l=P.list.filter(x=>!x.omit);const pos=new Map(l.map((x,i)=>[x.id,i]));
+      if(w.querySelector("#ad-l").checked){const first=new Map();l.forEach((x,i)=>{if(!first.has(x.loc))first.set(x.loc,i);});const byN=w.querySelector("#ad-n").checked;
+        l=[...l].sort((a,b)=>(first.get(a.loc)-first.get(b.loc))||(byN?(a.dn==="N")-(b.dn==="N"):0)||(pos.get(a.id)-pos.get(b.id)));}
+      const o=[];const dias={};let acc=0;const cap=Math.round(lim*8);
+      for(const x of l){if(acc>0&&acc+x.e8>cap){const k="dia:"+uid("d");o.push(k);dias[k]={data:"",chamada:"07:00",obs:""};acc=0;}o.push(x.id);acc+=x.e8;}
+      if(acc>0){const k="dia:"+uid("d");o.push(k);dias[k]={data:"",chamada:"07:00",obs:""};}
+      P.list.filter(x=>x.omit).forEach(x=>o.push(x.id));
+      sc.meta.plano={ordem:o,dias};markChanged(sc);renderPlano();toast(`${Object.keys(dias).length} dias de gravação montados`);}},{label:"Cancelar"}]});
+}
+function dTbl(cols,rows,widths){
+  const cell=(t,w,b,fill)=>`<w:tc><w:tcPr><w:tcW w:w="${w}" w:type="dxa"/>${fill?`<w:shd w:val="clear" w:color="auto" w:fill="${fill}"/>`:""}</w:tcPr>${String(t==null?"":t).split("\n").map(l=>pX(`<w:spacing w:after="0"/>`,rX(l,{sz:18,b:b?1:0}))).join("")}</w:tc>`;
+  const bd=`<w:tblBorders>${["top","left","bottom","right","insideH","insideV"].map(k=>`<w:${k} w:val="single" w:sz="4" w:space="0" w:color="000000"/>`).join("")}</w:tblBorders>`;
+  return `<w:tbl><w:tblPr><w:tblW w:w="${widths.reduce((a,b)=>a+b,0)}" w:type="dxa"/>${bd}<w:tblLayout w:type="fixed"/></w:tblPr><w:tblGrid>${widths.map(w=>`<w:gridCol w:w="${w}"/>`).join("")}</w:tblGrid><w:tr><w:trPr><w:tblHeader/></w:trPr>${cols.map((c,i)=>cell(c,widths[i],1,"D0D0D0")).join("")}</w:tr>${rows.map(r=>`<w:tr><w:trPr><w:cantSplit/></w:trPr>${r.map((c,i)=>cell(c,widths[i],0,r.fill)).join("")}</w:tr>`).join("")}</w:tbl>`;
+}
+async function callSheetDocx(sc,P,days){
+  const m=sc.meta;let x="";
+  days.forEach((d,di)=>{const cs=callSheet(sc,P,d);
+    x+=pX(`${di?"<w:pageBreakBefore/>":""}<w:spacing w:after="40"/><w:jc w:val="center"/>`,rX(String(m.serie).toUpperCase(),{sz:28,b:1}));
+    x+=pX(`<w:spacing w:after="40"/><w:jc w:val="center"/>`,rX(`${epCode(m)} · “${m.titulo}” · ORDEM DO DIA ${d.n} DE ${P.days.length}`,{sz:22,b:1}));
+    x+=pX(`<w:spacing w:after="200"/><w:jc w:val="center"/>`,rX(`${d.info.data?dataLonga(d.info.data):"Data a definir"} · Chamada geral: ${d.info.chamada||"—"} · ${d.scenes.length} cenas · ${e8(d.e8)} páginas`,{sz:20}));
+    x+=dTbl(["Cena","I/E","Local","D/N","Págs.","Elenco","Resumo"],d.scenes.map(s=>Object.assign([s.label,s.ie,s.loc,s.dn==="N"?"NOITE":"DIA",e8(s.e8),s.cast.join(", "),s.syn.slice(0,160)],{fill:(STRIP_COR[s.key]||"#FFFFFF").slice(1)})),[620,560,2000,900,820,900,3840]);
+    x+=pX(`<w:spacing w:before="200" w:after="80"/>`,rX("ELENCO",{sz:20,b:1}));
+    x+=dTbl(["Nº","Personagem","Cenas","Chamada","Maquiagem","No set"],cs.elenco.map(r=>[r[0],r[1],r[2],"","",""]),[600,2600,2240,1400,1400,1400]);
+    if(cs.necess.length){x+=pX(`<w:spacing w:before="200" w:after="80"/>`,rX("NECESSIDADES DA PRODUÇÃO",{sz:20,b:1}));x+=dTbl(["Departamento","Itens"],cs.necess,[2600,7040]);}
+    x+=pX(`<w:spacing w:before="200" w:after="40"/>`,rX("LOCAIS: ",{sz:20,b:1})+rX(cs.locais.join(" · "),{sz:20}));
+    if(d.info.obs)x+=pX(`<w:spacing w:before="120" w:after="40"/>`,rX("OBSERVAÇÕES: ",{sz:20,b:1})+rX(d.info.obs,{sz:20}));
+  });
+  const doc=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:document ${NS}><w:body>${x}<w:sectPr><w:pgSz w:w="11906" w:h="16838"/><w:pgMar w:top="850" w:right="1134" w:bottom="850" w:left="1134" w:header="567" w:footer="567" w:gutter="0"/></w:sectPr></w:body></w:document>`;
+  const styles=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:styles ${NS}><w:docDefaults><w:rPrDefault><w:rPr>${FONT}<w:sz w:val="20"/><w:lang w:val="pt-BR"/></w:rPr></w:rPrDefault><w:pPrDefault><w:pPr><w:spacing w:after="0" w:line="240" w:lineRule="auto"/></w:pPr></w:pPrDefault></w:docDefaults><w:style w:type="paragraph" w:default="1" w:styleId="Normal"><w:name w:val="Normal"/></w:style></w:styles>`;
+  const ct=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/><Override PartName="/word/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.styles+xml"/></Types>`;
+  const rels=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="word/document.xml"/></Relationships>`;
+  const drels=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/></Relationships>`;
+  return makeZip([["[Content_Types].xml",ct],["_rels/.rels",rels],["word/document.xml",doc],["word/_rels/document.xml.rels",drels],["word/styles.xml",styles]]);
+}
+const _syncViews7=syncViews;
+syncViews=function(){_syncViews7();const p=document.getElementById("plano");if(p)p.hidden=S.view!=="plano";};
+const _setMode7=setMode;
+setMode=function(v){if(v==="plano"){S.view="plano";hideAC();syncViews();renderPlano();renderTypebar();desk.scrollTop=0;return;}_setMode7(v);};
+const _renderAll7=renderAll;
+renderAll=function(){_renderAll7();if(S.view==="plano")renderPlano();};
+
+/* ---------- comandos, menus e dicas ---------- */
+Object.assign(CMD,{
+  comentar:{label:"Comentário…",icon:"com",key:"Ctrl+Alt+M",needs:1,run:()=>addComment(S.focusId,String(getSelection()).trim())},
+  verComent:{label:"Mostrar comentários na página",check:()=>prefs.verComent!==false,run:()=>{prefs.verComent=prefs.verComent===false;savePrefs();paintHighlights();}},
+  listaComent:{label:"Lista de comentários",icon:"com",needs:1,run:()=>{S.tool="notas";renderSide();}},
+  verPlano:{label:"Plano de filmagem",icon:"strip",needs:1,check:()=>S.view==="plano",run:()=>setMode(S.view==="plano"?"page":"plano")},
+});
+MENUS.find(m=>m[0]==="Inserir")[2].push("-","comentar");
+{const pr=MENUS.find(m=>m[0]==="Produção")[2];pr.splice(pr.indexOf("analise")+1,0,"verPlano");pr.push("-","listaComent","verComent");}
+{const ex=MENUS.find(m=>m[0]==="Exibir")[2];ex.splice(ex.indexOf("estrutura")+1,0,"verPlano");}
+TIPS.push("Selecione um trecho e aperte Ctrl+Alt+M para deixar um comentário com o seu nome. Ele vira comentário de verdade quando você exporta o .docx.",
+  "Produção › Plano de filmagem transforma as cenas em faixas coloridas: amarelo é exterior de dia, azul interior de noite. Arraste para montar os dias de gravação.",
+  "No plano de filmagem, a aba Diárias do elenco mostra quantos dias cada personagem fica parado esperando entre uma gravação e outra.",
+  "O tamanho das cenas no painel agora vem em oitavos de página (1 3/8), como a produção conta.");
 
 if(IS_TOOL)bootTool(new URLSearchParams(location.search).get("janela"));else boot();
 </script>
