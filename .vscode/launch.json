@@ -2,7 +2,7 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Rodar a Sala de Roteiro 95",
+      "name": "Rodar o ScriptRoom",
       "type": "node",
       "request": "launch",
       "cwd": "${workspaceFolder}",

@@ -1,9 +1,13 @@
-// Sala de Roteiro 95 — processo principal do Electron.
-// Guarda cada roteiro, ficha, série e versão como um .json em Documentos\Sala de Roteiro 95,
+// ScriptRoom — processo principal do Electron (antes chamado Sala de Roteiro 95).
+// Guarda cada roteiro, ficha, série e versão como um .json em Documentos\ScriptRoom,
 // abre os acessórios (Bloco de notas, Calculadora…) em janelas próprias e cuida das atualizações.
 const { app, BrowserWindow, ipcMain, dialog, shell, Menu } = require("electron");
 const path = require("path");
 const fs = require("fs");
+
+// As preferências (tema, zoom, lista do SmartType) ficam na pasta interna do nome antigo,
+// para quem atualizou da Sala de Roteiro 95 não perder nada.
+app.setPath("userData", path.join(app.getPath("appData"), "Sala de Roteiro 95"));
 
 let autoUpdater = null;
 try { ({ autoUpdater } = require("electron-updater")); } catch (err) { console.error("electron-updater indisponível:", err.message); }
@@ -23,7 +27,14 @@ const ferramentas = new Map();
 const idDe = (wc) => { if (win && wc === win.webContents) return "main"; for (const [id, w] of ferramentas) if (!w.isDestroyed() && w.webContents === wc) return id; return ""; };
 
 function pastaDados() {
-  DATA = path.join(app.getPath("documents"), "Sala de Roteiro 95");
+  const nova = path.join(app.getPath("documents"), "ScriptRoom");
+  const antiga = path.join(app.getPath("documents"), "Sala de Roteiro 95");
+  DATA = nova;
+  // Primeira vez com o nome novo: a pasta antiga só muda de nome. Se o Windows não deixar
+  // (OneDrive ou antivírus segurando um arquivo), continua usando a pasta antiga.
+  if (!fs.existsSync(nova) && fs.existsSync(antiga)) {
+    try { fs.renameSync(antiga, nova); } catch (err) { DATA = antiga; }
+  }
   for (const c of COLECOES) fs.mkdirSync(path.join(DATA, c), { recursive: true });
   const marca = path.join(DATA, ".primeira-vez");
   const seed = path.join(__dirname, "app", "seed");
@@ -176,7 +187,7 @@ function protegerNavegacao(w) {
 function criarJanela() {
   win = new BrowserWindow({
     width: 1280, height: 820, minWidth: 820, minHeight: 560,
-    frame: false, show: false, backgroundColor: "#008080", title: "Sala de Roteiro 95",
+    frame: false, show: false, backgroundColor: "#008080", title: "ScriptRoom",
     icon: path.join(__dirname, "build", "icon.png"),
     webPreferences: { preload: path.join(__dirname, "preload.js"), contextIsolation: true, nodeIntegration: false, sandbox: true, spellcheck: true },
   });

@@ -1,8 +1,8 @@
 {
   "name": "sala-de-roteiro-95",
-  "productName": "Sala de Roteiro 95",
-  "version": "4.6.0",
-  "description": "Editor de roteiros de TV com cara de 1995, para qualquer série: drama, novela, comédia, policial, radionovela e mais.",
+  "productName": "ScriptRoom",
+  "version": "4.8.0",
+  "description": "ScriptRoom: editor de roteiros de TV com cara de 1995, para qualquer série: drama, novela, comédia, policial, radionovela e mais. Lê e grava .docx, .fdx (Final Draft), PDF e Fountain.",
   "main": "main.js",
   "author": "Departamento de Dramaturgia",
   "license": "UNLICENSED",
@@ -20,7 +20,7 @@
   },
   "build": {
     "appId": "br.c2.saladeroteiro95",
-    "productName": "Sala de Roteiro 95",
+    "productName": "ScriptRoom",
     "copyright": "Departamento de Dramaturgia · C2",
     "directories": {
       "output": "dist",
@@ -39,7 +39,7 @@
       "icon": "build/icon.ico"
     },
     "portable": {
-      "artifactName": "SalaDeRoteiro95_portatil.exe"
+      "artifactName": "ScriptRoom_portatil.exe"
     },
     "nsis": {
       "oneClick": false,
@@ -55,15 +55,15 @@
       "include": "build/installer.nsh",
       "createDesktopShortcut": "always",
       "createStartMenuShortcut": true,
-      "shortcutName": "Sala de Roteiro 95",
-      "menuCategory": "Sala de Roteiro",
+      "shortcutName": "ScriptRoom",
+      "menuCategory": "ScriptRoom",
       "runAfterFinish": true,
       "deleteAppDataOnUninstall": false,
       "installerLanguages": [
         "pt_BR"
       ],
       "language": "1046",
-      "artifactName": "SETUP_SALA95_${version}.${ext}"
+      "artifactName": "SETUP_SCRIPTROOM_${version}.${ext}"
     },
     "publish": {
       "provider": "github",

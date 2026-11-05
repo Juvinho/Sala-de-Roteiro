@@ -1,4 +1,4 @@
-SALA DE ROTEIRO 95 — CONTRATO DE LICENÇA DE USO
+SCRIPTROOM — CONTRATO DE LICENÇA DE USO
 
 LEIA COM ATENÇÃO. AO CLICAR EM "ACEITO", VOCÊ CONCORDA COM OS TERMOS ABAIXO.
 
@@ -6,7 +6,7 @@ LEIA COM ATENÇÃO. AO CLICAR EM "ACEITO", VOCÊ CONCORDA COM OS TERMOS ABAIXO.
    e de qualquer outra série que o seu departamento de dramaturgia inventar.
 
 2. Os roteiros, fichas de personagem e anotações que você criar são seus.
-   Eles ficam na pasta Documentos\Sala de Roteiro 95, em arquivos .json
+   Eles ficam na pasta Documentos\ScriptRoom, em arquivos .json
    que você pode copiar, guardar em disquete ou mandar por e-mail.
 
 3. Desinstalar o programa não apaga essa pasta.
@@ -14,6 +14,6 @@ LEIA COM ATENÇÃO. AO CLICAR EM "ACEITO", VOCÊ CONCORDA COM OS TERMOS ABAIXO.
 4. O programa é fornecido "como está". Faça backup (Arquivo > Fazer backup)
    antes de grandes reformas no roteiro. Nenhum episódio vai ao ar sozinho.
 
-5. É proibido usar a Sala de Roteiro 95 para escrever "Feliz Natal." de novo.
+5. É proibido usar o ScriptRoom para escrever "Feliz Natal." de novo.
 
 Departamento de Dramaturgia · C2

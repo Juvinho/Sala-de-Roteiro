@@ -1,9 +1,11 @@
-# Sala de Roteiro 95
+# ScriptRoom
+
+*Antes chamado Sala de Roteiro 95.*
 
 Editor de roteiros de TV com cara de programa de 1995. Nasceu para **Fundação Varguelia** e hoje
 escreve qualquer série: drama, telenovela, comédia de situação, policial, antologia, minissérie,
 telefilme, desenho animado, radionovela e humorístico de esquetes.
-Este projeto transforma a Sala de Roteiro num programa de verdade para Windows, com um
+Este projeto transforma o ScriptRoom num programa de verdade para Windows, com um
 **instalador clássico** (SETUP.EXE com assistente, contrato de licença, fundo azul em tela cheia,
 atalho na área de trabalho e desinstalador).
 
@@ -38,7 +40,7 @@ Isso baixa o Electron e o gerador de instalador (uns 300 MB, só na primeira vez
 npm start
 ```
 
-Ou aperte **F5** no VS Code: a configuração "Rodar a Sala de Roteiro 95" já está pronta.
+Ou aperte **F5** no VS Code: a configuração "Rodar o ScriptRoom" já está pronta.
 
 ## 4. Gerar o instalador
 
@@ -49,13 +51,13 @@ npm run instalador
 Quando terminar, o instalador estará em:
 
 ```
-dist\SETUP_SALA95_4.6.0.exe
+dist\SETUP_SCRIPTROOM_4.8.0.exe
 ```
 
 Dê dois cliques nele e siga o assistente: **Avançar › Aceito › Avançar › Instalar › Concluir**.
 
 Prefere um .exe que roda sem instalar (pendrive, por exemplo)? Use `npm run portatil`.
-O arquivo sai como `dist\SalaDeRoteiro95_portatil.exe`.
+O arquivo sai como `dist\ScriptRoom_portatil.exe`.
 
 No VS Code também dá para usar **Terminal › Run Task…**, que lista as quatro tarefas
 (instalar dependências, rodar, gerar instalador e gerar portátil).
@@ -80,6 +82,39 @@ No VS Code também dá para usar **Terminal › Run Task…**, que lista as quat
   Análise técnica mostra a folha de cada cena por departamento e exporta em .csv.
 - **Exportar PDF…** com opções: folha de rosto, marcas de revisão, só um trecho de cenas, marca
   d'água e **cópias nominais** (um PDF por pessoa, com o nome dela na marca d'água).
+
+## Novo nome e Final Draft (versão 4.8)
+
+- **ScriptRoom:** o programa mudou de nome. Ao atualizar, a pasta `Documentos\Sala de Roteiro 95`
+  vira `Documentos\ScriptRoom` sozinha, na primeira vez que o programa abre (se o OneDrive ou o
+  antivírus não deixarem, ele continua usando a pasta antiga). Tema, zoom e listas do SmartType
+  ficam como estavam. A atualização instala por cima da versão antiga; se sobrar um atalho
+  "Sala de Roteiro 95" na área de trabalho, pode apagar.
+- **Final Draft (.fdx):** Arquivo › Exportar para Final Draft gera um .fdx que abre no Final Draft
+  8 ou mais novo: cabeçalhos com número de cena, ação, personagem, rubrica, fala, transição, atos,
+  diálogo simultâneo, página nova, resumo da cena e folha de rosto. Arquivo › Importar também lê
+  .fdx. Os comentários não vão para o .fdx: use o .docx, que leva os comentários do Word.
+- **Beat Board** (Exibir): uma mesa livre de ideias. Dois cliques no fundo criam um beat; arraste
+  pelo topo, ligue beats com setas, escolha a cor, ligue cada beat a uma cena ou crie a cena a
+  partir dele. “Beats das cenas” cria um cartão para cada cena que ainda não tem.
+
+## Sala ao vivo: escrever junto (versão 4.7, só na versão web)
+
+A versão web do ScriptRoom (o link do claude.ai) agora é uma sala de roteiro de verdade:
+compartilhe o link pelo menu **Compartilhar** do claude.ai, com acesso de **Colaborador**, e
+escrevam juntos.
+
+- **Quem está na sala:** o ícone de pessoas na bandeja mostra quantos estão com a Sala aberta.
+  Ferramentas › **Sala ao vivo…** lista cada um, em que roteiro está, e tem **Ir até** e **Seguir**
+  (a sua tela acompanha a da outra pessoa, bom para leitura com a equipe).
+- **Na margem**, uma etiqueta colorida com o nome mostra o trecho em que cada pessoa está; um ✎
+  aparece enquanto ela digita, e o texto chega letra a letra.
+- **Mesclagem:** se duas pessoas mexem em trechos diferentes ao mesmo tempo, as duas mudanças
+  ficam. Se mexem no mesmo trecho, fica a versão de quem está olhando e a Sala avisa.
+  Comentários de duas pessoas se somam.
+- **Bate-papo** (Ctrl+Shift+B): mensagens rápidas, com o "uh-oh" de 1996. Não ficam guardadas.
+
+No programa instalado (.exe) cada um escreve no próprio computador, como antes.
 
 ## Comentários e plano de filmagem (versão 4.6)
 
@@ -167,7 +202,7 @@ A Fundação Varguelia vira automaticamente a primeira série na primeira vez qu
 ## Onde ficam os seus roteiros
 
 ```
-Documentos\Sala de Roteiro 95\
+Documentos\ScriptRoom\
    roteiros\      um .json por episódio (ep-16.json, ep-17.json…)
    personagens\   uma ficha por personagem
    versoes\       versões guardadas (automáticas e com nome)

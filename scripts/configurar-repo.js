@@ -14,4 +14,4 @@ const pkg = JSON.parse(fs.readFileSync(arq, "utf8"));
 pkg.repository = `https://github.com/${owner}/${repo}`;
 pkg.build.publish = Object.assign({}, pkg.build.publish, { provider: "github", owner, repo });
 fs.writeFileSync(arq, JSON.stringify(pkg, null, 2) + "\n");
-console.log(`Pronto. A Sala de Roteiro vai procurar atualizações em github.com/${owner}/${repo}/releases`);
+console.log(`Pronto. O ScriptRoom vai procurar atualizações em github.com/${owner}/${repo}/releases`);

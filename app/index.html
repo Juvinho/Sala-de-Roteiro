@@ -7,7 +7,7 @@
 <style>*,*::before,*::after{box-sizing:border-box}:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
 </head>
 <body>
-<title>Sala de Roteiro</title>
+<title>ScriptRoom</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Arimo:wght@400;700&family=Courier+Prime:ital,wght@0,400;0,700;1,400;1,700&family=VT323&display=swap">
@@ -520,12 +520,39 @@ table.dood .d-I,table.dood .d-IF{background:#7CD07C}table.dood .d-F{background:#
 .callsheet{background:#fff;color:#000;border:2px inset var(--face,#C0C0C0);padding:10px;display:flex;flex-direction:column;gap:8px}
 .callsheet h3{margin:0;font:bold 14px Tahoma,sans-serif;text-align:center}.callsheet>p{margin:0;text-align:center}
 .callsheet tr.strip td{background:var(--sc,#fff)}
+/* pacote 4: sala ao vivo */
+.peermarks{position:absolute;inset:0;pointer-events:none}
+.pmk{position:absolute;left:calc(var(--ml,38.1)*-0.06mm + 2px + var(--k,0)*5px);width:3px;background:var(--pc)}
+.pmk span{position:absolute;left:5px;top:-1px;white-space:nowrap;background:var(--pc);color:#fff;font:bold 9px/13px Tahoma,sans-serif;padding:0 4px;box-shadow:1px 1px 0 rgba(0,0,0,.35);transform:translateY(calc(var(--k,0)*14px))}
+.el.remote-chg{animation:rchg 1.6s ease-out}
+@keyframes rchg{0%{background:#D8F0D0}100%{background:transparent}}
+.traypeers{display:inline-flex;align-items:center;gap:2px;background:transparent;border:0;padding:0 4px;font:11px Tahoma,sans-serif;cursor:pointer;position:relative}
+.traypeers .cnt{position:absolute;top:-4px;right:-4px;font-style:normal}
+.dotp{display:inline-block;width:10px;height:10px;border:1px solid #000;background:var(--pc);margin-right:4px;vertical-align:middle}
+.chatlist{height:220px;overflow:auto;background:#fff;border:2px inset var(--face,#C0C0C0);padding:2px 4px;font:12px Tahoma,sans-serif}
+.chatlist .cm{padding:2px 0;border-bottom:1px dotted #C0C0C0}.chatlist .cm.me{background:#F0F4FF}
+.chatlist small{color:#606060}
+@media (prefers-reduced-motion:reduce){.el.remote-chg{animation:none;outline:2px solid #30A030}}
+/* pacote 5: beat board */
+.beats .bb-scroll{overflow:auto;height:calc(100vh - 230px);min-height:360px;background:#fff;border:2px inset var(--face,#C0C0C0)}
+.bb-canvas{position:relative;background-color:#F4F4EC;background-image:radial-gradient(#B8B8A8 1px,transparent 1px);background-size:20px 20px}
+.bb-links{position:absolute;left:0;top:0;pointer-events:none}.bb-links .bb-lk{pointer-events:auto;cursor:pointer}
+.beat{position:absolute;width:220px;background:var(--bc,#FFF8B0);border:1px solid #000;box-shadow:3px 3px 0 rgba(0,0,0,.35);display:flex;flex-direction:column;color:#000}
+.beat.sel{outline:2px solid #000080;outline-offset:1px}.beat.from{outline:2px dashed #C00000;outline-offset:2px}
+.beat.dragging{opacity:.85;box-shadow:6px 6px 0 rgba(0,0,0,.3);z-index:5}
+.beat:focus-visible{outline:2px dotted #000;outline-offset:2px}
+.bt-h{display:flex;align-items:center;gap:2px;padding:2px;background:rgba(0,0,0,.08);cursor:grab;touch-action:none}
+.bt-h .grip{color:#555;font-size:10px;padding:0 2px}
+.bt-t{flex:1;min-width:0;border:0;background:transparent;font:bold 12px Tahoma,sans-serif;color:#000}
+.bt-x{border:0;border-top:1px dotted rgba(0,0,0,.3);background:transparent;resize:vertical;font:12px/1.35 "Courier New",monospace;padding:4px;min-height:54px;color:#000}
+.bt-f{display:flex;gap:2px;padding:2px;border-top:1px dotted rgba(0,0,0,.3)}.bt-f select{flex:1;min-width:0;font-size:11px}
+.bb-cores{display:inline-flex;gap:2px}.bb-cores .sw{width:16px;height:16px;border:1px solid #000;padding:0;cursor:pointer}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
 </style>
 
 
 <div class="app" id="app">
-  <div class="titlebar" id="mainTitle"><span data-icon="script"></span><span class="ttl" id="winTitle">Sala de Roteiro 95</span>
+  <div class="titlebar" id="mainTitle"><span data-icon="script"></span><span class="ttl" id="winTitle">ScriptRoom</span>
     <button class="tb-btn" type="button" data-cmd="verPainel" title="Mostrar ou esconder o painel" aria-label="Painel">_</button>
     <button class="tb-btn" type="button" data-cmd="verQuadro" title="Quadro de cenas" aria-label="Quadro de cenas">□</button>
     <button class="tb-btn" type="button" data-cmd="desligar" title="Desligar" aria-label="Desligar">×</button></div>
@@ -576,12 +603,12 @@ table.dood .d-I,table.dood .d-IF{background:#7CD07C}table.dood .d-F{background:#
 </div>
 <div class="taskbar" id="taskbar">
   <button class="start" type="button" id="startBtn" aria-expanded="false" aria-haspopup="menu"><span data-icon="clapper"></span>Iniciar</button>
-  <button class="task main" type="button" id="taskMain" aria-pressed="true"><span data-icon="script"></span><span id="taskTitle">Sala de Roteiro 95</span></button>
+  <button class="task main" type="button" id="taskMain" aria-pressed="true"><span data-icon="script"></span><span id="taskTitle">ScriptRoom</span></button>
   <button class="task mob" type="button" id="tPage" aria-pressed="true"><span data-icon="script"></span><span>Roteiro</span></button>
   <button class="task mob" type="button" id="tPanel" aria-pressed="false"><span data-icon="board"></span><span>Painel</span></button>
   <div class="tray"><button type="button" id="traySom" title="Som de teclado" aria-label="Som de teclado"></button><span class="clock" id="clock">--:--</span></div>
 </div>
-<input type="file" id="fDocx" accept=".docx,.txt,.fountain" multiple hidden>
+<input type="file" id="fDocx" accept=".docx,.fdx,.txt,.fountain" multiple hidden>
 <input type="file" id="fJson" accept=".json,application/json" hidden>
 
 
@@ -1213,7 +1240,7 @@ async function exportDocx(sc){
   const head0=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:hdr ${NS}><w:p/></w:hdr>`;
   const styles=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:styles ${NS}><w:docDefaults><w:rPrDefault><w:rPr>${FONT}<w:sz w:val="24"/><w:szCs w:val="24"/><w:lang w:val="pt-BR"/></w:rPr></w:rPrDefault><w:pPrDefault><w:pPr><w:spacing w:after="0" w:line="240" w:lineRule="auto"/></w:pPr></w:pPrDefault></w:docDefaults><w:style w:type="paragraph" w:default="1" w:styleId="Normal"><w:name w:val="Normal"/><w:qFormat/></w:style><w:style w:type="paragraph" w:styleId="Header"><w:name w:val="header"/><w:basedOn w:val="Normal"/></w:style></w:styles>`;
   const settings=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:settings ${NS}><w:defaultTabStop w:val="720"/><w:compat><w:compatSetting w:name="compatibilityMode" w:uri="http://schemas.microsoft.com/office/word" w:val="15"/></w:compat></w:settings>`;
-  const core=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><cp:coreProperties xmlns:cp="http://schemas.openxmlformats.org/package/2006/metadata/core-properties" xmlns:dc="http://purl.org/dc/elements/1.1/"><dc:title>${escX(`${m.serie} ${epCode(m)} “${m.titulo}”`)}</dc:title><dc:creator>Sala de Roteiro</dc:creator></cp:coreProperties>`;
+  const core=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><cp:coreProperties xmlns:cp="http://schemas.openxmlformats.org/package/2006/metadata/core-properties" xmlns:dc="http://purl.org/dc/elements/1.1/"><dc:title>${escX(`${m.serie} ${epCode(m)} “${m.titulo}”`)}</dc:title><dc:creator>ScriptRoom</dc:creator></cp:coreProperties>`;
   const ct=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/><Override PartName="/word/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.styles+xml"/><Override PartName="/word/settings.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.settings+xml"/><Override PartName="/word/header1.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.header+xml"/><Override PartName="/word/header2.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.header+xml"/><Override PartName="/docProps/core.xml" ContentType="application/vnd.openxmlformats-package.core-properties+xml"/><Override PartName="/word/comments.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.comments+xml"/></Types>`;
   const rels=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="word/document.xml"/><Relationship Id="rId2" Type="http://schemas.openxmlformats.org/package/2006/relationships/metadata/core-properties" Target="docProps/core.xml"/></Relationships>`;
   const drels=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/><Relationship Id="rId3" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/settings" Target="settings.xml"/><Relationship Id="rId4" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/header" Target="header1.xml"/><Relationship Id="rId5" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/header" Target="header2.xml"/><Relationship Id="rId6" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/comments" Target="comments.xml"/></Relationships>`;
@@ -1277,7 +1304,7 @@ function openEp(id,keepTool){histCommit();S.cur=id;S.focusId=null;hideAC();if(!k
 function doNew(){const l=sortedEps();const sc=newScript(l[l.length-1]);S.eps[sc.id]=sc;S.cur=sc.id;markChanged(sc);openEp(sc.id);toast(`EP${pad2(sc.meta.episodio)} criado. Clique na folha de rosto para dar o título.`);}
 document.getElementById("epSel").onchange=e=>openEp(e.target.value);
 document.getElementById("fDocx").onchange=async e=>{const fs=[...e.target.files];e.target.value="";let last=null,n=0;
-  for(const f of fs){try{const sc=/\.docx$/i.test(f.name)?await importDocx(await f.arrayBuffer(),f.name):importText(await f.text(),f.name);S.eps[sc.id]=sc;markChanged(sc);bumpBase(epWords(sc));last=sc;n++;}catch(err){toast(`Não consegui ler ${f.name}: ${err.message}`);}}
+  for(const f of fs){try{const sc=/\.docx$/i.test(f.name)?await importDocx(await f.arrayBuffer(),f.name):/\.fdx$/i.test(f.name)?importFdx(await f.text(),f.name):importText(await f.text(),f.name);S.eps[sc.id]=sc;markChanged(sc);bumpBase(epWords(sc));last=sc;n++;}catch(err){toast(`Não consegui ler ${f.name}: ${err.message}`);}}
   if(last){openEp(last.id);toast(n>1?`${n} roteiros importados`:`EP${pad2(last.meta.episodio)} importado`);}};
 async function offer(name,blob){
   if(window.salaNative&&window.salaNative.saveAs){try{const r=await window.salaNative.saveAs(name,new Uint8Array(await blob.arrayBuffer()));toast(r&&r.status==="saved"?`Salvo: ${r.path}`:"Cancelado");}catch(e){toast("Não foi possível salvar: "+(e.message||e));}return;}
@@ -1314,7 +1341,7 @@ function boot(){
   const ls=lsLoad();if(ls&&ls.eps){S.eps=ls.eps;S.cur=ls.cur&&S.eps[ls.cur]?ls.cur:(sortedEps().slice(-1)[0]||{}).id||null;}
   S.chars=lsCharsLoad();S.notas=lsNotasLoad();S.series=lsGet(LS_SE);S.modelos=lsGet(LS_MO);migrate();
   renderAll();histReset();
-  if(window.salaNative){setupNative();syncStore(nativeDbAdapter(window.salaNative),whenReady,"Salvo em Documentos › Sala de Roteiro 95");return;}
+  if(window.salaNative){setupNative();syncStore(nativeDbAdapter(window.salaNative),whenReady,"Salvo em Documentos › ScriptRoom");return;}
   if(!window.claude||!window.claude.use){setStatus("local","Salvo só neste navegador");whenReady();return;}
   claude.use("downloads").then(d=>{S.dl=d;}).catch(()=>{});
   claude.use("db").then(db=>{if(!db){setStatus("local","Salvo só neste navegador");whenReady();return;}syncStore(db,whenReady,"Salvo");}).catch(()=>{setStatus("local","Salvo só neste navegador");whenReady();});
@@ -1336,7 +1363,7 @@ async function syncStore(db,whenReady,okText){
   }catch(e){clearTimeout(tm);setStatus("local","Sem acesso ao armazenamento; salvo neste navegador");whenReady();}
 }
 /* ================================================================
-   SALA DE ROTEIRO 95 — interface de época
+   SCRIPTROOM — interface de época
    ================================================================ */
 const ICON={
   new:'<path d="M3.5 1.5h6l3 3v10h-9z" fill="#fff" stroke="#000"/><path d="M9.5 1.5v3h3" fill="#C0C0C0" stroke="#000"/>',
@@ -1382,7 +1409,7 @@ const CMD={
   proximo:{label:"Próximo episódio",icon:"script",run:()=>createNext()},
   assistente:{label:"Assistente de episódio…",icon:"wand",run:()=>wizard()},
   abrir:{label:"Abrir…",icon:"open",key:"Ctrl+O",run:()=>openDialog()},
-  importar:{label:"Importar .docx ou .fountain…",run:()=>document.getElementById("fDocx").click()},
+  importar:{label:"Importar .docx, .fdx ou .fountain…",run:()=>document.getElementById("fDocx").click()},
   exportar:{label:"Exportar .docx",icon:"save",needs:1,run:async()=>{const sc=cur();histCommit();await offer(fileName(sc),await exportDocx(sc));}},
   exportarTxt:{label:"Exportar texto (.fountain)",needs:1,run:async()=>{const sc=cur();await offer(fileName(sc).replace(/\.docx$/,".txt"),new Blob([toFountain(sc)],{type:"text/plain"}));}},
   zip:{label:"Exportar todos (.zip)",run:async()=>{const l=sortedEps();if(!l.length)return;toast(`Montando ${l.length} arquivos…`);const ents=[];for(const s of l)ents.push([fileName(s),new Uint8Array(await (await exportDocx(s)).arrayBuffer())]);await offer(`${l[0].meta.codigo}_roteiros_EP${pad2(l[0].meta.episodio)}-EP${pad2(l[l.length-1].meta.episodio)}.zip`,await makeZip(ents));}},
@@ -1420,7 +1447,7 @@ const CMD={
   boasvindas:{label:"Mostrar boas-vindas ao iniciar",check:()=>prefs.welcome,run:()=>{prefs.welcome=!prefs.welcome;savePrefs();}},
   atalhos:{label:"Atalhos de teclado",icon:"help",run:()=>{S.tool="ajuda";renderSide();showPanel();}},
   dica:{label:"Dica do dia…",icon:"lamp",run:()=>tipDialog()},
-  sobre:{label:"Sobre a Sala de Roteiro 95",run:()=>aboutDialog()},
+  sobre:{label:"Sobre o ScriptRoom",run:()=>aboutDialog()},
   tpl_padrao:{label:"Episódio padrão (teaser + 4 atos)",run:()=>createFromTemplate("padrao")},
   tpl_partes:{label:"Episódio em duas partes",run:()=>createFromTemplate("partes")},
   tpl_aviso:{label:"Com aviso aos telespectadores",run:()=>createFromTemplate("aviso")},
@@ -1448,7 +1475,7 @@ function showMenu(items,x,y,level,opts){
   const m=document.createElement("div");m.className="menu"+(opts.start?" startmenu":"");m.setAttribute("role","menu");
   const body=items.map((it,i)=>{if(it==="-")return "<hr>";const chk=it.check&&it.check();
     return `<button type="button" class="mi${opts.big?" big":""}" role="menuitem" data-i="${i}"${it.disabled?" disabled":""}><span class="ic">${it.icon?icon(it.icon,opts.big?22:16):chk?"✓":""}</span><span>${it.html||escH(it.label)}</span><span class="k">${it.key||""}</span><span>${it.sub?"▸":""}</span></button>`;}).join("");
-  m.innerHTML=opts.start?`<div class="sm-band"><b>Sala de Roteiro</b> 95</div><div class="sm-items">${body}</div>`:body;
+  m.innerHTML=opts.start?`<div class="sm-band"><b>Script</b>Room</div><div class="sm-items">${body}</div>`:body;
   document.body.appendChild(m);menuStack.push(m);
   const w=m.offsetWidth,h=m.offsetHeight;
   if(opts.up)y=y-h;
@@ -1586,15 +1613,15 @@ function tipDialog(){dialog({title:"Dica do dia",width:420,body:`<div class="tip
 function aboutDialog(){
   const n=Object.values(S.eps);const cenas=n.reduce((a,s)=>a+s.els.filter(e=>e.t==="scene").length,0),falas=n.reduce((a,s)=>a+s.els.filter(e=>e.t==="character").length,0);
   const kb=Math.round(JSON.stringify(S.eps).length/1024);
-  dialog({title:"Sobre a Sala de Roteiro 95",width:420,body:`<div class="splash"><svg viewBox="0 0 16 16" width="48" height="48" aria-hidden="true">${ICON.clapper}</svg><span class="big">SALA DE ROTEIRO 95</span><span class="sub">Versão 4.00.950</span></div>
+  dialog({title:"Sobre o ScriptRoom",width:420,body:`<div class="splash"><svg viewBox="0 0 16 16" width="48" height="48" aria-hidden="true">${ICON.clapper}</svg><span class="big">SCRIPTROOM</span><span class="sub">Versão 4.00.950</span></div>
   <div>Licenciado para:<br><b>Departamento de Dramaturgia — C2</b><br>Série em produção: ${escH((cur()||{meta:{serie:"—"}}).meta.serie)}</div><hr style="border:0;border-top:1px solid var(--lo);border-bottom:1px solid var(--hi);width:100%">
   <div class="muted">${n.length} roteiros · ${fmtN(cenas)} cenas · ${fmtN(falas)} falas<br>Memória usada pela sala: ${fmtN(kb)} KB</div>`,buttons:[{label:"OK",def:1}]});
 }
 function shutdown(){
-  dialog({title:"Desligar a Sala de Roteiro",width:380,body:`<div class="row" style="flex-wrap:nowrap;align-items:flex-start">${icon("power",32)}<fieldset style="flex:1"><legend>O que você quer fazer?</legend><label class="radio"><input type="radio" name="sd" value="off" checked><span>Salvar tudo e desligar</span></label><label class="radio"><input type="radio" name="sd" value="re"><span>Reiniciar (volta às boas-vindas)</span></label></fieldset></div>`,
+  dialog({title:"Desligar o ScriptRoom",width:380,body:`<div class="row" style="flex-wrap:nowrap;align-items:flex-start">${icon("power",32)}<fieldset style="flex:1"><legend>O que você quer fazer?</legend><label class="radio"><input type="radio" name="sd" value="off" checked><span>Salvar tudo e desligar</span></label><label class="radio"><input type="radio" name="sd" value="re"><span>Reiniciar (volta às boas-vindas)</span></label></fieldset></div>`,
     buttons:[{label:"Sim",def:1,run:async w=>{const v=w.querySelector("input[name=sd]:checked").value;histCommit();clearTimeout(saveT);await flush();
       if(v==="re"){setTimeout(()=>showWelcome(true),50);return;}
-      const o=document.createElement("div");o.className="desligado";o.setAttribute("role","button");o.tabIndex=0;o.innerHTML="Agora você pode desligar<br>o seu computador com segurança.<br><br><small style='font-size:20px;color:#888'>clique para religar a Sala de Roteiro</small>";
+      const o=document.createElement("div");o.className="desligado";o.setAttribute("role","button");o.tabIndex=0;o.innerHTML="Agora você pode desligar<br>o seu computador com segurança.<br><br><small style='font-size:20px;color:#888'>clique para religar o ScriptRoom</small>";
       document.body.appendChild(o);o.focus();if(window.salaNative)setTimeout(()=>window.salaNative.close(),1800);const back=()=>{o.remove();showWelcome(true);};o.onclick=back;o.onkeydown=e=>{if(e.key==="Enter"||e.key===" ")back();};}},{label:"Não"}]});
 }
 
@@ -1643,7 +1670,7 @@ function updStatus(){
   let sn=0;if(f){for(let k=f.i;k>=0;k--)if(sc.els[k].t==="scene"){sn=lay.info[k].num;break;}}
   set("sbScene",`Cena ${sn||"–"} de ${total}`);set("sbPage",`Pág. ${f&&lay.info[f.i]?lay.info[f.i].page:"–"} de ${lay.pages}`);set("sbStyle",f?TYPES[f.e.t].label:"–");{const m=sc.meta;const el=document.getElementById("sbEtapa");if(el){el.textContent=`${m.status||"Sem etapa"}${m.entrega&&!["Aprovado","Gravado","Exibido"].includes(m.status)?" · "+prazo(m.entrega):""}`;el.style.color=m.entrega&&daysTo(m.entrega)<0&&!["Aprovado","Gravado","Exibido"].includes(m.status)?"var(--err)":"";}}
 }
-function updTitle(){const sc=cur();const t=sc?`Sala de Roteiro 95 - [${sc.meta.codigo}_${epTag(sc.meta)}.ROT]`:"Sala de Roteiro 95";const a=document.getElementById("winTitle");if(a)a.textContent=t;const b=document.getElementById("taskTitle");if(b)b.textContent=sc?epLabel(sc):"Sala de Roteiro 95";}
+function updTitle(){const sc=cur();const t=sc?`ScriptRoom - [${sc.meta.codigo}_${epTag(sc.meta)}.ROT]`:"ScriptRoom";const a=document.getElementById("winTitle");if(a)a.textContent=t;const b=document.getElementById("taskTitle");if(b)b.textContent=sc?epLabel(sc):"ScriptRoom";}
 setInterval(()=>{const c=document.getElementById("clock");if(c){const d=new Date();c.textContent=`${pad2(d.getHours())}:${pad2(d.getMinutes())}`;c.title=d.toLocaleDateString("pt-BR",{weekday:"long",day:"numeric",month:"long",year:"numeric"});}},1000);
 
 /* ---------- quadro de cenas ---------- */
@@ -2422,7 +2449,7 @@ function showWelcome(force){
   let nxt="";if(prev){nxt=`${prev.meta.codigo} ${epTag({prefixo:prev.meta.prefixo,episodio:(+prev.meta.episodio||0)+1})} · continua do ${epTag(prev.meta)}, estreia ${fmtDate(nextAir(prev.meta.estreia,se))}`;}
   const opt=(v,label,small,checked,extra)=>`<label class="radio"><input type="radio" name="wel" value="${v}"${checked?" checked":""}><span>${label}${small?`<small>${small}</small>`:""}${extra||""}</span></label>`;
   const all=sortedEps();
-  const body=`<div class="welcome"><div class="art"><div class="splash"><svg viewBox="0 0 16 16" width="64" height="64" aria-hidden="true">${ICON.clapper}</svg><span class="big">SALA DE ROTEIRO</span><span class="sub">versão 95</span></div>
+  const body=`<div class="welcome"><div class="art"><div class="splash"><svg viewBox="0 0 16 16" width="64" height="64" aria-hidden="true">${ICON.clapper}</svg><span class="big">SCRIPTROOM</span><span class="sub">edição 95</span></div>
     <div class="tip">${icon("lamp",24)}<div><b>Você sabia…</b><span id="tipTxt">${escH(TIPS[prefs.tip||0])}</span><div style="margin-top:6px"><button type="button" class="btn sm" id="tipNext">Próxima dica</button></div></div></div></div>
     <fieldset><legend>O que você quer fazer?</legend>
     ${last?opt("cont","Continuar de onde parei",escH(`${se?se.nome+" · ":""}${epLabel(last)}`),true):""}
@@ -2430,9 +2457,9 @@ function showWelcome(force){
     ${opt("serie","Criar uma série nova","Novela, comédia, policial, radionovela, telefilme e mais 5 formatos",!last)}
     ${se?opt("tpl",`Novo roteiro de ${escH(se.nome)} a partir de um modelo`,"",false,`<div style="margin-top:3px"><select id="welTpl" aria-label="Modelo">${templateOptions()}</select></div>`):""}
     ${all.length?opt("open","Abrir outro roteiro","",false,`<div style="margin-top:3px"><select id="welOpen" aria-label="Roteiro">${[...new Set(all.map(s=>s.meta.serieId))].map(sid=>`<optgroup label="${escH((S.series[sid]||{}).nome||"Sem série")}">${all.filter(s=>s.meta.serieId===sid).map(s=>`<option value="${s.id}">${escH(epLabel(s))}</option>`).join("")}</optgroup>`).join("")}</select></div>`):""}
-    ${opt("imp","Importar .docx ou .fountain","")}</fieldset></div>
+    ${opt("imp","Importar .docx, .fdx (Final Draft) ou .fountain","")}</fieldset></div>
     <label class="chk"><input type="checkbox" id="welShow"${prefs.welcome?" checked":""}> Mostrar esta janela ao iniciar</label>`;
-  dialog({id:"welcomeWin",title:"Bem-vindo à Sala de Roteiro 95",width:660,body,
+  dialog({id:"welcomeWin",title:"Bem-vindo ao ScriptRoom",width:660,body,
     onOpen:w=>{w.querySelector("#tipNext").onclick=()=>{w.querySelector("#tipTxt").textContent=nextTip();};
       w.querySelectorAll("select").forEach(s=>s.addEventListener("change",()=>{const r=s.closest(".radio").querySelector("input");r.checked=true;}));
       w.addEventListener("dblclick",e=>{if(e.target.closest(".radio"))w.querySelector('[data-b="0"]').click();});
@@ -2572,7 +2599,7 @@ function openAccessory(id){
 }
 /* janela própria do acessório (.exe) */
 function bootTool(id){
-  const A=ACC[id];document.title=A?A.title:"Sala de Roteiro 95";document.body.dataset.scheme=prefs.scheme;document.body.classList.add("tool","native");
+  const A=ACC[id];document.title=A?A.title:"ScriptRoom";document.body.dataset.scheme=prefs.scheme;document.body.classList.add("tool","native");
   document.getElementById("app").hidden=true;document.getElementById("taskbar").hidden=true;
   const wrap=document.createElement("div");wrap.className="app toolwin";
   wrap.innerHTML=`<div class="titlebar" id="mainTitle"><span data-icon="${A?A.icon:"script"}"></span><span class="ttl">${escH(A?A.title:"?")}</span><button class="tb-btn" type="button" data-tw="min" aria-label="Minimizar" title="Minimizar">_</button><button class="tb-btn" type="button" data-tw="x" aria-label="Fechar" title="Fechar">×</button></div><div class="toolbody"><div class="acc-root acc-${id}"></div></div>`;
@@ -2598,10 +2625,10 @@ const UPD={silent:true,state:"idle",info:null};
 function updDialogBody(){
   const d=UPD.info||{};const st=UPD.state;
   if(st==="checking")return `<div class="row">${icon("update",32)}<div>Procurando uma versão nova no repositório…</div></div><div class="prog wide marquee"><i></i><i></i><i></i><i></i></div>`;
-  if(st==="none")return `<div class="row">${icon("info",32)}<div>Você já tem a versão mais nova da Sala de Roteiro 95 (${escH(d.version||"")}).</div></div>`;
+  if(st==="none")return `<div class="row">${icon("info",32)}<div>Você já tem a versão mais nova do ScriptRoom (${escH(d.version||"")}).</div></div>`;
   if(st==="available")return `<div class="row" style="align-items:flex-start">${icon("update",32)}<div><b>A versão ${escH(d.version)} está disponível.</b><br>Você tem a ${escH(UPD.cur||"")}. Seus roteiros não são tocados pela atualização.</div></div>${d.notes?`<div class="listview" style="max-height:160px;padding:6px 8px;white-space:pre-wrap">${escH(d.notes)}</div>`:""}`;
   if(st==="progress"){const p=Math.max(0,Math.min(100,d.percent||0));return `<div>Copiando arquivos da versão nova… ${Math.round(p)}%</div><div class="prog wide">${"<i></i>".repeat(Math.round(p/100*30))}</div><div class="muted">${d.total?`${fmtN(Math.round((d.transferred||0)/1024))} KB de ${fmtN(Math.round(d.total/1024))} KB`:""}${d.bps?` · ${fmtN(Math.round(d.bps/1024))} KB/s`:""}</div>`;}
-  if(st==="downloaded")return `<div class="row">${icon("update",32)}<div><b>Pronto.</b> A versão ${escH(d.version||"")} foi baixada. A Sala de Roteiro vai salvar tudo, fechar, instalar e abrir de novo.</div></div>`;
+  if(st==="downloaded")return `<div class="row">${icon("update",32)}<div><b>Pronto.</b> A versão ${escH(d.version||"")} foi baixada. O ScriptRoom vai salvar tudo, fechar, instalar e abrir de novo.</div></div>`;
   if(st==="error")return `<div class="row" style="align-items:flex-start">${icon("warn",32)}<div><b>Não foi possível procurar atualizações.</b><br>${escH(d.hint||"")}<br><small class="muted">${escH((d.message||"").slice(0,240))}</small></div></div>`;
   if(st==="dev")return `<div class="row">${icon("info",32)}<div>As atualizações só funcionam no programa instalado pelo SETUP. Rodando pelo VS Code (npm start), use o git para atualizar.</div></div>`;
   return `<div class="row">${icon("update",32)}<div>Clique em Procurar para ver se há uma versão nova.</div></div>`;
@@ -2614,9 +2641,9 @@ function updButtons(){const st=UPD.state;
 function drawUpd(){const w=document.getElementById("updWin");if(!w)return;w.querySelector(".win-body").innerHTML=updDialogBody();
   const btns=updButtons();const bar=w.querySelector(".win-btns");bar.innerHTML=btns.map((b,i)=>`<button type="button" class="btn${b.def?" def":""}" data-ub="${i}">${escH(b.label)}</button>`).join("");
   bar.onclick=async e=>{const b=e.target.closest("[data-ub]");if(!b)return;const r=btns[+b.dataset.ub].run?await btns[+b.dataset.ub].run():undefined;if(r!==false)w._close();};}
-function updDialog(){dialog({id:"updWin",title:"Atualização da Sala de Roteiro",width:440,body:updDialogBody(),buttons:[{label:"Fechar"}],onOpen:()=>setTimeout(drawUpd,0)});}
+function updDialog(){dialog({id:"updWin",title:"Atualização do ScriptRoom",width:440,body:updDialogBody(),buttons:[{label:"Fechar"}],onOpen:()=>setTimeout(drawUpd,0)});}
 async function checkUpdates(silent){
-  if(!window.salaNative||!window.salaNative.checkUpdates){if(!silent)msgBox({title:"Atualização",icon:"info",text:"Esta é a versão web da Sala de Roteiro: ela já abre sempre na versão mais nova. O botão de atualizar é do programa instalado."});return;}
+  if(!window.salaNative||!window.salaNative.checkUpdates){if(!silent)msgBox({title:"Atualização",icon:"info",text:"Esta é a versão web do ScriptRoom: ela já abre sempre na versão mais nova. O botão de atualizar é do programa instalado."});return;}
   if(silent&&(document.getElementById("updWin")||UPD.state==="checking"||UPD.state==="progress"||UPD.state==="downloaded"))return;
   UPD.silent=!!silent;if(!silent){UPD.state="checking";UPD.info=null;updDialog();}
   if(!silent)clearTimeout(UPD.timer);if(!silent)UPD.timer=setTimeout(()=>{if(UPD.state==="checking"&&!UPD.silent){UPD.state="error";UPD.info={message:"Sem resposta em 30 segundos.",hint:"O GitHub não respondeu. Confira a internet ou se algum firewall bloqueia o programa, e tente de novo."};drawUpd();}},30000);
@@ -2628,7 +2655,7 @@ function onUpdateEvent(d){
   if(!d)return;const map={checking:"checking",available:"available",none:"none",progress:"progress",downloaded:"downloaded",error:"error"};const st=map[d.type];if(!st)return;
   if(UPD.silent&&(st==="none"||st==="error"||st==="checking"))return;
   UPD.state=st;UPD.info=d;if(st==="error")UPD.info.hint=friendlyUpd(d.message);
-  if(UPD.silent&&st==="available"){balloon("Nova versão disponível",`A Sala de Roteiro ${d.version} está pronta para baixar. Clique aqui.`,()=>{UPD.silent=false;updDialog();});return;}
+  if(UPD.silent&&st==="available"){balloon("Nova versão disponível",`O ScriptRoom ${d.version} está pronto para baixar. Clique aqui.`,()=>{UPD.silent=false;updDialog();});return;}
   if(!document.getElementById("updWin"))updDialog();else drawUpd();
 }
 function balloon(title,text,onClick){
@@ -2679,7 +2706,7 @@ Object.assign(ICON,{
 });
 const PAPERS={a4:{label:"A4 (21 × 29,7 cm)",w:210,h:297},carta:{label:"Carta (21,6 × 27,9 cm)",w:215.9,h:279.4},oficio:{label:"Ofício (21,6 × 33 cm)",w:216,h:330}};
 const PAGE_PRESETS={
-  sala:{label:"Padrão da Sala",desc:"A4 com margem larga à esquerda para grampear. O formato dos roteiros de Fundação Varguelia.",papel:"a4",mt:25.4,mb:25.4,ml:38.1,mr:25.4,ic:50.8,ipl:38.1,ipr:38.1,idl:25.4,idr:25.4},
+  sala:{label:"Padrão ScriptRoom",desc:"A4 com margem larga à esquerda para grampear. O formato dos roteiros de Fundação Varguelia.",papel:"a4",mt:25.4,mb:25.4,ml:38.1,mr:25.4,ic:50.8,ipl:38.1,ipr:38.1,idl:25.4,idr:25.4},
   americano:{label:"Roteiro americano",desc:"Papel carta, personagem a 9,4 cm da borda e fala em coluna estreita, como nos estúdios de cinema.",papel:"carta",mt:25.4,mb:25.4,ml:38.1,mr:25.4,ic:55.9,ipl:40.6,ipr:50.8,idl:25.4,idr:38.1},
   oficio:{label:"Papel ofício",desc:"Folha comprida e margens de máquina de escrever, como as 41 folhas do roteiro vazado em Tencri.",papel:"oficio",mt:20,mb:20,ml:30,mr:20,ic:50,ipl:35,ipr:35,idl:25,idr:25},
   novela:{label:"Novela brasileira",desc:"Nome do personagem na margem e fala recuada logo abaixo. Cabe mais diálogo por página.",papel:"a4",mt:20,mb:20,ml:25,mr:20,ic:0,ipl:30,ipr:10,idl:30,idr:0},
@@ -2851,7 +2878,7 @@ Object.assign(CMD,{
 MENUS.find(m=>m[0]==="Formatar")[2].push("-","paginaMargens");
 {const a=MENUS.find(m=>m[0]==="Arquivo")[2];a.splice(a.indexOf("exportar")+1,0,"exportarPdf","exportarEscaleta");}
 TIPS.push("Arraste os triângulos da régua para mudar o recuo do personagem, da fala e da rubrica. Os quadradinhos nas pontas mudam as margens da página.",
-  "Formatar › Página e margens tem seis modelos, do Padrão da Sala ao papel ofício, com prévia e contagem de páginas.",
+  "Formatar › Página e margens tem seis modelos, do Padrão ScriptRoom ao papel ofício, com prévia e contagem de páginas.",
   "Arquivo › Exportar PDF monta o roteiro paginado, com folha de rosto e número de página, pronto para mandar à produção.");
 
 /* ================================================================
@@ -3117,7 +3144,7 @@ async function scriptPDF(sc,o){
     kids.push(add(`<< /Type /Page /Parent ${pagesObj} 0 R /MediaBox [0 0 ${pw.toFixed(2)} ${ph.toFixed(2)}] /Resources ${res} /Contents ${c} 0 R >>`));}
   objs[catalog-1]=`<< /Type /Catalog /Pages ${pagesObj} 0 R >>`;objs[pagesObj-1]=`<< /Type /Pages /Kids [${kids.map(k=>k+" 0 R").join(" ")}] /Count ${kids.length} >>`;
   const u16=str=>"<FEFF"+[...String(str)].map(ch=>{const c=ch.codePointAt(0);if(c>0xFFFF){const v=c-0x10000;return ((0xD800+(v>>10)).toString(16)+(0xDC00+(v&1023)).toString(16)).toUpperCase();}return c.toString(16).padStart(4,"0").toUpperCase();}).join("")+">";
-  const info2=add(`<< /Title ${u16(`${m.serie} ${epCode(m)} “${m.titulo}”`)} /Creator (Sala de Roteiro 95) /Producer (Sala de Roteiro 95)${o.marca?` /Subject ${u16(o.marca)}`:""} >>`);
+  const info2=add(`<< /Title ${u16(`${m.serie} ${epCode(m)} “${m.titulo}”`)} /Creator (ScriptRoom) /Producer (ScriptRoom)${o.marca?` /Subject ${u16(o.marca)}`:""} >>`);
   const parts=[enc.encode("%PDF-1.4\n%âãÏÓ\n")];let off=parts[0].length;const offs=[];
   objs.forEach((ob,i)=>{offs.push(off);const head=enc.encode(`${i+1} 0 obj\n`);parts.push(head);off+=head.length;
     if(typeof ob==="string"){const b=enc.encode(ob);parts.push(b);off+=b.length;}else{const h=enc.encode(ob.head),t=enc.encode(ob.tail);parts.push(h,ob.data,t);off+=h.length+ob.data.length+t.length;}
@@ -3364,7 +3391,7 @@ MENUS.find(m=>m[0]==="Inserir")[2].push("quebraCmd");
 {const ex=MENUS.find(m=>m[0]==="Exibir")[2];ex.splice(ex.indexOf("verTemporada")+1,0,"estrutura");ex.splice(ex.indexOf("verRegua")+1,0,"verAnalise");}
 {const fe=MENUS.find(m=>m[0]==="Ferramentas")[2];fe.splice(fe.indexOf("meta"),0,"smartLists","-");}
 TIPS.push("Botão direito no nome do segundo personagem › Diálogo simultâneo põe as duas falas lado a lado.",
-  "Fala comprida no pé da página? A Sala divide com (MAIS) e continua na página seguinte com (CONT.), como no Final Draft.",
+  "Fala comprida no pé da página? O ScriptRoom divide com (MAIS) e continua na página seguinte com (CONT.), como no Final Draft.",
   "Na cena, depois do “ — ”, o autocompletar oferece NOITE, MADRUGADA… No personagem, abra um parêntese para ver (V.O.), (NA FITA)…",
   "Exibir › Estrutura do episódio mostra as cenas numa linha do tempo, com os atos e os pontos de virada.");
 
@@ -3583,7 +3610,7 @@ function planBind(el){
     if(r.dataset.k===k)return;o.splice(o.indexOf(k),1);let at=o.indexOf(r.dataset.k)+(after?1:0);o.splice(at,0,k);drag=null;markChanged(sc);renderPlano();});
 }
 function autoDays(sc){
-  dialog({title:"Montar os dias de gravação",width:440,body:`<p class="muted" style="margin:0">A Sala reorganiza as faixas e coloca as divisões de dia. Depois você ajusta à mão.</p>
+  dialog({title:"Montar os dias de gravação",width:440,body:`<p class="muted" style="margin:0">O ScriptRoom reorganiza as faixas e coloca as divisões de dia. Depois você ajusta à mão.</p>
     <label class="fld"><span>Páginas por dia (no máximo)</span><input type="number" id="ad-p" min="1" max="30" step="0.5" value="${prefs.paginasDia||5}"></label>
     <label class="chk"><input type="checkbox" id="ad-l" checked> Juntar as cenas do mesmo local (menos mudança de set)</label>
     <label class="chk"><input type="checkbox" id="ad-n" checked> No mesmo local, gravar o dia antes da noite</label>`,
@@ -3643,6 +3670,336 @@ TIPS.push("Selecione um trecho e aperte Ctrl+Alt+M para deixar um comentário co
   "Produção › Plano de filmagem transforma as cenas em faixas coloridas: amarelo é exterior de dia, azul interior de noite. Arraste para montar os dias de gravação.",
   "No plano de filmagem, a aba Diárias do elenco mostra quantos dias cada personagem fica parado esperando entre uma gravação e outra.",
   "O tamanho das cenas no painel agora vem em oitavos de página (1 3/8), como a produção conta.");
+
+/* ================================================================
+   PACOTE 4: SALA AO VIVO (versão web) — sincronização com mesclagem, quem está na sala,
+   marcas na margem, seguir alguém, digitação ao vivo, bate-papo
+   ================================================================ */
+Object.assign(ICON,{
+  people:'<circle cx="5.5" cy="5" r="2.5" fill="#FFD0A0" stroke="#000"/><path d="M1.5 13c0-3 1.8-4.5 4-4.5s4 1.5 4 4.5z" fill="#3050D0" stroke="#000"/><circle cx="11" cy="5.5" r="2" fill="#FFD0A0" stroke="#000"/><path d="M8.5 13c.2-2.6 1.3-3.8 2.5-3.8s3 1.2 3 3.8z" fill="#30A030" stroke="#000"/>',
+  chat:'<path d="M1.5 2.5h9v6h-5l-2.5 2v-2h-1.5z" fill="#fff" stroke="#000"/><path d="M6.5 9.5h1.5v2h5v-6h-2" fill="#FFF8B0" stroke="#000"/>',
+});
+const COLAB={pend:{},on:false,db:null,room:null,user:null,me:null,peers:[],names:{},base:{},follow:null,chat:[],unread:0,typing:{},unsub:null};
+
+/* ---------- comparação estável e mesclagem de três vias ---------- */
+function canon(v){if(Array.isArray(v))return "["+v.map(canon).join(",")+"]";if(v&&typeof v==="object")return "{"+Object.keys(v).filter(k=>v[k]!==undefined).sort().map(k=>JSON.stringify(k)+":"+canon(v[k])).join(",")+"}";return JSON.stringify(v===undefined?null:v);}
+const canonDoc=d=>{const o=Object.assign({},d);delete o.atualizado;delete o.id;return canon(o);};
+function mergeComents(B,L,R){const b=new Map((B||[]).map(c=>[c.id,canon(c)]));const out=new Map();
+  for(const c of R||[])out.set(c.id,c);
+  for(const c of L||[]){const r=out.get(c.id);if(!r){if(!b.has(c.id))out.set(c.id,c);continue;}const lc=canon(c),rc=canon(r),bc=b.get(c.id);
+    if(lc===rc||lc===bc)continue;if(rc===bc){out.set(c.id,c);continue;}
+    const resp=[...r.resp];for(const x of c.resp)if(!resp.some(y=>y.data===x.data&&y.txt===x.txt))resp.push(x);resp.sort((a,b2)=>a.data-b2.data);out.set(c.id,Object.assign({},r,{resp,ok:c.ok||r.ok}));}
+  return [...out.values()];}
+function merge3(B,L,R){
+  B=B||{meta:{},els:[]};let conflitos=0;
+  const b=new Map((B.els||[]).map(e=>[e.id,canon(e)])),l=new Map(L.els.map(e=>[e.id,e])),r=new Map(R.els.map(e=>[e.id,e]));
+  const out=[];
+  for(const e of R.els){const bi=b.get(e.id),le=l.get(e.id);
+    if(!le){if(bi===undefined||bi!==canon(e))out.push(e);continue;}
+    const lc=canon(le),rc=canon(e);
+    if(lc===rc||lc===bi)out.push(e);else if(rc===bi)out.push(le);else{out.push(le);conflitos++;}}
+  const pos=new Map(out.map((e,i)=>[e.id,i]));
+  L.els.forEach((e,i)=>{if(r.has(e.id))return;const bi=b.get(e.id);if(bi!==undefined&&canon(e)===bi)return;
+    let at=0;for(let k=i-1;k>=0;k--){const p=out.findIndex(x=>x.id===L.els[k].id);if(p>=0){at=p+1;break;}}out.splice(at,0,e);});
+  const meta={};const keys=new Set([...Object.keys(B.meta||{}),...Object.keys(L.meta||{}),...Object.keys(R.meta||{})]);
+  for(const k of keys){const bv=canon((B.meta||{})[k]),lv=L.meta[k],rv=R.meta[k];
+    if(k==="coment"){meta[k]=mergeComents((B.meta||{})[k],lv,rv);continue;}
+    const lc=canon(lv),rc=canon(rv);let v;if(lc===rc||lc===bv)v=rv;else if(rc===bv)v=lv;else{v=lv;conflitos++;}
+    if(v!==undefined)meta[k]=v;}
+  return {doc:Object.assign({},R,{meta,els:out,id:R.id||L.id,atualizado:Math.max(L.atualizado||0,R.atualizado||0)}),conflitos};
+}
+
+/* ---------- aplicar mudanças de fora no roteiro aberto, sem tirar o cursor de quem escreve ---------- */
+function applyToCurrent(nd){
+  const sc=cur();const a=document.activeElement;const caret=a&&a.classList&&a.classList.contains("el")&&sheet.contains(a)?{id:a.dataset.id,off:caretOff(a)}:null;
+  const sameShape=sc.els.length===nd.els.length&&sc.els.every((e,i)=>e.id===nd.els[i].id&&e.t===nd.els[i].t);
+  const changed=new Set(nd.els.filter((e,i)=>canon(e)!==canon(sc.els[i]||{})).map(e=>e.id));
+  const st=desk.scrollTop;
+  S.eps[nd.id]=nd;
+  if(sameShape){for(const e of nd.els){if(!changed.has(e.id))continue;const n=nodeOf(e.id);if(!n||(caret&&caret.id===e.id))continue;if(n.textContent!==e.x)n.textContent=e.x;markRemote(e.id);}decor();}
+  else{renderSheet();desk.scrollTop=st;if(caret&&findEl(caret.id))setCaret(nodeOf(caret.id),caret.off);changed.forEach(markRemote);}
+  histCommit();renderEpSel();updTitle();refreshSide();
+}
+function markRemote(id){const n=nodeOf(id);if(!n)return;n.classList.add("remote-chg");setTimeout(()=>n.classList.remove("remote-chg"),1600);}
+
+function onRemoteRoteiros(snap){
+  let listChanged=false,conflitos=0;const sc0=cur();
+  for(const ch of snap.docChanges()){const d=ch.doc;if(d.metadata&&(d.metadata.hasPendingWrites||d.metadata.fromCache))continue;
+    if(ch.type==="removed"){const l=S.eps[d.id];if(l&&!S.dirty.has(d.id)){delete S.eps[d.id];delete COLAB.base[d.id];listChanged=true;if(S.cur===d.id){toast("Outra pessoa excluiu este roteiro");const L=sortedEps();openEp(L.length?L[L.length-1].id:null);}}continue;}
+    const raw=d.data();if(!raw||!raw.meta)continue;const r=JSON.parse(JSON.stringify(raw));r.id=d.id;const rc=canonDoc(r);
+    const l=S.eps[d.id];const base=COLAB.base[d.id];
+    if(!l){S.eps[d.id]=r;COLAB.base[d.id]=r;listChanged=true;continue;}
+    const lc=canonDoc(l);
+    if(rc===lc){COLAB.base[d.id]=r;continue;}
+    const pd=COLAB.pend[d.id];if(pd&&pd.includes(rc)){COLAB.base[d.id]=r;COLAB.pend[d.id]=pd.slice(pd.indexOf(rc)+1);continue;}
+    if(base&&rc===canonDoc(base))continue;
+    let nd;if(!base||lc===canonDoc(base))nd=r;else{const m=merge3(base,l,r);nd=m.doc;conflitos+=m.conflitos;}
+    COLAB.base[d.id]=r;
+    if(d.id===S.cur)applyToCurrent(nd);else{S.eps[d.id]=nd;listChanged=true;}
+    if(canonDoc(nd)!==rc){S.eps[d.id].atualizado=Date.now();S.dirty.add(d.id);clearTimeout(saveT);saveT=setTimeout(flush,900);}
+    else S.dirty.delete(d.id);
+    if(S.view==="board"&&d.id===S.cur)renderBoard();if(S.view==="plano"&&d.id===S.cur)renderPlano();
+  }
+  if(listChanged){renderEpSel();if(S.view==="season")renderSeason();}
+  if(conflitos)toast(`Você e outra pessoa mudaram o mesmo trecho (${conflitos}). Nesses trechos ficou a sua versão.`);
+  lsSave();
+}
+const _flush8=flush;
+flush=async function(){const snap=new Map([...S.dirty].map(id=>[id,S.eps[id]&&JSON.parse(JSON.stringify(S.eps[id]))]));if(COLAB.on)for(const [id,v] of snap)if(v){const a=(COLAB.pend[id]=COLAB.pend[id]||[]);a.push(canonDoc(v));if(a.length>8)a.shift();}await _flush8();if(COLAB.on)for(const [id,v] of snap)if(v&&!S.dirty.has(id))COLAB.base[id]=v;};
+
+/* ---------- início: só na versão web, com o banco que avisa mudanças ---------- */
+const _syncStore8=syncStore;
+syncStore=async function(db,whenReady,okText){await _syncStore8(db,whenReady,okText);
+  if(window.salaNative||!db||typeof db.collection!=="function")return;const col=db.collection("roteiros");if(typeof col.onSnapshot!=="function")return;
+  COLAB.db=db;for(const s of Object.values(S.eps))COLAB.base[s.id]=JSON.parse(JSON.stringify(s));
+  COLAB.unsub=col.onSnapshot(onRemoteRoteiros,()=>{COLAB.unsub=null;});COLAB.on=true;colabRoom();};
+async function colabRoom(){
+  try{COLAB.user=await claude.use("user");}catch(e){}
+  if(COLAB.user){try{COLAB.me=await COLAB.user.me();if(!prefs.autor&&COLAB.me&&COLAB.me.name){prefs.autor=COLAB.me.name;savePrefs();}}catch(e){}}
+  let room=null;try{room=await claude.use("room");}catch(e){}
+  if(!room){trayPeers();return;}COLAB.room=room;
+  room.onPeers(ch=>{COLAB.peers=ch.peers.filter(p=>p.kind==="viewer");
+    for(const p of ch.joined)if(!p.isMe&&p.kind==="viewer")colabName(p).then(n=>toast(`${n} entrou na sala`));
+    for(const p of ch.left)if(!p.isMe&&p.kind==="viewer")colabName(p).then(n=>toast(`${n} saiu da sala`));
+    resolveNames().then(()=>{trayPeers();placePeerMarks();followTick();if(document.getElementById("liveWin"))liveDraw();});},()=>{});
+  room.on("el",onLiveEl,()=>{});room.on("chat",onChat,()=>{});
+  colabPresence();trayPeers();
+}
+async function resolveNames(){const ids=[...new Set(COLAB.peers.map(p=>p.by).filter(Boolean))];if(!ids.length||!COLAB.user)return;try{const ps=await COLAB.user.profiles(ids);for(const id of ids)COLAB.names[id]=ps[id];}catch(e){}}
+async function colabName(p){if(p.by&&!COLAB.names[p.by])await resolveNames();const pr=p.by&&COLAB.names[p.by];
+  const typed=p.presence&&typeof p.presence.nome==="string"?p.presence.nome.slice(0,40):"";return (pr&&pr.name)||typed||"Alguém";}
+const peerName=p=>{const pr=p.by&&COLAB.names[p.by];const typed=p.presence&&typeof p.presence.nome==="string"?p.presence.nome.slice(0,40):"";return (pr&&pr.name)||typed||"Alguém";};
+const peerColor=p=>{const pr=p.by&&COLAB.names[p.by];if(pr&&pr.color)return pr.color;let h=0;for(const c of p.peer)h=(h*31+c.charCodeAt(0))>>>0;return `hsl(${h%360} 70% 42%)`;};
+let presT=null;
+function colabPresence(){if(!COLAB.room)return;clearTimeout(presT);presT=setTimeout(()=>{const sc=cur();
+  COLAB.room.presence({ep:sc?sc.id:null,ep_tag:sc?epTag(sc.meta):"",el:S.focusId||null,view:S.view||"page",nome:autor()||"",follow:COLAB.follow?{of:COLAB.follow}:null}).catch(()=>{});},150);}
+sheet.addEventListener("focusin",()=>setTimeout(colabPresence,0));
+const _openEp8=openEp;openEp=function(id,k){_openEp8(id,k);colabPresence();placePeerMarks();};
+const _setMode8=setMode;setMode=function(v){_setMode8(v);colabPresence();};
+
+/* ---------- digitação ao vivo ---------- */
+const liveT={};
+sheet.addEventListener("input",e=>{if(!COLAB.room)return;const n=e.target.closest&&e.target.closest(".el");if(!n)return;const id=n.dataset.id;if(liveT[id])return;
+  liveT[id]=setTimeout(()=>{delete liveT[id];const f=findEl(id);const sc=cur();if(!f||!sc||f.e.x.length>3000)return;COLAB.room.emit("el",{ep:sc.id,id,t:f.e.t,x:f.e.x}).catch(()=>{});},350);});
+function onLiveEl(m){if(m.sameTab||!m.data||typeof m.data!=="object")return;const {ep,id,x}=m.data;if(typeof x!=="string"||typeof id!=="string")return;const sc=S.eps[ep];if(!sc)return;
+  const e=sc.els.find(z=>z.id===id);if(!e||e.x===x)return;const n=ep===S.cur?nodeOf(id):null;if(n&&document.activeElement===n)return;
+  e.x=x;if(n){n.textContent=x;scheduleDecor();}COLAB.typing[m.peer]={id,at:Date.now()};placePeerMarks();}
+
+/* ---------- marcas dos outros na margem ---------- */
+function placePeerMarks(){
+  const sc=cur();let box=document.getElementById("peermarks");
+  if(!sc||S.view!=="page"){if(box)box.innerHTML="";return;}
+  if(!box||box.parentElement!==sheet){box=document.createElement("div");box.id="peermarks";box.className="peermarks";box.setAttribute("aria-hidden","true");sheet.appendChild(box);}
+  if(prefs.verCursores===false){box.innerHTML="";return;}
+  let h="";const seen=new Map();
+  for(const p of COLAB.peers){if(p.isMe&&p.sameTab)continue;const pr=p.presence||{};if(pr.ep!==sc.id||typeof pr.el!=="string")continue;const n=nodeOf(pr.el);if(!n)continue;
+    const k=seen.get(pr.el)||0;seen.set(pr.el,k+1);const ty=COLAB.typing[p.peer]&&Date.now()-COLAB.typing[p.peer].at<2500;
+    h+=`<div class="pmk" style="top:${n.offsetTop}px;height:${Math.max(14,n.offsetHeight)}px;--pc:${peerColor(p)};--k:${k}"><span>${escH(peerName(p))}${p.isMe?" (você, outra aba)":""}${ty?" ✎":""}</span></div>`;}
+  box.innerHTML=h;
+}
+const _paintHi8=paintHighlights;paintHighlights=function(){_paintHi8();placePeerMarks();};
+setInterval(()=>{if(COLAB.room&&Object.keys(COLAB.typing).length){for(const k in COLAB.typing)if(Date.now()-COLAB.typing[k].at>3000)delete COLAB.typing[k];placePeerMarks();}},1500);
+
+/* ---------- seguir alguém ---------- */
+function followTick(){if(!COLAB.follow)return;const p=COLAB.peers.find(x=>x.peer===COLAB.follow);if(!p){COLAB.follow=null;colabPresence();toast("A pessoa que você seguia saiu da sala");trayPeers();return;}
+  const pr=p.presence||{};if(pr.ep&&S.eps[pr.ep]&&pr.ep!==S.cur)openEp(pr.ep,true);if(S.view!=="page")return;
+  if(typeof pr.el==="string"&&pr.el!==COLAB.lastFollowEl){COLAB.lastFollowEl=pr.el;const n=nodeOf(pr.el);if(n){n.scrollIntoView({block:"center",behavior:"smooth"});flash(pr.el);}}}
+function setFollow(peer){COLAB.follow=peer||null;COLAB.lastFollowEl=null;colabPresence();trayPeers();if(peer){const p=COLAB.peers.find(x=>x.peer===peer);toast(`Seguindo ${p?peerName(p):"alguém"}. Comece a escrever para parar.`);followTick();}}
+sheet.addEventListener("keydown",e=>{if(COLAB.follow&&!e.ctrlKey&&e.key.length===1){setFollow(null);toast("Você parou de seguir");}});
+
+/* ---------- bate-papo ---------- */
+function onChat(m){if(!m.data||typeof m.data.t!=="string")return;const t=m.data.t.slice(0,500);const p=COLAB.peers.find(x=>x.peer===m.peer);
+  COLAB.chat.push({peer:m.peer,me:m.isMe&&m.sameTab,nome:p?peerName(p):(m.isMe?"Você":"Alguém"),cor:p?peerColor(p):"#000080",t,at:Date.now()});if(COLAB.chat.length>200)COLAB.chat.shift();
+  if(document.getElementById("chatWin"))chatDraw();else if(!(m.isMe&&m.sameTab)){COLAB.unread++;trayPeers();toast(`${p?peerName(p):"Alguém"}: ${t.slice(0,80)}`);if(prefs.som!==false)try{uhOh();}catch(e){}}}
+function uhOh(){const C=window.AudioContext||window.webkitAudioContext;if(!C)return;const a=new C();const o=a.createOscillator(),g=a.createGain();o.type="square";o.connect(g);g.connect(a.destination);g.gain.value=.04;
+  o.frequency.setValueAtTime(660,a.currentTime);o.frequency.setValueAtTime(440,a.currentTime+.12);o.start();o.stop(a.currentTime+.26);setTimeout(()=>a.close(),400);}
+function chatDraw(){const box=document.getElementById("chat-l");if(!box)return;
+  box.innerHTML=COLAB.chat.map(c=>`<div class="cm${c.me?" me":""}"><b style="color:${c.cor}">${escH(c.me?"Você":c.nome)}</b> <small>${new Date(c.at).toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"})}</small><div>${escH(c.t)}</div></div>`).join("")||`<p class="muted" style="margin:4px">Ninguém falou nada ainda. As mensagens não ficam guardadas: só quem está na sala agora vê.</p>`;
+  box.scrollTop=box.scrollHeight;COLAB.unread=0;trayPeers();}
+function chatWin(){if(!COLAB.room){toast("O bate-papo funciona na versão web, com o roteiro compartilhado");return;}
+  dialog({id:"chatWin",title:"Bate-papo da sala",width:340,modal:false,icon:"chat",body:`<div class="chatlist" id="chat-l"></div><div class="row"><input type="text" id="chat-t" maxlength="500" placeholder="Escreva e aperte Enter" style="flex:1" aria-label="Mensagem"></div>`,
+    onOpen:w=>{chatDraw();const i=w.querySelector("#chat-t");i.focus();},
+    buttons:[{label:"Enviar",def:1,run:w=>{sendChat(w.querySelector("#chat-t"));return false;}},{label:"Fechar"}]});}
+function sendChat(i){const t=i.value.trim();if(!t)return;COLAB.room.emit("chat",{t}).then(()=>{i.value="";}).catch(e=>toast(e&&e.code==="not_permitted"?"Você só pode ler esta sala (acesso de leitor)":"A mensagem não foi enviada"));}
+
+/* ---------- bandeja e janela "Sala ao vivo" ---------- */
+function trayPeers(){const tray=document.querySelector("#taskbar .tray");if(!tray)return;let b=document.getElementById("trayPeers");
+  if(!b){b=document.createElement("button");b.type="button";b.id="trayPeers";b.className="traypeers";b.addEventListener("click",()=>runCmd("salaAoVivo"));tray.insertBefore(b,tray.firstChild);}
+  const others=COLAB.peers.filter(p=>!p.isMe);b.hidden=!COLAB.on;
+  b.innerHTML=`${icon("people")}<b>${others.length+ (COLAB.room?1:0)}</b>${COLAB.unread?`<i class="cnt">${COLAB.unread}</i>`:""}`;
+  b.title=COLAB.room?(others.length?`Na sala: você e ${others.map(peerName).join(", ")}${COLAB.follow?" · seguindo alguém":""}`:"Só você na sala agora"):"Sincronizando com o banco da sala";
+  b.setAttribute("aria-label",b.title);}
+function liveDraw(){const box=document.getElementById("live-l");if(!box)return;const others=COLAB.peers.filter(p=>!(p.isMe&&p.sameTab));
+  box.innerHTML=`<table><thead><tr><th>Pessoa</th><th>Onde está</th><th></th></tr></thead><tbody><tr><td><span class="dotp" style="--pc:${COLAB.me?COLAB.me.color:"#000080"}"></span><b>${escH(autor()||(COLAB.me&&COLAB.me.name)||"Você")}</b> (você)</td><td>${escH(cur()?epTag(cur().meta):"—")}</td><td></td></tr>
+    ${others.map(p=>{const pr=p.presence||{};const where=pr.ep&&S.eps[pr.ep]?epTag(S.eps[pr.ep].meta):(typeof pr.ep_tag==="string"?pr.ep_tag.slice(0,30):"—");const vw={page:"escrevendo",board:"no quadro",plano:"no plano de filmagem",cast:"no elenco",season:"na temporada"}[pr.view]||"";
+      return `<tr><td><span class="dotp" style="--pc:${peerColor(p)}"></span><b>${escH(peerName(p))}</b>${p.guest?" <small>(convidado)</small>":""}${p.isMe?" <small>(você, outra aba)</small>":""}</td><td>${escH(where)} ${vw?`<small class="muted">${vw}</small>`:""}</td>
+        <td>${pr.ep&&S.eps[pr.ep]?`<button type="button" class="btn sm" data-lgo="${p.peer}">Ir até</button><button type="button" class="btn sm" data-lfol="${p.peer}" aria-pressed="${COLAB.follow===p.peer}">${COLAB.follow===p.peer?"Parar de seguir":"Seguir"}</button>`:""}</td></tr>`;}).join("")}</tbody></table>`;}
+function liveDialog(){
+  if(window.salaNative){msgBox({title:"Sala ao vivo",icon:"info",text:"Escrever junto, ao vivo, funciona na versão web do ScriptRoom (o link do claude.ai). No programa instalado, cada um escreve no seu computador: use Arquivo › Fazer backup ou o .docx para trocar roteiros.",buttons:[{label:"OK",def:1}]});return;}
+  if(!COLAB.on){msgBox({title:"Sala ao vivo",icon:"info",text:"A sincronização ainda não começou (ou este navegador está salvando só localmente). Abra o ScriptRoom pelo link do claude.ai, conectado à sua conta.",buttons:[{label:"OK",def:1}]});return;}
+  dialog({id:"liveWin",title:"Sala ao vivo",width:560,modal:false,icon:"people",body:`<div class="listview" id="live-l" style="max-height:260px"></div>
+    <label class="fld"><span>Seu nome nos comentários e no bate-papo</span><input type="text" id="lv-n" value="${escH(autor())}" placeholder="${escH((COLAB.me&&COLAB.me.name)||"ex.: JUAN")}"></label>
+    <label class="chk"><input type="checkbox" id="lv-c"${prefs.verCursores!==false?" checked":""}> Mostrar na margem onde cada pessoa está</label>
+    <p class="muted" style="margin:0">Para chamar alguém: no claude.ai, abra o menu <b>Compartilhar</b> deste artifact e dê acesso de <b>Colaborador</b> (para escrever) ou de leitor (só para ver e conversar). Os roteiros, fichas e comentários salvam no banco da sala e aparecem para todo mundo; o que cada um digita aparece ao vivo para quem está com o mesmo roteiro aberto.</p>`,
+    onOpen:w=>{liveDraw();w.addEventListener("click",e=>{const g=e.target.closest("[data-lgo]");if(g){const p=COLAB.peers.find(x=>x.peer===g.dataset.lgo);const pr=p&&p.presence||{};if(pr.ep&&S.eps[pr.ep]){if(S.view!=="page")setMode("page");gotoEl(typeof pr.el==="string"&&S.eps[pr.ep].els.some(x=>x.id===pr.el)?pr.el:S.eps[pr.ep].els[0].id,pr.ep);}return;}
+        const f=e.target.closest("[data-lfol]");if(f){setFollow(COLAB.follow===f.dataset.lfol?null:f.dataset.lfol);liveDraw();}});
+      w.querySelector("#lv-n").addEventListener("change",e=>{prefs.autor=e.target.value.trim();savePrefs();colabPresence();});
+      w.querySelector("#lv-c").addEventListener("change",e=>{prefs.verCursores=e.target.checked;savePrefs();placePeerMarks();});},
+    buttons:[{label:"Bate-papo…",run:()=>{setTimeout(chatWin,0);}},{label:"Fechar",def:1}]});
+}
+
+Object.assign(CMD,{
+  salaAoVivo:{label:"Sala ao vivo…",icon:"people",run:()=>liveDialog()},
+  batePapo:{label:"Bate-papo da sala…",icon:"chat",key:"Ctrl+Shift+B",run:()=>chatWin()},
+});
+{const fe=MENUS.find(m=>m[0]==="Ferramentas")[2];fe.splice(0,0,"salaAoVivo","batePapo","-");}
+document.addEventListener("keydown",e=>{if(e.ctrlKey&&e.shiftKey&&e.code==="KeyB"&&!IS_TOOL){e.preventDefault();chatWin();}});
+TIPS.push("Compartilhe o link do ScriptRoom no claude.ai e escrevam juntos: cada pessoa aparece na margem do trecho em que está, com o nome dela.",
+  "Ferramentas › Sala ao vivo › Seguir faz a sua tela acompanhar a de outra pessoa, ótimo para uma leitura com a equipe.",
+  "Ctrl+Shift+B abre o bate-papo da sala. As mensagens não ficam guardadas: é conversa de corredor.");
+
+/* ================================================================
+   PACOTE 5: Final Draft (.fdx) de ida e volta · Beat Board
+   ================================================================ */
+Object.assign(ICON,{
+  fdx:'<path d="M3.5 1.5h6l3 3v10h-9z" fill="#fff" stroke="#000"/><path d="M9.5 1.5v3h3" fill="none" stroke="#000"/><rect x="4.5" y="8" width="7" height="4.5" fill="#B00000"/><path d="M5.5 9.2h2M5.5 10.6h1.5M8.5 9.2v2.2M8.5 9.2h1.5M8.5 10.3h1.2" stroke="#fff" stroke-width=".8"/>',
+  beats:'<rect x="1.5" y="2.5" width="5" height="4" fill="#FFF8B0" stroke="#000"/><rect x="9.5" y="4.5" width="5" height="4" fill="#C8E0FF" stroke="#000"/><rect x="4.5" y="10.5" width="5" height="4" fill="#D8F0D0" stroke="#000"/><path d="M6.5 5l3 1M12 8.5l-4 2" stroke="#C00000"/>',
+});
+const escA=s=>escX(s).replace(/"/g,"&quot;");
+
+/* ---------- exportar .fdx ---------- */
+const FDX_T={scene:"Scene Heading",action:"Action",character:"Character",paren:"Parenthetical",dialogue:"Dialogue",trans:"Transition",act:"New Act",time:"General",note:"General"};
+function toFdx(sc){
+  const m=sc.meta;const lay=paginate(sc);const pairs=new Map(dualPairs(sc).map(q=>[q.L[0],q]));
+  const para=(e,i)=>{const f=lay.info[i];const T=FDX_T[e.t]||"Action";let x=e.x;let attrs=` Type="${T}"`;
+    if(e.t==="scene"){attrs+=` Number="${escA(String(f.label||f.num))}"`;if(e.omit)x="OMITIDA";}
+    if(e.quebra)attrs+=` StartsNewPage="Yes"`;
+    if(["scene","character","act","trans"].includes(e.t))x=x.toUpperCase();
+    const style=e.t==="note"||e.t==="time"?` Style="Italic"`:"";
+    const props=e.t==="scene"&&(e.syn||"").trim()?`<SceneProperties Length="${e8(eighthsN(scenesLines(sc,lay,i),lay.lpp))}" Page="${f.page||1}" Title=""><Summary><Paragraph Type="Action"><Text>${escX(e.syn.trim())}</Text></Paragraph></Summary></SceneProperties>`:"";
+    return `    <Paragraph${attrs}>${props}<Text${style}>${escX(x)}</Text></Paragraph>\n`;};
+  let body="";
+  for(let i=0;i<sc.els.length;i++){const pr=pairs.get(i);
+    if(pr){body+=`    <Paragraph${sc.els[i].quebra?` StartsNewPage="Yes"`:""}><DualDialogue>\n`;for(let k=pr.L[0];k<pr.R[1];k++)body+="  "+para(Object.assign({},sc.els[k],{quebra:false}),k);body+=`    </DualDialogue></Paragraph>\n`;i=pr.R[1]-1;continue;}
+    body+=para(sc.els[i],i);}
+  const tp=[[String(m.serie).toUpperCase(),1],[epCode(m),0],[`“${m.titulo}”`,1],["",0],[`${m.temporada}ª temporada · ${m.unidade||"episódio"} ${m.episodio} · ${m.duracao}`,0],[estreiaLine(m),0],...(m.notas||[]).map(n=>[n,0])];
+  const title=tp.map(([t,b])=>`      <Paragraph Alignment="Center" Type="General"><Text${b?' Style="Bold"':""}>${escX(t)}</Text></Paragraph>\n`).join("");
+  return `<?xml version="1.0" encoding="UTF-8" standalone="no" ?>\n<FinalDraft DocumentType="Script" Template="No" Version="5">\n  <Content>\n${body}  </Content>\n  <TitlePage>\n    <Content>\n${title}    </Content>\n  </TitlePage>\n</FinalDraft>\n`;
+}
+function scenesLines(sc,lay,i){let s=0;for(let k=i;k<sc.els.length;k++){if(k>i&&(sc.els[k].t==="scene"||sc.els[k].t==="act"))break;const f=lay.info[k];s+=f.before+f.lines+f.after;}return s;}
+
+/* ---------- importar .fdx ---------- */
+function importFdx(xml,fname){
+  const dom=new DOMParser().parseFromString(xml,"application/xml");if(dom.getElementsByTagName("parsererror").length)throw new Error("o .fdx está corrompido");
+  const root=dom.documentElement;if(!root||root.nodeName!=="FinalDraft")throw new Error("não parece um arquivo do Final Draft");
+  const content=[...root.children].find(n=>n.nodeName==="Content");if(!content)throw new Error("o .fdx não tem roteiro");
+  const txt=p=>[...p.children].filter(n=>n.nodeName==="Text").map(n=>n.textContent).join("");
+  const italic=p=>[...p.children].filter(n=>n.nodeName==="Text").some(n=>/Italic/i.test(n.getAttribute("Style")||""));
+  const els=[];let pendQ=false;
+  const push=(p,dualSecond)=>{const T=p.getAttribute("Type")||"Action";let x=txt(p).replace(/\s+$/,"");const xt=x.trim();let t;
+    if(p.getAttribute("StartsNewPage")==="Yes")pendQ=true;
+    switch(T){case"Scene Heading":t="scene";break;case"Character":t="character";x=xt.replace(/\s*\((CONT['’]?D|CONT\.?|MAIS|MORE)\)\s*$/i,"");break;case"Parenthetical":t="paren";break;case"Dialogue":t="dialogue";break;
+      case"Transition":t="trans";break;case"New Act":case"End of Act":case"Act Break":t="act";break;case"Shot":t="action";x=xt.toUpperCase();break;
+      case"General":t=TC.test(xt)?"time":italic(p)||/^[A-ZÇÃÕÉÍ ]{3,24}:/.test(xt)?"note":"action";break;default:t="action";}
+    if(!xt&&t!=="action")return;if(!xt&&els.length&&els[els.length-1].t==="action"&&!els[els.length-1].x)return;
+    const e={id:uid(),t,x:t==="dialogue"||t==="action"||t==="note"?x.trim():xt};
+    if(t==="scene"){const sp=[...p.children].find(n=>n.nodeName==="SceneProperties");if(sp){const sm=[...sp.getElementsByTagName("Summary")][0];if(sm){const s=[...sm.getElementsByTagName("Text")].map(n=>n.textContent).join(" ").trim();if(s)e.syn=s;}}
+      if(/^OMITID[AO]$|^OMITTED$/i.test(xt)){e.omit=true;}}
+    if(dualSecond)e.dual=true;if(pendQ){e.quebra=true;pendQ=false;}if(e.x||t==="action")els.push(e);};
+  for(const p of content.children){if(p.nodeName!=="Paragraph")continue;
+    const dd=[...p.children].find(n=>n.nodeName==="DualDialogue");
+    if(dd){if(p.getAttribute("StartsNewPage")==="Yes")pendQ=true;let chars=0;for(const q of dd.children){if(q.nodeName!=="Paragraph")continue;const isC=q.getAttribute("Type")==="Character";if(isC)chars++;push(q,isC&&chars===2);}continue;}
+    push(p,false);}
+  const sc=newScript(null);sc.meta.titulo=String(fname||"Roteiro").replace(/\.fdx$/i,"").trim();
+  const tpg=[...root.children].find(n=>n.nodeName==="TitlePage");
+  if(tpg){const lines=[...tpg.getElementsByTagName("Paragraph")].map(txt).map(s=>s.trim()).filter(Boolean);let used=new Set();
+    lines.forEach((l,k)=>{let mm;if((mm=/^[“"](.+)[”"]$/.exec(l))){sc.meta.titulo=mm[1].toUpperCase();used.add(k);}else if((mm=/^(\S+)\s+EP\s*(\d+)$/i.exec(l))){sc.meta.codigo=mm[1];sc.meta.episodio=+mm[2];used.add(k);}});
+    const first=lines.findIndex((l,k)=>!used.has(k));if(first>=0&&first<2){sc.meta.serie=lines[first];used.add(first);}
+    if(!lines.some(l=>/^[“"]/.test(l))&&first>=0){sc.meta.titulo=lines[first].toUpperCase();}
+    const notas=lines.filter((l,k)=>!used.has(k)&&!/temporada|estreia/i.test(l));if(notas.length)sc.meta.notas=notas.slice(0,6);}
+  sc.els=els.length?els:[E("action","")];return sc;
+}
+
+/* ---------- Beat Board ---------- */
+const BEAT_COR=["#FFF8B0","#C8E0FF","#D8F0D0","#FFD8D8","#E4D4FF","#FFE0B0","#FFFFFF"];
+const bbData=sc=>{const b=sc.meta.beats||(sc.meta.beats={items:[],links:[]});b.items=b.items||[];b.links=b.links||[];return b;};
+const bbEl=()=>{let el=document.getElementById("beats");if(!el){el=document.createElement("div");el.className="season beats";el.id="beats";el.hidden=S.view!=="beats";document.getElementById("season").after(el);bbBind(el);}return el;};
+S.bbSel=null;S.bbLink=false;
+function bbCard(b,scenes){const s=b.sid&&scenes.find(x=>x.id===b.sid);
+  return `<div class="beat${S.bbSel===b.id?" sel":""}" data-b="${b.id}" style="left:${b.x}px;top:${b.y}px;--bc:${b.cor||BEAT_COR[0]}" tabindex="0" role="group" aria-label="Beat ${escH(b.t||"sem título")}">
+    <div class="bt-h" data-drag="${b.id}" title="Arraste para mover"><span class="grip" aria-hidden="true">⋮⋮</span><input class="bt-t" data-bf="t" value="${escH(b.t||"")}" placeholder="Título do beat" aria-label="Título do beat"><button type="button" class="ib" data-bdel="${b.id}" aria-label="Apagar beat" title="Apagar">×</button></div>
+    <textarea class="bt-x" data-bf="txt" rows="3" placeholder="O que acontece. Uma ideia, uma imagem, uma fala." aria-label="Texto do beat">${escH(b.txt||"")}</textarea>
+    <div class="bt-f"><select data-bf="sid" aria-label="Cena ligada"><option value="">— sem cena —</option>${scenes.map(x=>`<option value="${x.id}"${x.id===b.sid?" selected":""}>Cena ${escH(String(x.label||x.n))} · ${escH(x.h.slice(0,28))}</option>`).join("")}</select>
+      ${s?`<button type="button" class="ib" data-bgo="${s.id}" title="Ir para a cena ${escH(String(s.label||s.n))}" aria-label="Ir para a cena">→</button>`:`<button type="button" class="ib" data-bnew="${b.id}" title="Criar uma cena com este beat" aria-label="Criar cena com este beat">+</button>`}</div></div>`;}
+function renderBeats(){
+  const el=bbEl();const sc=cur();if(!sc){el.innerHTML=`<div class="desk-empty">Abra um roteiro para usar o Beat Board.</div>`;return;}
+  const B=bbData(sc);const lay=paginate(sc);const scenes=scenesOf(sc,lay.info).filter(x=>x.n);
+  const W=Math.max(1600,...B.items.map(b=>b.x+260)),H=Math.max(900,...B.items.map(b=>b.y+220));
+  el.innerHTML=`<div class="castwin"><div class="titlebar"><span data-icon="beats"></span><span class="ttl">Beat Board — ${escH(epCode(sc.meta))} “${escH(sc.meta.titulo)}”</span><button class="tb-btn" type="button" data-cmd="verPagina" aria-label="Fechar Beat Board">×</button></div>
+    <div class="col" style="padding:8px"><div class="row"><button type="button" class="btn sm" data-ba="novo">+ Beat</button><button type="button" class="btn sm" data-ba="ligar" aria-pressed="${S.bbLink}">${S.bbLink?"Clique em dois beats…":"Ligar beats"}</button><button type="button" class="btn sm" data-ba="grade">Arrumar em grade</button><button type="button" class="btn sm" data-ba="cenas">Beats das cenas</button><button type="button" class="btn sm" data-ba="criar">Criar cenas dos beats soltos</button>
+      <span class="bb-cores" role="group" aria-label="Cor do beat selecionado">${BEAT_COR.map(c=>`<button type="button" class="sw" data-bcor="${c}" style="background:${c}" aria-label="Cor ${c}" title="Cor do beat selecionado"></button>`).join("")}</span>
+      <span class="muted" style="margin-left:auto">${B.items.length} beats · ${B.items.filter(b=>b.sid).length} ligados a cenas · dois cliques no fundo criam um beat</span></div>
+      <div class="bb-scroll"><div class="bb-canvas" style="width:${W}px;height:${H}px"><svg class="bb-links" width="${W}" height="${H}" aria-hidden="true"><defs><marker id="bbArrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#C00000"/></marker></defs><g></g></svg>${B.items.map(b=>bbCard(b,scenes)).join("")}</div></div></div></div>`;
+  paintIcons(el);bbLinks();
+}
+function bbLinks(){const el=document.getElementById("beats");const sc=cur();if(!el||!sc)return;const g=el.querySelector(".bb-links g");if(!g)return;const B=bbData(sc);
+  const ctr=id=>{const n=el.querySelector(`.beat[data-b="${id}"]`);return n?{x:n.offsetLeft,y:n.offsetTop,w:n.offsetWidth,h:n.offsetHeight}:null;};
+  g.innerHTML=B.links.map(([a,b],k)=>{const A=ctr(a),Bb=ctr(b);if(!A||!Bb)return "";const ax=A.x+A.w/2,ay=A.y+A.h/2,bx=Bb.x+Bb.w/2,by=Bb.y+Bb.h/2;
+    const dx=bx-ax,dy=by-ay;const t=Math.min(Math.abs((Bb.w/2+4)/(dx||1e-6)),Math.abs((Bb.h/2+4)/(dy||1e-6)));const ex=bx-dx*t,ey=by-dy*t;
+    return `<line x1="${ax.toFixed(1)}" y1="${ay.toFixed(1)}" x2="${ex.toFixed(1)}" y2="${ey.toFixed(1)}" stroke="#C00000" stroke-width="2" marker-end="url(#bbArrow)"/><circle class="bb-lk" data-blk="${k}" cx="${((ax+ex)/2).toFixed(1)}" cy="${((ay+ey)/2).toFixed(1)}" r="6" fill="#fff" stroke="#C00000"><title>Clique para apagar esta ligação</title></circle>`;}).join("");}
+function bbNew(x,y,extra){const sc=cur();const B=bbData(sc);const b=Object.assign({id:uid("bt"),x:Math.round(x),y:Math.round(y),t:"",txt:"",cor:BEAT_COR[B.items.length%BEAT_COR.length]},extra||{});B.items.push(b);S.bbSel=b.id;markChanged(sc);renderBeats();return b;}
+function bbBind(el){
+  let drag=null;let saveT2=null;
+  const sc=()=>cur();const find=id=>bbData(sc()).items.find(b=>b.id===id);
+  el.addEventListener("pointerdown",e=>{const h=e.target.closest("[data-drag]");if(!h||e.target.closest("input,button,select,textarea"))return;const n=h.closest(".beat");const b=find(n.dataset.b);if(!b)return;
+    e.preventDefault();h.setPointerCapture(e.pointerId);drag={b,n,h,sx:e.clientX,sy:e.clientY,x0:b.x,y0:b.y,moved:false};n.classList.add("dragging");});
+  el.addEventListener("pointermove",e=>{if(!drag)return;const dx=e.clientX-drag.sx,dy=e.clientY-drag.sy;if(Math.abs(dx)+Math.abs(dy)>2)drag.moved=true;
+    drag.b.x=Math.max(0,Math.round(drag.x0+dx));drag.b.y=Math.max(0,Math.round(drag.y0+dy));drag.n.style.left=drag.b.x+"px";drag.n.style.top=drag.b.y+"px";bbLinks();});
+  el.addEventListener("pointerup",()=>{if(!drag)return;drag.n.classList.remove("dragging");if(drag.moved)markChanged(sc());drag=null;});
+  el.addEventListener("click",e=>{const s=sc();if(!s)return;const B=bbData(s);
+    const a=e.target.closest("[data-ba]");
+    if(a){const k=a.dataset.ba;
+      if(k==="novo"){const sb=el.querySelector(".bb-scroll");bbNew((sb?sb.scrollLeft:0)+40+(B.items.length%5)*30,(sb?sb.scrollTop:0)+40+(B.items.length%5)*30);setTimeout(()=>{const i=el.querySelector(`.beat[data-b="${S.bbSel}"] .bt-t`);if(i)i.focus();},0);}
+      if(k==="ligar"){S.bbLink=!S.bbLink;S.bbFrom=null;renderBeats();if(S.bbLink)toast("Clique no beat de onde a seta sai e depois no beat aonde ela chega");}
+      if(k==="grade"){B.items.forEach((b,i)=>{b.x=24+(i%5)*250;b.y=24+Math.floor(i/5)*200;});markChanged(s);renderBeats();}
+      if(k==="cenas"){const lay=paginate(s);const scenes=scenesOf(s,lay.info).filter(x=>x.n);let n=0;
+        for(const x of scenes){if(B.items.some(b=>b.sid===x.id))continue;const i=B.items.length;B.items.push({id:uid("bt"),x:24+(i%6)*250,y:24+Math.floor(i/6)*200,t:`Cena ${x.label||x.n}`,txt:(x.syn||x.first||"").slice(0,240),sid:x.id,cor:x.cor||BEAT_COR[1]});n++;}
+        markChanged(s);renderBeats();toast(n?`${n} beats criados a partir das cenas`:"Todas as cenas já têm beat");}
+      if(k==="criar"){const solt=B.items.filter(b=>!b.sid&&(b.t||b.txt).trim());if(!solt.length){toast("Não há beats soltos com texto");return;}
+        solt.sort((p,q)=>p.y-q.y||p.x-q.x).forEach(b=>bbToScene(b,true));renderBeats();toast(`${solt.length} cena${solt.length>1?"s":""} nova${solt.length>1?"s":""} no fim do roteiro`);}
+      return;}
+    const lk=e.target.closest("[data-blk]");if(lk){B.links.splice(+lk.dataset.blk,1);markChanged(s);bbLinks();return;}
+    const del=e.target.closest("[data-bdel]");if(del){const id=del.dataset.bdel;B.items=B.items.filter(b=>b.id!==id);B.links=B.links.filter(l=>l[0]!==id&&l[1]!==id);markChanged(s);renderBeats();toast("Beat apagado (Ctrl+Z desfaz)");histCommit();return;}
+    const go=e.target.closest("[data-bgo]");if(go){setMode("page");setTimeout(()=>gotoEl(go.dataset.bgo),0);return;}
+    const nw=e.target.closest("[data-bnew]");if(nw){const b=find(nw.dataset.bnew);if(b){bbToScene(b,false);renderBeats();toast("Cena criada no fim do roteiro e ligada ao beat");}return;}
+    const cor=e.target.closest("[data-bcor]");if(cor){const b=S.bbSel&&find(S.bbSel);if(!b){toast("Clique num beat primeiro");return;}b.cor=cor.dataset.bcor;markChanged(s);renderBeats();return;}
+    const card=e.target.closest(".beat");
+    if(card){if(S.bbLink){if(!S.bbFrom){S.bbFrom=card.dataset.b;card.classList.add("from");}else if(S.bbFrom!==card.dataset.b){if(!B.links.some(l=>l[0]===S.bbFrom&&l[1]===card.dataset.b))B.links.push([S.bbFrom,card.dataset.b]);S.bbFrom=null;S.bbLink=false;markChanged(s);renderBeats();}return;}
+      if(S.bbSel!==card.dataset.b){S.bbSel=card.dataset.b;el.querySelectorAll(".beat.sel").forEach(x=>x.classList.remove("sel"));card.classList.add("sel");}}});
+  el.addEventListener("dblclick",e=>{if(e.target.closest(".beat"))return;const cv=e.target.closest(".bb-canvas");if(!cv)return;const r=cv.getBoundingClientRect();
+    bbNew(e.clientX-r.left-110,e.clientY-r.top-30);setTimeout(()=>{const i=el.querySelector(`.beat[data-b="${S.bbSel}"] .bt-t`);if(i)i.focus();},0);});
+  el.addEventListener("input",e=>{const f=e.target.dataset.bf;if(!f||f==="sid")return;const n=e.target.closest(".beat");const b=n&&find(n.dataset.b);if(!b)return;b[f]=e.target.value;clearTimeout(saveT2);saveT2=setTimeout(()=>markChanged(sc()),400);if(f==="txt")bbLinks();});
+  el.addEventListener("change",e=>{if(e.target.dataset.bf!=="sid")return;const n=e.target.closest(".beat");const b=n&&find(n.dataset.b);if(!b)return;b.sid=e.target.value||null;markChanged(sc());renderBeats();});
+  el.addEventListener("keydown",e=>{const n=e.target.classList&&e.target.classList.contains("beat")?e.target:null;if(!n)return;const b=find(n.dataset.b);if(!b)return;
+    const st={ArrowLeft:[-10,0],ArrowRight:[10,0],ArrowUp:[0,-10],ArrowDown:[0,10]}[e.key];
+    if(st){e.preventDefault();b.x=Math.max(0,b.x+st[0]);b.y=Math.max(0,b.y+st[1]);n.style.left=b.x+"px";n.style.top=b.y+"px";bbLinks();markChanged(sc());}
+    if(e.key==="Delete"){e.preventDefault();n.querySelector("[data-bdel]").click();}});
+}
+function bbToScene(b,quiet){const sc=cur();const s={id:uid(),t:"scene",x:(b.t||"NOVA CENA").toUpperCase().replace(/^CENA\s+\S+\s*/,"")||"NOVA CENA",syn:b.txt||""};if(b.cor&&b.cor!=="#FFFFFF")s.cor=b.cor;
+  sc.els.push(s,{id:uid(),t:"action",x:b.txt||""});b.sid=s.id;touch(true);}
+const _syncViews10=syncViews;syncViews=function(){_syncViews10();const p=document.getElementById("beats");if(p)p.hidden=S.view!=="beats";};
+const _setMode10=setMode;
+setMode=function(v){if(v==="beats"){S.view="beats";hideAC();syncViews();renderBeats();renderTypebar();desk.scrollTop=0;if(typeof colabPresence==="function")colabPresence();return;}_setMode10(v);};
+const _renderAll10=renderAll;renderAll=function(){_renderAll10();if(S.view==="beats")renderBeats();};
+
+Object.assign(CMD,{
+  exportarFdx:{label:"Exportar para Final Draft (.fdx)",icon:"fdx",needs:1,run:async()=>{const sc=cur();await offer(fileName(sc).replace(/\.docx$/,".fdx"),new Blob([toFdx(sc)],{type:"application/xml"}));toast("Pronto: abre no Final Draft 8 ou mais novo");}},
+  verBeats:{label:"Beat Board",icon:"beats",needs:1,check:()=>S.view==="beats",run:()=>setMode(S.view==="beats"?"page":"beats")},
+});
+{const a=MENUS.find(m=>m[0]==="Arquivo")[2];a.splice(a.indexOf("exportarTxt")+1,0,"exportarFdx");}
+{const ex=MENUS.find(m=>m[0]==="Exibir")[2];ex.splice(ex.indexOf("verQuadro")+1,0,"verBeats");}
+TIPS.push("Arquivo › Exportar para Final Draft (.fdx) gera um arquivo que abre no Final Draft. O ScriptRoom também importa .fdx.",
+  "Exibir › Beat Board é uma mesa livre para ideias: dois cliques no fundo criam um beat; depois ligue cada um a uma cena.");
 
 if(IS_TOOL)bootTool(new URLSearchParams(location.search).get("janela"));else boot();
 </script>
