@@ -19,6 +19,12 @@ contextBridge.exposeInMainWorld("salaNative", {
   checkUpdates: () => ipcRenderer.invoke("upd:check"),
   downloadUpdate: () => ipcRenderer.invoke("upd:download"),
   installUpdate: () => ipcRenderer.invoke("upd:install"),
+  lanHost: (senha, presenca) => ipcRenderer.invoke("lan:host", senha, presenca),
+  lanJoin: (ip, senha, presenca) => ipcRenderer.invoke("lan:join", ip, senha, presenca),
+  lanSend: (m) => ipcRenderer.invoke("lan:send", m),
+  lanStop: () => ipcRenderer.invoke("lan:stop"),
+  lanIps: () => ipcRenderer.invoke("lan:ips"),
+  onLan: (cb) => ipcRenderer.on("lan:event", (_e, d) => cb(d)),
   onEvent: (cb) => {
     ipcRenderer.on("upd:event", (_e, d) => cb("upd", d));
     ipcRenderer.on("app:message", (_e, d) => cb("msg", d));

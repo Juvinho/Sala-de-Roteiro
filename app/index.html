@@ -547,6 +547,10 @@ table.dood .d-I,table.dood .d-IF{background:#7CD07C}table.dood .d-F{background:#
 .bt-x{border:0;border-top:1px dotted rgba(0,0,0,.3);background:transparent;resize:vertical;font:12px/1.35 "Courier New",monospace;padding:4px;min-height:54px;color:#000}
 .bt-f{display:flex;gap:2px;padding:2px;border-top:1px dotted rgba(0,0,0,.3)}.bt-f select{flex:1;min-width:0;font-size:11px}
 .bb-cores{display:inline-flex;gap:2px}.bb-cores .sw{width:16px;height:16px;border:1px solid #000;padding:0;cursor:pointer}
+/* pacote 6: sala na rede local */
+.lanbox{display:flex;gap:10px;align-items:flex-start;padding:8px;background:#fff;border:2px inset var(--face,#C0C0C0)}
+.lanbox.on{background:#F0FFF0}
+.lanips{margin:4px 0}.lanips code{display:inline-block;font:bold 18px var(--f-type,monospace);background:#000;color:#30FF30;padding:2px 8px;margin:2px 4px 2px 0;letter-spacing:.04em}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
 </style>
 
@@ -3816,7 +3820,7 @@ function uhOh(){const C=window.AudioContext||window.webkitAudioContext;if(!C)ret
 function chatDraw(){const box=document.getElementById("chat-l");if(!box)return;
   box.innerHTML=COLAB.chat.map(c=>`<div class="cm${c.me?" me":""}"><b style="color:${c.cor}">${escH(c.me?"Você":c.nome)}</b> <small>${new Date(c.at).toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"})}</small><div>${escH(c.t)}</div></div>`).join("")||`<p class="muted" style="margin:4px">Ninguém falou nada ainda. As mensagens não ficam guardadas: só quem está na sala agora vê.</p>`;
   box.scrollTop=box.scrollHeight;COLAB.unread=0;trayPeers();}
-function chatWin(){if(!COLAB.room){toast("O bate-papo funciona na versão web, com o roteiro compartilhado");return;}
+function chatWin(){if(!COLAB.room){if(window.salaNative&&typeof lanDialog==="function"){toast("Entre numa sala da rede primeiro");lanDialog();}else toast("O bate-papo funciona com o roteiro compartilhado");return;}
   dialog({id:"chatWin",title:"Bate-papo da sala",width:340,modal:false,icon:"chat",body:`<div class="chatlist" id="chat-l"></div><div class="row"><input type="text" id="chat-t" maxlength="500" placeholder="Escreva e aperte Enter" style="flex:1" aria-label="Mensagem"></div>`,
     onOpen:w=>{chatDraw();const i=w.querySelector("#chat-t");i.focus();},
     buttons:[{label:"Enviar",def:1,run:w=>{sendChat(w.querySelector("#chat-t"));return false;}},{label:"Fechar"}]});}
@@ -3835,7 +3839,7 @@ function liveDraw(){const box=document.getElementById("live-l");if(!box)return;c
       return `<tr><td><span class="dotp" style="--pc:${peerColor(p)}"></span><b>${escH(peerName(p))}</b>${p.guest?" <small>(convidado)</small>":""}${p.isMe?" <small>(você, outra aba)</small>":""}</td><td>${escH(where)} ${vw?`<small class="muted">${vw}</small>`:""}</td>
         <td>${pr.ep&&S.eps[pr.ep]?`<button type="button" class="btn sm" data-lgo="${p.peer}">Ir até</button><button type="button" class="btn sm" data-lfol="${p.peer}" aria-pressed="${COLAB.follow===p.peer}">${COLAB.follow===p.peer?"Parar de seguir":"Seguir"}</button>`:""}</td></tr>`;}).join("")}</tbody></table>`;}
 function liveDialog(){
-  if(window.salaNative){msgBox({title:"Sala ao vivo",icon:"info",text:"Escrever junto, ao vivo, funciona na versão web do ScriptRoom (o link do claude.ai). No programa instalado, cada um escreve no seu computador: use Arquivo › Fazer backup ou o .docx para trocar roteiros.",buttons:[{label:"OK",def:1}]});return;}
+  if(window.salaNative&&!(typeof LAN!=="undefined"&&LAN.on)){lanDialog();return;}
   if(!COLAB.on){msgBox({title:"Sala ao vivo",icon:"info",text:"A sincronização ainda não começou (ou este navegador está salvando só localmente). Abra o ScriptRoom pelo link do claude.ai, conectado à sua conta.",buttons:[{label:"OK",def:1}]});return;}
   dialog({id:"liveWin",title:"Sala ao vivo",width:560,modal:false,icon:"people",body:`<div class="listview" id="live-l" style="max-height:260px"></div>
     <label class="fld"><span>Seu nome nos comentários e no bate-papo</span><input type="text" id="lv-n" value="${escH(autor())}" placeholder="${escH((COLAB.me&&COLAB.me.name)||"ex.: JUAN")}"></label>
@@ -4000,6 +4004,127 @@ Object.assign(CMD,{
 {const ex=MENUS.find(m=>m[0]==="Exibir")[2];ex.splice(ex.indexOf("verQuadro")+1,0,"verBeats");}
 TIPS.push("Arquivo › Exportar para Final Draft (.fdx) gera um arquivo que abre no Final Draft. O ScriptRoom também importa .fdx.",
   "Exibir › Beat Board é uma mesa livre para ideias: dois cliques no fundo criam um beat; depois ligue cada um a uma cena.");
+
+/* ================================================================
+   PACOTE 6: SALA NA REDE LOCAL (programa instalado) — hospedar ou entrar pelo IP
+   Imita a "sala" do claude.ai para reaproveitar a sala ao vivo inteira (pacote 4).
+   ================================================================ */
+Object.assign(ICON,{
+  lan:'<rect x="1.5" y="2.5" width="6" height="5" fill="#fff" stroke="#000"/><rect x="8.5" y="2.5" width="6" height="5" fill="#fff" stroke="#000"/><path d="M4.5 7.5v2.5h7V7.5M8 10v2" stroke="#000"/><rect x="5.5" y="12" width="5" height="2.5" fill="#C0C0C0" stroke="#000"/><path d="M2.5 3.5h4v3h-4zM9.5 3.5h4v3h-4z" fill="#000080"/>',
+});
+const LAN_SHARED=["roteiros","personagens","series"];
+const LAN={on:false,role:null,me:null,ids:new Set(),localAtJoin:new Set(),R:null,ip:"",ips:[],nativeDb:null,host:"",waitT:null};
+const lanOk=()=>!!(window.salaNative&&window.salaNative.lanHost);
+
+/* a sala falsa: mesma forma do room do claude.ai */
+function makeLanRoom(){
+  const R={peers:[],onp:[],topics:{}};
+  const mk=p=>Object.freeze({peer:String(p.peer),by:null,isMe:p.peer===LAN.me,sameTab:p.peer===LAN.me,kind:"viewer",guest:false,presence:Object.freeze(Object.assign({},p.presence||{})),updatedAt:Date.now()});
+  R.api={presence:async patch=>{await window.salaNative.lanSend({k:"pres",p:patch});},
+    onPeers(fn){R.onp.push(fn);if(R.peers.length)setTimeout(()=>fn({peers:R.peers,joined:R.peers,left:[],updated:[]}),0);return ()=>{R.onp=R.onp.filter(f=>f!==fn);};},
+    on(t,fn){(R.topics[t]=R.topics[t]||[]).push(fn);return ()=>{R.topics[t]=R.topics[t].filter(f=>f!==fn);};},
+    emit:async(t,d)=>{if(!LAN.on)return;await window.salaNative.lanSend({k:"emit",topic:t,data:d===undefined?null:d});},
+    peers:()=>R.peers,connected:()=>LAN.on};
+  R.setPeers=list=>{if(!Array.isArray(list))return;const old=new Map(R.peers.map(p=>[p.peer,p]));const nw=list.filter(p=>p&&p.peer).map(mk);const ids=new Set(nw.map(p=>p.peer));
+    const joined=nw.filter(p=>!old.has(p.peer)),left=R.peers.filter(p=>!ids.has(p.peer)),updated=nw.filter(p=>old.has(p.peer));R.peers=nw;R.onp.forEach(fn=>fn({peers:nw,joined,left,updated}));};
+  R.msg=m=>{if(typeof m.topic!=="string")return;(R.topics[m.topic]||[]).forEach(fn=>fn({peer:String(m.peer),by:null,isMe:m.peer===LAN.me,sameTab:m.peer===LAN.me,kind:"viewer",guest:false,topic:m.topic,data:m.data}));};
+  return R;
+}
+/* liga a sala ao vivo (pacote 4) a uma sala que não é a do claude.ai */
+const _colabRoom11=colabRoom;
+colabRoom=async function(roomOverride){
+  if(!roomOverride)return _colabRoom11();
+  const room=roomOverride;COLAB.room=room;
+  room.onPeers(ch=>{COLAB.peers=ch.peers.filter(p=>p.kind==="viewer");
+    if(!LAN.firstPeers){for(const p of ch.joined)if(!p.isMe)toast(`${peerName(p)} entrou na sala`);for(const p of ch.left)if(!p.isMe)toast(`${peerName(p)} saiu da sala`);}
+    LAN.firstPeers=false;trayPeers();placePeerMarks();followTick();if(document.getElementById("liveWin"))liveDraw();if(document.getElementById("lanWin"))lanDraw();},()=>{});
+  room.on("el",onLiveEl,()=>{});room.on("chat",onChat,()=>{});
+  colabPresence();trayPeers();
+};
+
+/* escrever: o banco local de sempre, e o que é da sala também vai para o anfitrião */
+function lanAdapter(native){return {collection(c){const base=native.collection(c);return Object.assign({},base,{doc:id=>{const d=base.doc(id);return Object.assign({},d,{
+  set:async data=>{await d.set(data);if(LAN.on&&LAN.role==="client"&&LAN_SHARED.includes(c)&&(LAN.ids.has(id)||!LAN.localAtJoin.has(id))){LAN.ids.add(id);window.salaNative.lanSend({k:"set",c,id,data});}},
+  delete:async()=>{await d.delete();if(LAN.on&&LAN.role==="client"&&LAN_SHARED.includes(c)&&LAN.ids.has(id))window.salaNative.lanSend({k:"del",c,id});}});}});}};}
+const fakeSnap=(type,id,data)=>({docChanges:()=>[{type,doc:{id,data:()=>data,metadata:{hasPendingWrites:false,fromCache:false}}}],metadata:{fromCache:false,hasPendingWrites:false}});
+const cacheLocal=(c,id,data)=>{if(LAN.role==="client"&&LAN.nativeDb)LAN.nativeDb.collection(c).doc(id).set(data).catch(()=>{});};
+function lanOnDoc(m){const {c,id,data}=m;if(!LAN_SHARED.includes(c)||typeof id!=="string"||!data||typeof data!=="object")return;LAN.ids.add(id);
+  if(c==="roteiros"){cacheLocal(c,id,data);onRemoteRoteiros(fakeSnap(S.eps[id]?"modified":"added",id,data));return;}
+  const obj=c==="series"?S.series:S.chars;const r=Object.assign({},data,{id});if(obj[id]&&canon(obj[id])===canon(r))return;obj[id]=r;cacheLocal(c,id,data);
+  if(c==="series"){renderEpSel();if(S.view==="season")renderSeason();}else if(S.view==="cast")renderCast();}
+function lanOnDel(m){const {c,id}=m;if(!LAN_SHARED.includes(c)||typeof id!=="string")return;
+  if(c==="roteiros"){const l=S.eps[id];if(l){onRemoteRoteiros(fakeSnap("removed",id,l));if(LAN.role==="client"&&LAN.nativeDb)LAN.nativeDb.collection(c).doc(id).delete().catch(()=>{});}return;}
+  const obj=c==="series"?S.series:S.chars;if(obj[id]){delete obj[id];if(LAN.role==="client"&&LAN.nativeDb)LAN.nativeDb.collection(c).doc(id).delete().catch(()=>{});renderEpSel();}}
+async function lanWelcome(m){
+  clearTimeout(LAN.waitT);LAN.me=String(m.you);LAN.host=String(m.host||"");LAN.role="client";LAN.nativeDb=S.db;
+  LAN.localAtJoin=new Set([...Object.keys(S.eps),...Object.keys(S.chars),...Object.keys(S.series)]);LAN.ids=new Set();
+  const docs=m.docs||{};let trocados=0;
+  for(const {id,data} of docs.series||[]){if(!data)continue;LAN.ids.add(id);S.series[id]=Object.assign({},data,{id});cacheLocal("series",id,data);}
+  for(const {id,data} of docs.personagens||[]){if(!data)continue;LAN.ids.add(id);S.chars[id]=Object.assign({},data,{id});cacheLocal("personagens",id,data);}
+  for(const {id,data} of docs.roteiros||[]){if(!data||!data.meta)continue;LAN.ids.add(id);const r=Object.assign({},data,{id});const l=S.eps[id];
+    if(l&&canonDoc(l)!==canonDoc(r)){trocados++;const v={id:uid("v"),epId:id,label:"Minha cópia antes de entrar na sala",auto:true,at:Date.now(),cenas:l.els.filter(e=>e.t==="scene").length,snapshot:JSON.parse(JSON.stringify({meta:l.meta,els:l.els}))};
+      try{await LAN.nativeDb.collection("versoes").doc(v.id).set(v);}catch(e){}}
+    S.eps[id]=r;COLAB.base[id]=JSON.parse(JSON.stringify(r));cacheLocal("roteiros",id,data);S.dirty.delete(id);}
+  S.db=lanAdapter(LAN.nativeDb);lanUp();
+  if(!S.cur||!S.eps[S.cur]){const l=sortedEps();S.cur=l.length?l[l.length-1].id:null;}
+  renderAll();histReset();
+  toast(`Você entrou na sala de ${LAN.host||LAN.ip}. ${(docs.roteiros||[]).length} roteiros${trocados?` · ${trocados} cópia${trocados>1?"s":""} sua${trocados>1?"s":""} guardada${trocados>1?"s":""} em Versões`:""}`);
+}
+function lanUp(){LAN.on=true;LAN.firstPeers=true;LAN.R=makeLanRoom();COLAB.on=true;COLAB.db=S.db;if(LAN.role==="host")for(const s of Object.values(S.eps))COLAB.base[s.id]=JSON.parse(JSON.stringify(s));
+  colabRoom(LAN.R.api);if(document.getElementById("lanWin"))lanDraw();modemSound();}
+function lanDown(msg){if(!LAN.on&&!LAN.waitT)return;clearTimeout(LAN.waitT);LAN.waitT=null;const was=LAN.role;LAN.on=false;LAN.role=null;COLAB.room=null;COLAB.peers=[];COLAB.on=false;COLAB.follow=null;
+  if(LAN.nativeDb){S.db=LAN.nativeDb;LAN.nativeDb=null;}trayPeers();placePeerMarks();if(document.getElementById("lanWin"))lanDraw();
+  if(msg!==false)toast(msg||(was==="client"?"A conexão com a sala caiu. Seus roteiros continuam aqui; entre de novo quando ela voltar.":"A sala foi encerrada"));}
+function lanEvents(){if(!lanOk()||LAN.bound)return;LAN.bound=true;
+  window.salaNative.onLan(m=>{if(!m||typeof m!=="object")return;
+    switch(m.k){case"welcome":lanWelcome(m);break;case"denied":lanDown(false);toast(m.motivo==="senha"?"Senha errada para essa sala":m.motivo==="cheia"?"A sala está cheia (16 pessoas)":"A sala recusou a entrada");break;
+      case"peers":if(LAN.R)LAN.R.setPeers(m.peers);break;case"msg":if(LAN.R)LAN.R.msg(m);break;case"doc":if(LAN.on)lanOnDoc(m);break;case"del":if(LAN.on)lanOnDel(m);break;
+      case"encerrada":lanDown(`${LAN.host||"O anfitrião"} encerrou a sala. Seus roteiros continuam aqui, com tudo o que foi escrito.`);break;case"fechou":lanDown();break;case"erro":toast(String(m.msg||"Erro na rede"));break;}});}
+const lanPres=()=>({ep:S.cur||null,el:S.focusId||null,view:S.view||"page",nome:autor()||""});
+async function lanHost(senha){if(!lanOk())return;lanEvents();await flush();
+  const r=await window.salaNative.lanHost(senha,lanPres());if(!r||!r.ok){toast((r&&r.erro)||"Não consegui abrir a sala");return false;}
+  LAN.role="host";LAN.me="host";LAN.ips=r.ips||[];LAN.host=r.nome||"";lanUp();toast(`Sala aberta. Os outros entram com o IP ${LAN.ips[0]||"deste computador"}`);return true;}
+async function lanJoin(ip,senha){if(!lanOk())return;lanEvents();await flush();LAN.ip=ip;prefs.lanIp=ip;savePrefs();
+  const r=await window.salaNative.lanJoin(ip,senha,lanPres());if(!r||!r.ok){toast((r&&r.erro)||"Não consegui entrar");return false;}
+  LAN.waitT=setTimeout(()=>{LAN.waitT=null;toast("A sala não respondeu. Confira se o ScriptRoom do outro lado está atualizado (4.9)");window.salaNative.lanStop();},8000);return true;}
+async function lanLeave(){if(!lanOk())return;await flush();await window.salaNative.lanStop();lanDown(LAN.role==="host"?"Sala encerrada. Os roteiros continuam no seu computador.":"Você saiu da sala. Ficou uma cópia de cada roteiro aqui.");}
+
+/* o modem de 1996 (curto e baixinho; desliga em Ferramentas › Som de teclado) */
+function modemSound(){if(prefs.somRede===false)return;try{const C=window.AudioContext||window.webkitAudioContext;if(!C)return;const a=new C();const g=a.createGain();g.gain.value=.035;g.connect(a.destination);let t=a.currentTime+.05;
+  const tone=(f1,f2,d)=>{for(const f of [f1,f2]){const o=a.createOscillator();o.type="sine";o.frequency.value=f;o.connect(g);o.start(t);o.stop(t+d);}t+=d+.04;};
+  const DT={4:[770,1209],7:[852,1209],9:[852,1477],5:[770,1336]};for(const d of [4,7,9,5])tone(...DT[d],.07);
+  t+=.1;const o=a.createOscillator();o.type="sawtooth";o.frequency.setValueAtTime(1300,t);o.frequency.setValueAtTime(2100,t+.25);o.frequency.setValueAtTime(980,t+.5);o.frequency.linearRampToValueAtTime(1650,t+.9);o.connect(g);o.start(t);o.stop(t+1.05);
+  const n=a.createBufferSource();const b=a.createBuffer(1,a.sampleRate*.5|0,a.sampleRate);const ch=b.getChannelData(0);for(let i=0;i<ch.length;i++)ch[i]=(Math.random()*2-1)*.5;n.buffer=b;n.connect(g);n.start(t+1.05);
+  setTimeout(()=>a.close(),2600);}catch(e){}}
+
+/* a janela */
+function lanDraw(){const box=document.getElementById("lan-body");if(!box)return;const others=COLAB.peers.filter(p=>!p.isMe);
+  if(LAN.on){box.innerHTML=`<div class="lanbox on">${icon("lan",32)}<div>${LAN.role==="host"?`<b>Sala aberta neste computador.</b><br>Os outros entram em Ferramentas › Sala na rede local, com o IP:<div class="lanips">${(LAN.ips.length?LAN.ips:["(sem rede)"]).map(i=>`<code>${escH(i)}</code>`).join(" ")}</div><small class="muted">porta 4795 · ${LAN.host?escH(LAN.host)+" · ":""}os roteiros ficam aqui</small>`:`<b>Você está na sala de ${escH(LAN.host||LAN.ip)}.</b><br><small class="muted">IP ${escH(LAN.ip)} · o que você escreve vai para lá e fica uma cópia aqui</small>`}</div></div>
+    <p style="margin:6px 0 2px"><b>Na sala:</b> você${others.map(p=>`, <span class="dotp" style="--pc:${peerColor(p)}"></span>${escH(peerName(p))}`).join("")}${others.length?"":" (ninguém mais ainda)"}</p>`;}
+  else box.innerHTML=`<div class="grid2"><fieldset><legend>Hospedar</legend><p class="muted" style="margin:0 0 4px">Os roteiros deste computador viram os roteiros da sala. Os outros entram com o seu IP.</p>
+      <label class="fld"><span>Senha da sala (opcional)</span><input type="password" id="lan-hs" autocomplete="off"></label><button type="button" class="btn" data-lan="host">Hospedar sala</button></fieldset>
+    <fieldset><legend>Entrar</legend><label class="fld"><span>IP de quem hospeda</span><input type="text" id="lan-ip" value="${escH(prefs.lanIp||"")}" placeholder="192.168.0.12" inputmode="decimal" autocomplete="off"></label>
+      <label class="fld"><span>Senha</span><input type="password" id="lan-js" autocomplete="off"></label><button type="button" class="btn" data-lan="join">Entrar na sala</button></fieldset></div>
+    <label class="fld"><span>Seu nome na sala</span><input type="text" id="lan-n" value="${escH(autor())}" placeholder="ex.: JUAN"></label>
+    <p class="muted" style="margin:4px 0 0">Funciona com todo mundo na mesma rede (casa, escritório, estúdio). Na primeira vez que você hospedar, o Windows pergunta se o ScriptRoom pode usar a rede: marque <b>Redes privadas</b> e clique em <b>Permitir</b>. Para gente em outra cidade, usem uma rede virtual como Tailscale ou ZeroTier e digitem o IP que ela mostra.</p>`;
+  const sair=document.getElementById("lanBtnSair");if(sair)sair.hidden=!LAN.on;const c=document.getElementById("lanBtnChat");if(c)c.hidden=!LAN.on;}
+function lanDialog(){
+  if(!lanOk()){msgBox({title:"Sala na rede local",icon:"info",text:"A sala na rede local é do programa instalado (ScriptRoom para Windows). Na versão web, use Ferramentas › Sala ao vivo.",buttons:[{label:"OK",def:1}]});return;}
+  lanEvents();
+  dialog({id:"lanWin",title:"Sala na rede local",width:560,modal:false,icon:"lan",body:`<div id="lan-body"></div>`,
+    onOpen:w=>{lanDraw();w.addEventListener("click",async e=>{const b=e.target.closest("[data-lan]");if(!b)return;const nm=w.querySelector("#lan-n");if(nm&&nm.value.trim()){prefs.autor=nm.value.trim();savePrefs();}
+        b.disabled=true;
+        if(b.dataset.lan==="host")await lanHost(w.querySelector("#lan-hs").value);
+        else{const ip=w.querySelector("#lan-ip").value.trim();if(!ip){toast("Digite o IP de quem está hospedando");b.disabled=false;w.querySelector("#lan-ip").focus();return;}b.textContent="Discando…";await lanJoin(ip,w.querySelector("#lan-js").value);}
+        setTimeout(()=>{if(document.getElementById("lanWin"))lanDraw();},LAN.on?0:400);});
+      w.addEventListener("keydown",e=>{if(e.key==="Enter"&&e.target.id==="lan-ip"){e.preventDefault();e.stopPropagation();w.querySelector('[data-lan="join"]').click();}},true);},
+    buttons:[{label:"Bate-papo…",id:"lanBtnChat",run:()=>{setTimeout(chatWin,0);return false;}},{label:"Sair da sala",id:"lanBtnSair",run:()=>{lanLeave();return false;}},{label:"Fechar"}]});
+  setTimeout(lanDraw,0);
+}
+Object.assign(CMD,{lanSala:{label:"Sala na rede local (IP)…",icon:"lan",run:()=>lanDialog()}});
+{const fe=MENUS.find(m=>m[0]==="Ferramentas")[2];fe.splice(fe.indexOf("batePapo")+1,0,"lanSala");}
+if(lanOk())lanEvents();
+TIPS.push("No programa instalado, Ferramentas › Sala na rede local abre uma sala pelo IP: todo mundo na mesma rede escreve junto, sem internet.");
 
 if(IS_TOOL)bootTool(new URLSearchParams(location.search).get("janela"));else boot();
 </script>

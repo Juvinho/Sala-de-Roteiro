@@ -51,7 +51,7 @@ npm run instalador
 Quando terminar, o instalador estará em:
 
 ```
-dist\SETUP_SCRIPTROOM_4.8.0.exe
+dist\SETUP_SCRIPTROOM_4.9.0.exe
 ```
 
 Dê dois cliques nele e siga o assistente: **Avançar › Aceito › Avançar › Instalar › Concluir**.
@@ -82,6 +82,29 @@ No VS Code também dá para usar **Terminal › Run Task…**, que lista as quat
   Análise técnica mostra a folha de cada cena por departamento e exporta em .csv.
 - **Exportar PDF…** com opções: folha de rosto, marcas de revisão, só um trecho de cenas, marca
   d'água e **cópias nominais** (um PDF por pessoa, com o nome dela na marca d'água).
+
+## Sala na rede local: escrever junto pelo IP (versão 4.9)
+
+No programa instalado, **Ferramentas › Sala na rede local (IP)…**:
+
+1. Quem vai **hospedar** clica em **Hospedar sala** (a senha é opcional). Aparece o IP deste
+   computador, por exemplo `192.168.0.12`. Os roteiros da sala são os desta máquina.
+2. Os outros digitam esse IP (e a senha) e clicam em **Entrar na sala**. Cada um recebe os
+   roteiros, as fichas e as séries de quem hospeda.
+3. Pronto: todo mundo vê quem está na sala (bandeja e margem), o texto chega ao vivo, as
+   mudanças de duas pessoas se juntam, dá para **seguir** alguém e usar o **bate-papo** (Ctrl+Shift+B).
+
+- Tudo o que é escrito fica gravado no computador de quem hospeda, e quem entrou guarda uma
+  cópia. Se a conexão cair, cada um continua escrevendo; ao entrar de novo, as mudanças se juntam.
+- Se você já tinha uma cópia diferente de um roteiro da sala, ela fica guardada em **Versões**
+  ("Minha cópia antes de entrar na sala") antes de ser trocada pela da sala.
+- Roteiros novos criados por quem entrou vão para a sala. Os outros roteiros seus ficam só com você.
+- Usa a porta **4795**. Na primeira vez que hospedar, o Windows pergunta se o ScriptRoom pode
+  usar a rede: marque **Redes privadas** e clique em **Permitir**. Se clicou em Cancelar sem
+  querer: Painel de Controle › Firewall do Windows Defender › Permitir um aplicativo.
+- Funciona na mesma rede (casa, escritório, estúdio). Para gente em outra cidade, usem uma
+  rede virtual como Tailscale ou ZeroTier e digitem o IP que ela mostra.
+- Todo mundo precisa estar com o ScriptRoom 4.9 ou mais novo.
 
 ## Novo nome e Final Draft (versão 4.8)
 
@@ -249,7 +272,7 @@ Tahoma e Courier New, as fontes principais, já vêm no Windows.
 ## Estrutura do projeto
 
 ```
-main.js            processo principal: janelas, arquivos em Documentos, lixeira, atualizações
+main.js            processo principal: janelas, arquivos em Documentos, lixeira, atualizações, sala na rede
 preload.js         ponte segura entre a página e o Windows (só a pasta da sala e as janelas do app)
 scripts\          configurar-repo.js, que liga o projeto ao seu repositório
 .github\workflows\ instalador.yml, que gera e publica o SETUP quando você cria uma tag

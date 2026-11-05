@@ -63,7 +63,7 @@ function avisarOutras(remetente, colecao, id) {
 }
 
 /* ---------- arquivos ---------- */
-ipcMain.handle("db:readAll", (_e, colecao) => {
+function lerTudo(colecao) {
   const dir = caminho(colecao);
   const out = [];
   for (const f of fs.readdirSync(dir)) {
@@ -72,24 +72,134 @@ ipcMain.handle("db:readAll", (_e, colecao) => {
     catch (err) { console.error("Arquivo ilegível ignorado:", f, err.message); }
   }
   return out;
-});
-ipcMain.handle("db:write", (e, colecao, id, data) => {
+}
+function gravar(colecao, id, data) {
   const alvo = caminho(colecao, id);
   const tmp = alvo + ".tmp";
   fs.writeFileSync(tmp, JSON.stringify(data, null, 1), "utf8");
   fs.renameSync(tmp, alvo); // gravação atômica
+}
+function paraLixeira(colecao, id) {
+  const alvo = caminho(colecao, id);
+  if (!fs.existsSync(alvo)) return false;
+  fs.mkdirSync(lixeira(), { recursive: true });
+  fs.renameSync(alvo, path.join(lixeira(), `${colecao}~${id}~${Date.now()}.json`));
+  return true;
+}
+ipcMain.handle("db:readAll", (_e, colecao) => lerTudo(colecao));
+ipcMain.handle("db:write", (e, colecao, id, data) => {
+  gravar(colecao, id, data);
   avisarOutras(e.sender, colecao, id);
+  if (lanServidor && LAN_COLS.includes(colecao)) lanTodos({ k: "doc", c: colecao, id, data, from: "host" }, "host");
   return true;
 });
 ipcMain.handle("db:remove", (e, colecao, id) => {
-  const alvo = caminho(colecao, id);
-  if (fs.existsSync(alvo)) {
-    fs.mkdirSync(lixeira(), { recursive: true });
-    fs.renameSync(alvo, path.join(lixeira(), `${colecao}~${id}~${Date.now()}.json`));
+  if (paraLixeira(colecao, id)) {
     avisarOutras(e.sender, colecao, id);
+    if (lanServidor && LAN_COLS.includes(colecao)) lanTodos({ k: "del", c: colecao, id, from: "host" }, "host");
   }
   return true;
 });
+
+/* ---------- Sala na rede local: quem hospeda vira o servidor, os outros entram pelo IP ----------
+   Uma conexão TCP por pessoa, uma mensagem JSON por linha. Os roteiros ficam na pasta de quem
+   hospeda; quem entra recebe tudo, escreve, e o anfitrião grava e repassa para os outros. */
+const net = require("net");
+const os = require("os");
+const LAN_PORTA = 4795;
+const LAN_COLS = ["roteiros", "personagens", "series"];
+const LAN_MAX = 8 * 1024 * 1024;            // uma linha (um roteiro inteiro) até 8 MB
+const LAN_MAX_PESSOAS = 16;
+const TOPICO_OK = /^[a-z][a-z0-9_.-]{0,47}$/;
+let lanServidor = null, lanSenha = "", lanHostPres = {}, lanCliente = null;
+const lanConexoes = new Map();               // peer -> { sock, ok, presence }
+const lanIps = () => Object.values(os.networkInterfaces()).flat().filter((i) => i && i.family === "IPv4" && !i.internal).map((i) => i.address);
+function lanParaJanela(m) { if (win && !win.isDestroyed()) win.webContents.send("lan:event", m); }
+function manda(sock, m) { try { if (!sock.destroyed) sock.write(JSON.stringify(m) + "\n"); } catch (err) { /* conexão caiu */ } }
+function porLinha(sock, cb) {
+  let buf = "";
+  sock.setEncoding("utf8");
+  sock.on("data", (ch) => {
+    buf += ch;
+    if (buf.length > LAN_MAX) { sock.destroy(); return; }
+    let i;
+    while ((i = buf.indexOf("\n")) >= 0) {
+      const l = buf.slice(0, i); buf = buf.slice(i + 1);
+      if (!l.trim()) continue;
+      let m; try { m = JSON.parse(l); } catch (err) { continue; }
+      if (m && typeof m === "object" && !Array.isArray(m)) cb(m);
+    }
+  });
+}
+const presencaOk = (p) => (p && typeof p === "object" && !Array.isArray(p) && JSON.stringify(p).length <= 4096 ? p : {});
+function lanPeers() { return [{ peer: "host", presence: lanHostPres }, ...[...lanConexoes].filter(([, c]) => c.ok).map(([peer, c]) => ({ peer, presence: c.presence }))]; }
+function lanTodos(m, exceto) {
+  for (const [peer, c] of lanConexoes) if (c.ok && peer !== exceto) manda(c.sock, m);
+  if (exceto !== "host") lanParaJanela(m);
+}
+const lanAvisarPeers = () => lanTodos({ k: "peers", peers: lanPeers() });
+function lanDoAnfitriao(peer, m) {             // mensagens de quem entrou
+  if (m.k === "pres") { const c = lanConexoes.get(peer); c.presence = presencaOk(Object.assign({}, c.presence, presencaOk(m.p))); lanAvisarPeers(); return; }
+  if (m.k === "emit") { if (TOPICO_OK.test(String(m.topic)) && JSON.stringify(m.data === undefined ? null : m.data).length <= 4096) lanTodos({ k: "msg", peer, topic: m.topic, data: m.data }); return; }
+  if (m.k === "set" && LAN_COLS.includes(m.c) && ID_OK.test(String(m.id)) && m.data && typeof m.data === "object") {
+    try { gravar(m.c, m.id, m.data); } catch (err) { return; }
+    lanTodos({ k: "doc", c: m.c, id: m.id, data: m.data, from: peer }, peer); return;
+  }
+  if (m.k === "del" && LAN_COLS.includes(m.c) && ID_OK.test(String(m.id))) { try { if (paraLixeira(m.c, m.id)) lanTodos({ k: "del", c: m.c, id: m.id, from: peer }, peer); } catch (err) { /* ignora */ } }
+}
+function lanParar() {
+  if (lanServidor) { for (const [, c] of lanConexoes) { manda(c.sock, { k: "encerrada" }); c.sock.end(); setTimeout(() => c.sock.destroy(), 500); } lanConexoes.clear(); lanServidor.close(); lanServidor = null; }
+  if (lanCliente) { lanCliente.removeAllListeners("close"); lanCliente.destroy(); lanCliente = null; }
+}
+ipcMain.handle("lan:host", (_e, senha, presenca) => new Promise((resolve) => {
+  lanParar();
+  lanSenha = String(senha || ""); lanHostPres = presencaOk(presenca);
+  const srv = net.createServer((sock) => {
+    if (lanConexoes.size >= LAN_MAX_PESSOAS) { manda(sock, { k: "denied", motivo: "cheia" }); sock.end(); return; }
+    const peer = "p" + Math.random().toString(36).slice(2, 10);
+    const c = { sock, ok: false, presence: {} };
+    lanConexoes.set(peer, c);
+    sock.setKeepAlive(true, 10000);
+    porLinha(sock, (m) => {
+      if (!c.ok) {
+        if (m.k !== "hello") return;
+        if (lanSenha && m.senha !== lanSenha) { manda(sock, { k: "denied", motivo: "senha" }); sock.end(); return; }
+        c.ok = true; c.presence = presencaOk(m.p);
+        manda(sock, { k: "welcome", you: peer, host: os.hostname(), docs: Object.fromEntries(LAN_COLS.map((col) => [col, lerTudo(col)])) });
+        lanAvisarPeers(); return;
+      }
+      lanDoAnfitriao(peer, m);
+    });
+    const sai = () => { if (lanConexoes.delete(peer)) lanAvisarPeers(); };
+    sock.on("close", sai); sock.on("error", sai);
+  });
+  srv.on("error", (err) => { lanServidor = null; resolve({ ok: false, erro: err.code === "EADDRINUSE" ? `A porta ${LAN_PORTA} já está em uso. Outro ScriptRoom já está hospedando neste computador?` : err.message }); });
+  srv.listen(LAN_PORTA, "0.0.0.0", () => { lanServidor = srv; resolve({ ok: true, ips: lanIps(), porta: LAN_PORTA, nome: os.hostname() }); setTimeout(lanAvisarPeers, 50); });
+}));
+ipcMain.handle("lan:join", (_e, ip, senha, presenca) => new Promise((resolve) => {
+  lanParar();
+  const host = String(ip || "").trim();
+  if (!/^[A-Za-z0-9.:-]{1,253}$/.test(host)) { resolve({ ok: false, erro: "Esse endereço não parece um IP." }); return; }
+  const sock = net.connect({ host, port: LAN_PORTA });
+  let pronto = false;
+  const t = setTimeout(() => { if (!pronto) { sock.destroy(); resolve({ ok: false, erro: "Ninguém respondeu nesse IP. Confira o número e se a sala está aberta." }); } }, 8000);
+  sock.on("connect", () => { pronto = true; clearTimeout(t); lanCliente = sock; sock.setKeepAlive(true, 10000); manda(sock, { k: "hello", senha: String(senha || ""), p: presencaOk(presenca) }); resolve({ ok: true }); });
+  sock.on("error", (err) => { if (!pronto) { clearTimeout(t); resolve({ ok: false, erro: err.code === "ECONNREFUSED" ? "Esse computador não está hospedando uma sala (ou o firewall bloqueou)." : err.message }); } });
+  porLinha(sock, (m) => lanParaJanela(m));
+  sock.on("close", () => { if (lanCliente === sock) { lanCliente = null; lanParaJanela({ k: "fechou" }); } });
+}));
+ipcMain.handle("lan:send", (_e, m) => {
+  if (!m || typeof m !== "object") return false;
+  if (lanServidor) {                            // o anfitrião também é uma pessoa na sala
+    if (m.k === "pres") { lanHostPres = presencaOk(Object.assign({}, lanHostPres, presencaOk(m.p))); lanAvisarPeers(); }
+    else if (m.k === "emit" && TOPICO_OK.test(String(m.topic))) lanTodos({ k: "msg", peer: "host", topic: m.topic, data: m.data });
+    return true;
+  }
+  if (lanCliente) { manda(lanCliente, m); return true; }
+  return false;
+});
+ipcMain.handle("lan:stop", () => { lanParar(); return true; });
+ipcMain.handle("lan:ips", () => lanIps());
 ipcMain.handle("file:saveAs", async (e, nome, bytes) => {
   const dono = BrowserWindow.fromWebContents(e.sender) || win;
   const r = await dialog.showSaveDialog(dono, { title: "Salvar como", defaultPath: path.join(app.getPath("documents"), String(nome).replace(/[\\/:*?"<>|]/g, "_")) });
