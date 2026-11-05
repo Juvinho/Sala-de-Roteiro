@@ -606,6 +606,17 @@ body.popwin .titlebar{-webkit-app-region:drag;cursor:default;user-select:none}bo
 .dlk{display:inline-block;width:11px;height:11px;margin:0 1px;vertical-align:middle}.dlk.dl0{background:#EBEDF0}.dlk.dl1{background:#C6E48B}.dlk.dl2{background:#7BC96F}.dlk.dl3{background:#239A3B}.dlk.dl4{background:#196127}.dlk.meta{outline:1px solid #000}
 body.foco #sheet .el:not(.foco-on){opacity:.18;transition:opacity .25s}body.foco #sheet .el.foco-on{opacity:1;transition:opacity .25s}body.foco #sheet .pgd{opacity:.25}
 @media print{body.foco #sheet .el{opacity:1!important}}
+/* pacote 10: bíblia e lote */
+.bibgrid{display:grid;grid-template-columns:260px 1fr;gap:10px}@media (max-width:700px){.bibgrid{grid-template-columns:1fr}}
+.biblist{display:flex;flex-direction:column;background:#fff;max-height:360px;min-height:200px}
+.bibit{display:flex;align-items:center;gap:6px;text-align:left;border:0;border-bottom:1px dotted #C0C0C0;background:#fff;padding:3px 6px;font:12px Tahoma,sans-serif;color:#000;cursor:pointer}
+.bibit i{width:10px;height:10px;border:1px solid #000;flex:none}.bibit b{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.bibit small{color:#606060}
+.bibit:hover,.bibit.sel{background:#000080;color:#fff}.bibit.sel small,.bibit:hover small{color:#C0C0FF}
+.bibtime{display:flex;flex-direction:column;gap:6px;max-height:420px;overflow:auto;background:#fff;border:2px inset var(--face,#C0C0C0);padding:8px}
+.bt-ev{display:grid;grid-template-columns:120px 1fr;gap:8px;border-left:4px solid var(--bc);padding-left:8px}.bt-q{font:bold 12px var(--f-type,monospace);color:#000080}
+.bsug{display:block;padding:2px 4px}
+::highlight(sr-bib){text-decoration:underline dotted #8000A0;text-decoration-thickness:2px;text-underline-offset:3px}
+::highlight(sr-bibx){text-decoration:underline wavy #E00000;text-decoration-thickness:1px;background-color:#FFE8E8}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
 </style>
 
@@ -1680,9 +1691,9 @@ function aboutDialog(){
 function shutdown(){
   dialog({title:"Desligar o ScriptRoom",width:380,body:`<div class="row" style="flex-wrap:nowrap;align-items:flex-start">${icon("power",32)}<fieldset style="flex:1"><legend>O que você quer fazer?</legend><label class="radio"><input type="radio" name="sd" value="off" checked><span>Salvar tudo e desligar</span></label><label class="radio"><input type="radio" name="sd" value="re"><span>Reiniciar (volta às boas-vindas)</span></label></fieldset></div>`,
     buttons:[{label:"Sim",def:1,run:async w=>{const v=w.querySelector("input[name=sd]:checked").value;histCommit();clearTimeout(saveT);await flush();
-      if(v==="re"){setTimeout(()=>showWelcome(true),50);return;}
+      if(v==="re"){setTimeout(()=>irParaInicio(true),50);return;}
       const o=document.createElement("div");o.className="desligado";o.setAttribute("role","button");o.tabIndex=0;o.innerHTML="Agora você pode desligar<br>o seu computador com segurança.<br><br><small style='font-size:20px;color:#888'>clique para religar o ScriptRoom</small>";
-      document.body.appendChild(o);o.focus();if(window.salaNative)setTimeout(()=>window.salaNative.close(),1800);const back=()=>{o.remove();showWelcome(true);};o.onclick=back;o.onkeydown=e=>{if(e.key==="Enter"||e.key===" ")back();};}},{label:"Não"}]});
+      document.body.appendChild(o);o.focus();if(window.salaNative)setTimeout(()=>window.salaNative.close(),1800);const back=()=>{o.remove();irParaInicio(false);};o.onclick=back;o.onkeydown=e=>{if(e.key==="Enter"||e.key===" ")back();};}},{label:"Não"}]});
 }
 
 /* ---------- abrir, ir para, meta, esquema ---------- */
@@ -2518,12 +2529,12 @@ function showWelcome(force){
     ${se?opt("tpl",`Novo roteiro de ${escH(se.nome)} a partir de um modelo`,"",false,`<div style="margin-top:3px"><select id="welTpl" aria-label="Modelo">${templateOptions()}</select></div>`):""}
     ${all.length?opt("open","Abrir outro roteiro","",false,`<div style="margin-top:3px"><select id="welOpen" aria-label="Roteiro">${[...new Set(all.map(s=>s.meta.serieId))].map(sid=>`<optgroup label="${escH((S.series[sid]||{}).nome||"Sem série")}">${all.filter(s=>s.meta.serieId===sid).map(s=>`<option value="${s.id}">${escH(epLabel(s))}</option>`).join("")}</optgroup>`).join("")}</select></div>`):""}
     ${opt("imp","Importar .docx, .fdx (Final Draft) ou .fountain","")}</fieldset></div>
-    <label class="chk"><input type="checkbox" id="welShow"${prefs.welcome?" checked":""}> Mostrar esta janela ao iniciar</label>`;
-  dialog({id:"welcomeWin",title:"Bem-vindo ao ScriptRoom",width:660,body,
+    `;
+  dialog({id:"welcomeWin",title:"Novo roteiro",width:660,body,
     onOpen:w=>{w.querySelector("#tipNext").onclick=()=>{w.querySelector("#tipTxt").textContent=nextTip();};
       w.querySelectorAll("select").forEach(s=>s.addEventListener("change",()=>{const r=s.closest(".radio").querySelector("input");r.checked=true;}));
       w.addEventListener("dblclick",e=>{if(e.target.closest(".radio"))w.querySelector('[data-b="0"]').click();});
-      w.querySelector("#welShow").onchange=e=>{prefs.welcome=e.target.checked;savePrefs();};},
+      },
     buttons:[{label:"OK",def:1,run:w=>{const v=(w.querySelector('input[name=wel]:checked')||{}).value;
       if(v==="cont"&&last)openEp(last.id);else if(v==="next"){openEp(prev.id);createNext();}else if(v==="serie")setTimeout(seriesWizard,0);
       else if(v==="tpl"){if(cur()!==last)openEp(last.id);createEpisodeFrom(w.querySelector("#welTpl").value);}else if(v==="open")openEp(w.querySelector("#welOpen").value);
@@ -4449,8 +4460,9 @@ TIPS.push("Ctrl+Z agora desfaz palavra por palavra. Editar › Histórico de alt
    A cada versão nova: mude APP_VERSAO e acrescente a entrada no topo de VERSOES.
    (o empacotamento confere se APP_VERSAO bate com o package.json)
    ================================================================ */
-const APP_VERSAO="5.2.0";
+const APP_VERSAO="5.3.0";
 const VERSOES=[
+  ["5.3.0","Bíblia do mundo",["Produção › Bíblia do mundo: lugares, facções, termos e a linha do tempo da série","Os termos ficam sublinhados na página; escrito de outro jeito, fica em vermelho com Trocar","Sugestões de verbetes tiradas dos próprios roteiros","Arquivo › Exportar a temporada: todos os roteiros em PDF, Word, Final Draft e Fountain num .zip","Arquivo › Reiniciar volta para a tela de começo"]],
   ["5.2.0","Para escritor de série",["Plantar e colher: pistas plantadas e onde elas pagam a conta, na série inteira","Gerador de nomes do mundo, que aprende com o seu elenco","A Revisão agora confere continuidade","Diário de escrita com mapa de calor do ano","Modo foco (Ctrl+Shift+F)"]],
   ["5.1.0","Desfazer de verdade",["Ctrl+Z desfaz palavra por palavra, e o cursor volta para onde a mudança aconteceu","Editar › Histórico de alterações: volte para qualquer passo","Exibir › Rede de personagens: quem contracena com quem","Exibir › Teleprompter: rolagem, espelho e destaque das falas de um ator","Sobre mostra a versão de verdade e esta lista de novidades"]],
   ["5.0.0","Tela de começo",["O ScriptRoom abre na tela de boas-vindas, com os roteiros recentes e a busca","Arquivo › Fechar roteiro (Ctrl+F4)","No programa instalado, todas as janelas ficam soltas como o Bloco de notas"]],
@@ -4631,6 +4643,142 @@ TIPS.push("Botão direito num trecho › Plantar e colher: marque a pista num ep
   "A Revisão agora confere continuidade: personagem em dois lugares ao mesmo tempo, cena CONTÍNUO com o tempo pulando, item da análise que sumiu do texto.",
   "Ferramentas › Diário de escrita mostra um mapa de calor das palavras que você escreveu em cada dia do ano.",
   "Ctrl+Shift+F liga o modo foco: só a cena em que você está fica acesa.");
+
+/* ================================================================
+   PACOTE 10: Bíblia do mundo (verbetes, grafia, linha do tempo) · Exportar a temporada em lote
+   ================================================================ */
+Object.assign(ICON,{
+  bible:'<path d="M3.5 2.5h8.5v11H3.5z" fill="#600000" stroke="#000"/><path d="M12 3.5h1.5v11H5" fill="none" stroke="#000"/><path d="M7.7 5v5M6 6.7h3.4" stroke="#FFD000" stroke-width="1.2"/>',
+  batch:'<rect x="4.5" y="1.5" width="9" height="10" fill="#fff" stroke="#000"/><rect x="3" y="3" width="9" height="10" fill="#fff" stroke="#000"/><rect x="1.5" y="4.5" width="9" height="10" fill="#fff" stroke="#000"/><path d="M3 7h6M3 9h6M3 11h4" stroke="#000080"/>',
+});
+const BIB_TIPOS=["Lugar","Facção","Instituição","Objeto","Termo","Evento","Espécie","Tecnologia","Idioma"];
+const BIB_COR={Lugar:"#30A030",Facção:"#C02060",Instituição:"#3050D0",Objeto:"#B040B0",Termo:"#806000",Evento:"#E07000",Espécie:"#208080",Tecnologia:"#606060",Idioma:"#A08020"};
+const semAcento=s=>String(s).normalize("NFD").replace(/[̀-ͯ]/g,"").toLowerCase();
+function bibOf(sid){const se=S.series[sid||(cur()&&cur().meta.serieId)];if(!se)return null;se.biblia=se.biblia||[];return se;}
+const bibNames=v=>[v.termo,...(v.aliases||[])].map(x=>String(x).trim()).filter(x=>x.length>=2);
+function lev(a,b){if(Math.abs(a.length-b.length)>1)return 9;const m=a.length,n=b.length;let prev=Array.from({length:n+1},(_,j)=>j);
+  for(let i=1;i<=m;i++){const cur_=[i];for(let j=1;j<=n;j++)cur_[j]=Math.min(prev[j]+1,cur_[j-1]+1,prev[j-1]+(a[i-1]===b[j-1]?0:1));prev=cur_;}return prev[n];}
+const reEsc=s=>s.replace(/[.*+?^${}()|[\]\\]/g,"\\$&");
+let bibCache={k:"",re:null,map:null,near:new Map()};
+function bibIndex(){const se=bibOf();if(!se||!se.biblia.length)return null;const k=se.id+":"+(se.atualizado||0)+":"+se.biblia.length;if(bibCache.k===k)return bibCache;
+  const map=new Map();for(const v of se.biblia)for(const n of bibNames(v))map.set(n.toLowerCase(),v);
+  const names=[...map.keys()].sort((a,b)=>b.length-a.length);
+  bibCache={k,map,re:names.length?new RegExp(`(?<![\\p{L}\\p{N}])(${names.map(reEsc).join("|")})(?![\\p{L}\\p{N}])`,"giu"):null,near:new Map(),norm:new Map([...map].map(([n,v])=>[semAcento(n),{n,v}]))};return bibCache;}
+/* uma palavra parecida com um verbete, mas escrita diferente (Varguélia × Varguelia) */
+function bibNear(word){const B=bibIndex();if(!B)return null;const w=word.toLowerCase();if(B.map.has(w))return null;if(B.near.has(w))return B.near.get(w);let hit=null;
+  const na=B.norm.get(semAcento(w));if(na&&na.n!==w)hit=na;
+  else if(w.length>=5){const chars=new Set(Object.values(S.chars).map(c=>String(c.nome||"").toLowerCase()));if(!chars.has(w))for(const [n,v] of B.map){if(n.length>=5&&!n.includes(" ")&&lev(w,n)===1){hit={n,v};break;}}}
+  if(hit){const nm=bibNames(hit.v).find(x=>x.toLowerCase()===hit.n)||hit.n;hit={n:nm,v:hit.v};}B.near.set(w,hit);return hit;}
+function bibScan(sc){const B=bibIndex();const hits=[],near=[];if(!B)return {hits,near};
+  for(const e of sc.els){if(["time","note"].includes(e.t))continue;const t=e.x;
+    if(B.re){B.re.lastIndex=0;let m;while((m=B.re.exec(t)))hits.push({e,a:m.index,b:m.index+m[0].length,v:B.map.get(m[0].toLowerCase())});}
+    for(const m of t.matchAll(/[\p{Lu}][\p{L}'-]{3,}/gu)){const nb=bibNear(m[0]);if(nb)near.push({e,a:m.index,b:m.index+m[0].length,w:m[0],n:nb.n,v:nb.v});}}
+  return {hits,near};}
+const _paintHi16=paintHighlights;
+paintHighlights=function(){_paintHi16();if(typeof CSS==="undefined"||!CSS.highlights||typeof Highlight==="undefined")return;CSS.highlights.delete("sr-bib");CSS.highlights.delete("sr-bibx");
+  const sc=cur();if(!sc||S.view!=="page"||prefs.verBiblia===false)return;const {hits,near}=bibScan(sc);const mk=l=>l.map(h=>{const n=nodeOf(h.e.id);const t=n&&n.firstChild;if(!t||t.nodeType!==3||h.b>t.length)return null;const r=new Range();r.setStart(t,h.a);r.setEnd(t,h.b);return r;}).filter(Boolean);
+  const a=mk(hits),b=mk(near);if(a.length)CSS.highlights.set("sr-bib",new Highlight(...a));if(b.length)CSS.highlights.set("sr-bibx",new Highlight(...b));};
+/* Alt+clique num termo da bíblia abre o verbete */
+sheet.addEventListener("click",e=>{if(!e.altKey)return;const n=e.target.closest&&e.target.closest(".el");if(!n)return;const B=bibIndex();if(!B)return;
+  let off=-1;const cp=document.caretPositionFromPoint?document.caretPositionFromPoint(e.clientX,e.clientY):null;if(cp)off=cp.offset;else if(document.caretRangeFromPoint){const r=document.caretRangeFromPoint(e.clientX,e.clientY);if(r)off=r.startOffset;}
+  if(off<0)return;const f=findEl(n.dataset.id);if(!f)return;const t=f.e.x;if(B.re){B.re.lastIndex=0;let m;while((m=B.re.exec(t))){if(off>=m.index&&off<=m.index+m[0].length){e.preventDefault();bibDialog(B.map.get(m[0].toLowerCase()).id);return;}}}
+  let a=off,b=off;while(a>0&&/[\p{L}'-]/u.test(t[a-1]))a--;while(b<t.length&&/[\p{L}'-]/u.test(t[b]))b++;const w=t.slice(a,b);const nb=w&&bibNear(w);if(nb){e.preventDefault();bibDialog(nb.v.id,{troca:{eid:f.e.id,a,b,w,n:nb.n}});}});
+/* aparições do verbete na série */
+function bibUses(v,sid){const names=bibNames(v);if(!names.length)return [];const re=new RegExp(`(?<![\\p{L}\\p{N}])(${names.map(reEsc).join("|")})(?![\\p{L}\\p{N}])`,"giu");const out=[];
+  for(const s of seriesEps(sid)){let n=0,first=null,scn=null;const lay=paginate(s);s.els.forEach((e,i)=>{if(e.t==="scene")scn=lay.info[i].label||lay.info[i].num;re.lastIndex=0;const c=(e.x.match(re)||[]).length;if(c){n+=c;if(!first)first={id:e.id,scn};}});if(n)out.push({s,n,first});}
+  return out;}
+/* sugestões: nomes próprios que aparecem no meio da frase e ainda não estão na bíblia */
+const PALAVRAS_COMUNS=new Set("a o os as um uma de do da dos das em no na nos nas e é que se não por para com sem mas mais ele ela eles elas eu você nós isso isto aquilo este esta esse essa todo toda todos todas cada outro outra sim também já quando onde como porque então depois antes agora aqui ali lá int ext cena ato teaser epílogo dia noite manhã tarde contínuo corta fusão fade grade nota senhor senhora dona seu sua".split(" "));
+function bibTitulo(w){return w.toLowerCase().split(" ").map((x,i)=>x.length===1&&/\p{L}/u.test(x)&&i>0&&!["e","o","a"].includes(x)?x.toUpperCase():(i>0&&["de","do","da","dos","das","e","o","a","os","as","no","na"].includes(x))?x:x.charAt(0).toUpperCase()+x.slice(1)).join(" ");}
+function bibSuggest(sid){const se=bibOf(sid);const known=new Set(se.biblia.flatMap(v=>bibNames(v).map(x=>x.toLowerCase())));const chars=new Set();for(const c of Object.values(S.chars))if(c.serieId===sid&&c.nome)chars.add(c.nome.toLowerCase());
+  const cnt=new Map(),loc=new Map();
+  for(const s of seriesEps(sid)){for(const c of charStats(s))chars.add(c.name.toLowerCase());
+    for(const e of s.els){if(e.t==="scene"){const p=locParse(e.x);for(const part of p.loc.split(/\s+[—–-]\s+/)){const L=part.trim();if(L&&L!=="(sem local)"&&L.length<=40)loc.set(L,(loc.get(L)||0)+1);}}
+      if(!["action","dialogue","note"].includes(e.t))continue;
+      for(const m of e.x.matchAll(/(?<=[\p{Ll},;]\s)([\p{Lu}][\p{Ll}'-]{2,}(?:\s(?:de|do|da)?\s?[\p{Lu}][\p{Ll}'-]{2,})*)/gu)){const w=m[1];const lw=w.toLowerCase();if(PALAVRAS_COMUNS.has(lw)||known.has(lw)||chars.has(lw)||chars.has(lw.split(" ")[0]))continue;cnt.set(w,(cnt.get(w)||0)+1);}}}
+  const termos=[...cnt].filter(([,c])=>c>=2).sort((a,b)=>b[1]-a[1]).slice(0,30).map(([w,c])=>({w,c,tipo:"Termo"}));
+  const lugares=[...loc].filter(([L])=>!known.has(L.toLowerCase())&&!/^(V[ÁA]RIOS|DIVERSOS|V[ÁA]RIAS|MESMO LOCAL|ANTERIOR)$/i.test(L)).sort((a,b)=>b[1]-a[1]).slice(0,25).map(([w,c])=>({w:bibTitulo(w),c,tipo:"Lugar"}));
+  return [...lugares,...termos];}
+/* a janela */
+let bibSel=null,bibQ="",bibTipo="",bibTab="verbetes";
+function bibDialog(openId,opts){const sc=cur();if(!sc)return;const se=bibOf();if(!se)return;if(openId)bibSel=openId;
+  dialog({id:"bibWin",title:`Bíblia do mundo — ${se.nome}`,width:820,modal:false,icon:"bible",body:`<div class="row"><div class="ptabs" role="group" aria-label="Bíblia"><button type="button" data-btab="verbetes" aria-pressed="${bibTab==="verbetes"}">Verbetes</button><button type="button" data-btab="tempo" aria-pressed="${bibTab==="tempo"}">Linha do tempo</button></div>
+      <button type="button" class="btn sm" data-bib="novo">+ Novo verbete</button><button type="button" class="btn sm" data-bib="sug">Sugerir a partir dos roteiros…</button><label class="chk" style="margin-left:auto"><input type="checkbox" id="bib-hl"${prefs.verBiblia!==false?" checked":""}> Sublinhar na página</label></div>
+    <div id="bib-body"></div>`,
+    onOpen:w=>{const draw=()=>bibDraw(w,opts);opts=null;draw();
+      w.addEventListener("click",e=>{const t=e.target.closest("[data-btab]");if(t){bibTab=t.dataset.btab;w.querySelectorAll("[data-btab]").forEach(b=>b.setAttribute("aria-pressed",b.dataset.btab===bibTab));bibDraw(w);return;}
+        const b=e.target.closest("[data-bib]");if(b){const k=b.dataset.bib;
+          if(k==="novo"){const v={id:uid("bb"),termo:"",tipo:bibTipo||"Termo",aliases:[],desc:"",quando:""};se.biblia.push(v);bibSel=v.id;bibTab="verbetes";markSerie(se);bibDraw(w);setTimeout(()=>{const i=w.querySelector("#bv-termo");if(i)i.focus();},0);}
+          if(k==="sug")bibSuggestDialog(w);
+          if(k==="del"){const v=se.biblia.find(x=>x.id===bibSel);if(!v)return;se.biblia=se.biblia.filter(x=>x!==v);bibSel=null;markSerie(se);bibDraw(w);paintHighlights();toast(`Verbete “${v.termo||"sem nome"}” apagado`);}
+          if(k==="troca"){const [eid,a,bb,n]=b.dataset.v.split("|");const ep=Object.values(S.eps).find(s=>s.els.some(x=>x.id===eid));const el=ep&&ep.els.find(x=>x.id===eid);if(el){const w0=el.x.slice(+a,+bb);const nn=w0[0]===w0[0].toUpperCase()?n.replace(/(^|\s)\p{L}/gu,c=>c.toUpperCase()):n;el.x=el.x.slice(0,+a)+nn+el.x.slice(+bb);if(ep===cur()){const nd=nodeOf(eid);if(nd)nd.textContent=el.x;touch(true);}else markChanged(ep);toast(`Trocado por “${nn}”`);const fs_=b.closest("fieldset");b.closest(".bibtroca").remove();if(fs_&&!fs_.querySelector(".bibtroca"))fs_.remove();paintHighlights();}}
+          if(k==="trocatodos"){bibFixAll(w);}
+          return;}
+        const it=e.target.closest("[data-bsel]");if(it){bibSel=it.dataset.bsel;bibTab="verbetes";bibDraw(w);return;}
+        const go=e.target.closest("[data-bgo2]");if(go){const [ep,id]=go.dataset.bgo2.split("|");if(S.view!=="page")setMode("page");gotoEl(id,ep);}});
+      let tm=null;w.addEventListener("input",e=>{const t=e.target;if(t.id==="bib-q"){bibQ=t.value;bibList(w);return;}if(t.id==="bib-t"){bibTipo=t.value;bibList(w);return;}
+        const f=t.dataset.bv;if(!f)return;const v=se.biblia.find(x=>x.id===bibSel);if(!v)return;v[f]=f==="aliases"?t.value.split(",").map(x=>x.trim()).filter(Boolean):t.value;
+        clearTimeout(tm);tm=setTimeout(()=>{markSerie(se);bibList(w);paintHighlights();},400);});
+      w.addEventListener("change",e=>{if(e.target.id==="bib-hl"){prefs.verBiblia=e.target.checked;savePrefs();paintHighlights();}if(e.target.dataset.bv==="tipo"){markSerie(se);bibList(w);}});},
+    buttons:[{label:"Fechar"}]});}
+function bibList(w){const se=bibOf();const box=w.querySelector("#bib-list");if(!box)return;const q=semAcento(bibQ);
+  const l=se.biblia.filter(v=>(!bibTipo||v.tipo===bibTipo)&&(!q||semAcento(bibNames(v).join(" ")+" "+(v.desc||"")).includes(q))).sort((a,b)=>String(a.termo).localeCompare(String(b.termo),"pt"));
+  box.innerHTML=l.map(v=>`<button type="button" class="bibit${v.id===bibSel?" sel":""}" data-bsel="${v.id}"><i style="background:${BIB_COR[v.tipo]||"#808080"}"></i><b>${escH(v.termo||"(sem nome)")}</b><small>${escH(v.tipo)}</small></button>`).join("")||`<p class="muted" style="margin:4px">${se.biblia.length?"Nada com esse filtro.":"A bíblia está vazia. Crie um verbete ou peça sugestões a partir dos roteiros."}</p>`;}
+function bibDraw(w,opts){const se=bibOf();const body=w.querySelector("#bib-body");
+  if(bibTab==="tempo"){const ev=se.biblia.filter(v=>(v.quando||"").trim()).map(v=>{const m=/(-?\d+)/.exec(v.quando);return {v,n:m?+m[1]:Infinity};}).sort((a,b)=>a.n-b.n||String(a.v.quando).localeCompare(String(b.v.quando)));
+    body.innerHTML=ev.length?`<div class="bibtime">${ev.map(({v})=>`<div class="bt-ev" style="--bc:${BIB_COR[v.tipo]||"#808080"}"><span class="bt-q">${escH(v.quando)}</span><div><button type="button" class="lnk" data-bsel="${v.id}"><b>${escH(v.termo)}</b></button> <small class="muted">${escH(v.tipo)}</small><div>${escH((v.desc||"").slice(0,220))}</div></div></div>`).join("")}</div>`:`<div class="empty">${icon("bible",32)}Preencha o campo “Quando” de um verbete (um ano, uma era, “antes da Fundação”) para ele aparecer aqui.</div>`;return;}
+  const v=se.biblia.find(x=>x.id===bibSel);const sc=cur();const {near}=bibScan(sc);
+  const troca=opts&&opts.troca?[opts.troca]:near.filter(x=>!v||x.v.id===v.id).slice(0,8).map(x=>({eid:x.e.id,a:x.a,b:x.b,w:x.w,n:x.n}));
+  body.innerHTML=`<div class="bibgrid"><div class="col"><div class="row"><input type="search" id="bib-q" placeholder="Procurar" value="${escH(bibQ)}" style="flex:1" aria-label="Procurar verbete"><select id="bib-t" aria-label="Tipo"><option value="">Todos</option>${BIB_TIPOS.map(t=>`<option${t===bibTipo?" selected":""}>${t}</option>`).join("")}</select></div><div class="listview biblist" id="bib-list"></div><p class="status" style="margin:0">${se.biblia.length} verbete${se.biblia.length===1?"":"s"} · Alt+clique num termo sublinhado abre o verbete</p></div>
+    <div class="col">${v?`<div class="grid2"><label class="fld"><span>Termo</span><input type="text" id="bv-termo" data-bv="termo" value="${escH(v.termo)}" placeholder="ex.: Tencri"></label><label class="fld"><span>Tipo</span><select data-bv="tipo">${BIB_TIPOS.map(t=>`<option${t===v.tipo?" selected":""}>${t}</option>`).join("")}</select></label></div>
+      <div class="grid2"><label class="fld"><span>Também escrito como (vírgula)</span><input type="text" data-bv="aliases" value="${escH((v.aliases||[]).join(", "))}" placeholder="ex.: a Fundação, FV"></label><label class="fld"><span>Quando (no mundo)</span><input type="text" data-bv="quando" value="${escH(v.quando||"")}" placeholder="ex.: 1961, era do bronze"></label></div>
+      <label class="fld"><span>Descrição</span><textarea data-bv="desc" rows="6">${escH(v.desc||"")}</textarea></label>
+      <div><b>Aparece em</b> ${(()=>{const u=bibUses(v,se.id);return u.length?u.map(x=>`<button type="button" class="lnk" data-bgo2="${x.s.id}|${x.first.id}">${escH(epTag(x.s.meta))} (${x.n}×)</button>`).join(" · "):`<span class="muted">nenhum roteiro ainda</span>`;})()}</div>
+      <div class="row"><button type="button" class="btn sm" data-bib="del">Apagar verbete</button></div>`:`<div class="empty">${icon("bible",32)}Escolha um verbete à esquerda ou crie um novo.</div>`}
+      ${troca.length?`<fieldset><legend>Grafia diferente neste roteiro</legend>${troca.map(t=>`<div class="row bibtroca"><span>“<b>${escH(t.w)}</b>” parece “${escH(t.n)}”</span><button type="button" class="btn sm" data-bib="troca" data-v="${escH(`${t.eid}|${t.a}|${t.b}|${t.n}`)}">Trocar</button></div>`).join("")}${troca.length>1?`<button type="button" class="btn sm" data-bib="trocatodos">Trocar todas</button>`:""}</fieldset>`:""}</div></div>`;
+  bibList(w);}
+function bibFixAll(w){const sc=cur();const {near}=bibScan(sc);if(!near.length)return;const by=new Map();for(const x of near){if(!by.has(x.e.id))by.set(x.e.id,[]);by.get(x.e.id).push(x);}
+  for(const [id,l] of by){const e=sc.els.find(z=>z.id===id);l.sort((a,b)=>b.a-a.a);for(const x of l){const nn=x.w[0]===x.w[0].toUpperCase()?x.n.replace(/(^|\s)\p{L}/gu,c=>c.toUpperCase()):x.n;e.x=e.x.slice(0,x.a)+nn+e.x.slice(x.b);}const nd=nodeOf(id);if(nd)nd.textContent=e.x;}
+  touch(true);toast(`${near.length} grafia${near.length>1?"s":""} acertada${near.length>1?"s":""}`);bibDraw(w);paintHighlights();}
+function bibSuggestDialog(parent){const se=bibOf();const l=bibSuggest(se.id);
+  dialog({title:"Sugestões para a bíblia",width:520,body:l.length?`<p class="muted" style="margin:0">Lugares dos cabeçalhos e nomes próprios que aparecem no meio das frases e ainda não estão na bíblia.</p><div class="listview" style="max-height:340px">${l.map((x,i)=>`<label class="chk bsug"><input type="checkbox" data-si="${i}"${x.tipo==="Lugar"||x.c>=3?" checked":""}> <b>${escH(x.w)}</b> <small class="muted">${x.tipo} · ${x.c}×</small></label>`).join("")}</div>`:`<p style="margin:0">Não achei nada novo. Os nomes próprios dos roteiros já estão na bíblia.</p>`,
+    buttons:[...(l.length?[{label:"Adicionar marcados",def:1,run:w=>{let n=0;w.querySelectorAll("[data-si]:checked").forEach(c=>{const x=l[+c.dataset.si];se.biblia.push({id:uid("bb"),termo:x.w,tipo:x.tipo,aliases:[],desc:"",quando:""});n++;});if(n){markSerie(se);bibCache.k="";if(parent&&parent.isConnected)bibDraw(parent);paintHighlights();toast(`${n} verbete${n>1?"s":""} na bíblia`);}}}]:[]),{label:"Cancelar"}]});}
+/* a grafia diferente entra na Revisão */
+const _reviewFindings16=reviewFindings;
+reviewFindings=function(sc){const r=_reviewFindings16(sc);try{if(sc===cur()){const seen=new Set();for(const x of bibScan(sc).near){const k=x.w+"|"+x.n;if(seen.has(k))continue;seen.add(k);r.push({sev:"warn",title:`Bíblia: “${x.w}” parece “${x.n}”`,det:`O verbete ${x.v.termo} (${x.v.tipo}) é escrito de outro jeito. Alt+clique na palavra para trocar.`,id:x.e.id,ep:sc.id});}}}catch(e){}return r;};
+
+/* ---------- Exportar a temporada em lote ---------- */
+function batchDialog(){const sc=cur();const sid=sc?sc.meta.serieId:curSid();const se=S.series[sid];const eps=seriesEps(sid);if(!eps.length){toast("Esta série ainda não tem roteiros");return;}
+  dialog({title:`Exportar a temporada — ${se?se.nome:"série"}`,width:520,body:`<fieldset><legend>Roteiros</legend><div class="listview" style="max-height:220px">${eps.map(s=>`<label class="chk"><input type="checkbox" data-bep="${s.id}" checked> <b>${escH(epTag(s.meta))}</b> · ${escH(s.meta.titulo)}</label>`).join("")}</div></fieldset>
+    <fieldset><legend>Formatos</legend><div class="grid2"><label class="chk"><input type="checkbox" data-bf="pdf" checked> PDF</label><label class="chk"><input type="checkbox" data-bf="docx" checked> Word (.docx)</label><label class="chk"><input type="checkbox" data-bf="fdx"> Final Draft (.fdx)</label><label class="chk"><input type="checkbox" data-bf="fountain"> Fountain (.txt)</label></div></fieldset>
+    <label class="chk"><input type="checkbox" id="bt-esc" checked> Incluir a escaleta de cada roteiro (lista de cenas, em .txt)</label><p class="muted" style="margin:0" id="bt-st">Sai um .zip com uma pasta para cada formato.</p>`,
+    buttons:[{label:"Exportar",def:1,run:async(w)=>{const ids=[...w.querySelectorAll("[data-bep]:checked")].map(c=>c.dataset.bep),fm=[...w.querySelectorAll("[data-bf]:checked")].map(c=>c.dataset.bf);
+      if(!ids.length||!fm.length){toast("Escolha pelo menos um roteiro e um formato");return false;}const st=w.querySelector("#bt-st");const ents=[];let k=0;
+      for(const id of ids){const s=S.eps[id];k++;st.textContent=`Montando ${epTag(s.meta)} (${k} de ${ids.length})…`;await new Promise(r=>setTimeout(r,0));const base=fileName(s).replace(/\.docx$/,"");
+        if(fm.includes("pdf")){const r=await scriptPDF(s,{});ents.push([`PDF/${base}.pdf`,new Uint8Array(await r.blob.arrayBuffer())]);}
+        if(fm.includes("docx")){const bl=await exportDocx(s);ents.push([`Word/${base}.docx`,new Uint8Array(await bl.arrayBuffer())]);}
+        if(fm.includes("fdx"))ents.push([`Final Draft/${base}.fdx`,toFdx(s)]);
+        if(fm.includes("fountain"))ents.push([`Fountain/${base}.txt`,toFountain(s)]);
+        if(w.querySelector("#bt-esc").checked){const lay=paginate(s);ents.push([`Escaletas/${base}_escaleta.txt`,`${s.meta.serie} · ${epCode(s.meta)} · “${s.meta.titulo}”\r\n\r\n`+scenesOf(s,lay.info).map(x=>x.n?`${x.label||x.n}. ${x.h}${x.tc?"  "+x.tcRaw:""}\r\n   ${(x.syn||x.first||"").slice(0,300)}\r\n`:`\r\n${String(x.act).toUpperCase()}\r\n`).join("")]);}}
+      st.textContent="Compactando…";const zip=await makeZip(ents);await offer(`${slug((se&&se.nome)||"serie")}_temporada_${(se&&se.temporada)||1}.zip`,zip);toast(`${ids.length} roteiro${ids.length>1?"s":""} em ${fm.length} formato${fm.length>1?"s":""}`);}},{label:"Cancelar"}]});}
+
+Object.assign(CMD,{
+  biblia:{label:"Bíblia do mundo…",icon:"bible",needs:1,run:()=>bibDialog()},
+  exportarTemporada:{label:"Exportar a temporada…",icon:"batch",needs:1,run:()=>batchDialog()},
+});
+{const pr=MENUS.find(m=>m[0]==="Produção")[2];pr.splice(pr.indexOf("plantar"),0,"biblia");}
+{const a=MENUS.find(m=>m[0]==="Arquivo")[2];a.splice(a.indexOf("exportarFdx")+1,0,"exportarTemporada");}
+TIPS.push("Produção › Bíblia do mundo guarda os lugares, facções e termos da série. Eles ficam sublinhados na página, e o ScriptRoom avisa quando você escreve um deles de outro jeito.",
+  "Arquivo › Exportar a temporada gera um .zip com todos os roteiros da série em PDF, Word, Final Draft e Fountain de uma vez.");
+
+/* ---------- voltar para a tela de começo (Reiniciar, depois de "pode desligar") ---------- */
+function irParaInicio(reinicio){histCommit();flush();
+  const fecha=d=>d.querySelectorAll(".win").forEach(w=>{if(w._close)try{w._close();}catch(e){}});
+  for(const c of [...(typeof POPS!=="undefined"?POPS:[])]){try{fecha(c.document);}catch(e){}}fecha(document);
+  document.querySelectorAll(".menu,.scrim").forEach(n=>n.remove());if(typeof hideAC==="function")hideAC();
+  if(S.view!=="page"){S.view="page";syncViews();}if(cur())fecharRoteiro();else renderAll();desk.scrollTop=0;
+  if(reinicio){if(typeof initDay==="function")initDay();toast("ScriptRoom reiniciado. Tudo salvo.");if(prefs.som)try{clack("ding");}catch(e){}}}
+CMD.novo.label="Novo roteiro…";
 
 if(IS_TOOL)bootTool(new URLSearchParams(location.search).get("janela"));else boot();
 </script>

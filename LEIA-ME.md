@@ -51,7 +51,7 @@ npm run instalador
 Quando terminar, o instalador estará em:
 
 ```
-dist\SETUP_SCRIPTROOM_5.2.0.exe
+dist\SETUP_SCRIPTROOM_5.3.0.exe
 ```
 
 Dê dois cliques nele e siga o assistente: **Avançar › Aceito › Avançar › Instalar › Concluir**.
@@ -82,6 +82,22 @@ No VS Code também dá para usar **Terminal › Run Task…**, que lista as quat
   Análise técnica mostra a folha de cada cena por departamento e exporta em .csv.
 - **Exportar PDF…** com opções: folha de rosto, marcas de revisão, só um trecho de cenas, marca
   d'água e **cópias nominais** (um PDF por pessoa, com o nome dela na marca d'água).
+
+## Bíblia do mundo e exportar a temporada (versão 5.3)
+
+- **Produção › Bíblia do mundo:** um wiki da série com lugares, facções, instituições, objetos,
+  termos, eventos, espécies, tecnologias e idiomas. Cada verbete tem descrição, outras grafias
+  ("a Fundação", "FV") e **quando** acontece no mundo, para montar a **linha do tempo**. A
+  bíblia mora dentro da série e vai junto para a sala na rede.
+  - Os termos ficam **sublinhados em roxo** na página. **Alt+clique** num deles abre o verbete.
+  - Escreveu de outro jeito ("Varguélia", "Tencry")? Fica sublinhado **em vermelho**, aparece na
+    Revisão, e o verbete oferece **Trocar** ou **Trocar todas**.
+  - **Sugerir a partir dos roteiros:** traz os lugares dos cabeçalhos e os nomes próprios que
+    aparecem no meio das frases; é só marcar os que interessam.
+  - "Aparece em" mostra em quais episódios cada termo aparece e quantas vezes.
+- **Arquivo › Exportar a temporada:** todos os roteiros da série (ou os que você marcar) em PDF,
+  Word, Final Draft e Fountain, mais a escaleta de cada um, num .zip só com uma pasta por formato.
+- **Arquivo › Reiniciar** agora salva, fecha todas as janelas e volta para a tela de começo.
 
 ## Para escritor de série (versão 5.2)
 

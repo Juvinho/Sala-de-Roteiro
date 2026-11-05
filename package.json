@@ -1,7 +1,7 @@
 {
   "name": "sala-de-roteiro-95",
   "productName": "ScriptRoom",
-  "version": "5.2.0",
+  "version": "5.3.0",
   "description": "ScriptRoom: editor de roteiros de TV com cara de 1995, para qualquer série: drama, novela, comédia, policial, radionovela e mais. Lê e grava .docx, .fdx (Final Draft), PDF e Fountain.",
   "main": "main.js",
   "author": "Departamento de Dramaturgia",
