@@ -51,7 +51,7 @@ npm run instalador
 Quando terminar, o instalador estará em:
 
 ```
-dist\SETUP_SCRIPTROOM_6.5.0.exe
+dist\SETUP_SCRIPTROOM_6.1.0.exe
 ```
 
 Dê dois cliques nele e siga o assistente: **Avançar › Aceito › Avançar › Instalar › Concluir**.
@@ -83,7 +83,7 @@ No VS Code também dá para usar **Terminal › Run Task…**, que lista as quat
 - **Exportar PDF…** com opções: folha de rosto, marcas de revisão, só um trecho de cenas, marca
   d'água e **cópias nominais** (um PDF por pessoa, com o nome dela na marca d'água).
 
-## Sonoplastia, Ritmo de TV e Splash Screen (versão 6.5)
+## Sonoplastia, Ritmo de TV e Splash Screen (versão 6.1)
 
 - **Tela de abertura horizontal (Splash Screen):** ao abrir o ScriptRoom, surge uma janela horizontal
   clássica (estilo Creative Cloud e programas emblemáticos de 1995 como Adobe Premiere, Photoshop 3.0 e

@@ -634,7 +634,7 @@ body.foco #sheet .el:not(.foco-on){opacity:.18;transition:opacity .25s}body.foco
 .relleg{display:flex;flex-wrap:wrap;gap:8px;font-size:11px;margin-left:auto}.relleg i{display:inline-block;width:14px;height:3px;vertical-align:middle;margin-right:3px}
 .vbar{display:inline-block;width:60px;height:8px;border:1px solid #808080;background:#fff;vertical-align:middle}.vbar i{display:block;height:100%}
 #vz-t tr[data-vz]{cursor:pointer}#vz-t tr.sel td{background:#FFFFE1}
-/* 6.5: sonoplastia foley, ritmo dramático, grade de transmissão, matriz de conflitos */
+/* 6.1: sonoplastia foley, ritmo dramático, grade de transmissão, matriz de conflitos */
 .el[data-sfx]::after{content:" 🔊 SFX";font:bold 9px var(--f-ui);color:#000080;background:#E2ECF8;border:1px solid #7090B0;padding:1px 4px;margin-left:6px;cursor:pointer;border-radius:2px;vertical-align:middle;user-select:none;display:inline-block}
 .el[data-sfx]:hover::after{background:#000080;color:#fff}
 .foley-panel{display:flex;flex-direction:column;gap:10px}
@@ -4524,9 +4524,9 @@ TIPS.push("Ctrl+Z agora desfaz palavra por palavra. Editar › Histórico de alt
    A cada versão nova: mude APP_VERSAO e acrescente a entrada no topo de VERSOES.
    (o empacotamento confere se APP_VERSAO bate com o package.json)
    ================================================================ */
-const APP_VERSAO="6.5.0";
+const APP_VERSAO="6.1.0";
 const VERSOES=[
-  ["6.5.0","Sonoplastia e Ritmo de TV",["Tela de abertura (Splash Screen) horizontal com logo clássico e barra de ferramentas","Ferramentas › Mesa de sonoplastia (Foley): 12 efeitos sintetizados para dramaturgia e rádio","Áudio no roteiro: marcas (SFX: ...) no texto têm botão sonoro direto na página para tocar na hora","Exibir › Ritmo dramático e curva de tensão: gráfico de ondas de tensão e detector de ganchos de intervalo comercial","Produção › Grade de exibição e comerciais: cálculo de minutagem de transmissão e quebras comerciais da emissora","Ferramentas › Matriz de conflitos e ideias: dilemas dramáticos e viradas de roteiro usando seu elenco","Ajuda › Tela de abertura: rever a tela de abertura e créditos a qualquer momento"]],
+  ["6.1.0","Sonoplastia e Ritmo de TV",["Tela de abertura (Splash Screen) horizontal com logo clássico e barra de ferramentas","Ferramentas › Mesa de sonoplastia (Foley): 12 efeitos sintetizados para dramaturgia e rádio","Áudio no roteiro: marcas (SFX: ...) no texto têm botão sonoro direto na página para tocar na hora","Exibir › Ritmo dramático e curva de tensão: gráfico de ondas de tensão e detector de ganchos de intervalo comercial","Produção › Grade de exibição e comerciais: cálculo de minutagem de transmissão e quebras comerciais da emissora","Ferramentas › Matriz de conflitos e ideias: dilemas dramáticos e viradas de roteiro usando seu elenco","Ajuda › Tela de abertura: rever a tela de abertura e créditos a qualquer momento"]],
   ["6.0.0","O mundo inteiro",["Produção › Mapa do mundo: suba o mapa, espete os lugares da Bíblia e veja as cenas de cada um","Caminho do episódio: a rota das cenas desenhada no mapa","Exibir › Árvore de relações: gerações, casais e alianças a partir das fichas","Exibir › Voz dos personagens: como cada um fala, e quem fala parecido demais","Arquivo › Cartões de cena para imprimir, quatro por folha","Correções: o Mapa de caracteres voltou a abrir; Ctrl+Shift+F não abre mais o Localizar junto","Correções: Novo roteiro já começa em “próximo episódio”; janelas de um episódio fecham ao trocar de episódio","Correções: palavras de outra pessoa na sala não contam mais na sua meta; painel mais estável"]],
   ["5.3.0","Bíblia do mundo",["Produção › Bíblia do mundo: lugares, facções, termos e a linha do tempo da série","Os termos ficam sublinhados na página; escrito de outro jeito, fica em vermelho com Trocar","Sugestões de verbetes tiradas dos próprios roteiros","Arquivo › Exportar a temporada: todos os roteiros em PDF, Word, Final Draft e Fountain num .zip","Arquivo › Reiniciar volta para a tela de começo"]],
   ["5.2.0","Para escritor de série",["Plantar e colher: pistas plantadas e onde elas pagam a conta, na série inteira","Gerador de nomes do mundo, que aprende com o seu elenco","A Revisão agora confere continuidade","Diário de escrita com mapa de calor do ano","Modo foco (Ctrl+Shift+F)"]],
@@ -5027,7 +5027,7 @@ TIPS.push("Produção › Mapa do mundo: suba a imagem do mapa e espete os lugar
 
 
 /* ================================================================
-   SCRIPTROOM 6.5 — MESA DE SONOPLASTIA, RITMO DE TV E SPLASH SCREEN
+   SCRIPTROOM 6.1 — MESA DE SONOPLASTIA, RITMO DE TV E SPLASH SCREEN
    ================================================================ */
 Object.assign(ICON, {
   foley: '<rect x="1.5" y="2.5" width="13" height="11" fill="#202020" stroke="#000"/><path d="M4 8h2l2-3v6l-2-3H4z" fill="#00ffcc" stroke="#000" stroke-width=".5"/><path d="M10.5 6q1.5 2 0 4M12.5 4.5q3 3.5 0 7" fill="none" stroke="#00ffcc" stroke-width="1.2"/>',
@@ -5863,7 +5863,7 @@ document.addEventListener("keydown", e => {
   }
 });
 
-/* ---------- comandos e menus da 6.5 ---------- */
+/* ---------- comandos e menus da 6.1 ---------- */
 Object.assign(CMD, {
   foley: { label: "Mesa de sonoplastia (Foley)…", icon: "foley", key: "Ctrl+Shift+S", run: () => foleyDialog() },
   ritmo: { label: "Ritmo dramático e curva de tensão…", icon: "ritmo", needs: 1, run: () => ritmoDialog() },
@@ -5898,7 +5898,7 @@ TIPS.push(
 );
 
 
-/* ---------- correções da 6.5 ---------- */
+/* ---------- correções da 6.1 ---------- */
 /* janelas que mostram um episódio só fecham quando você troca de episódio (senão mostrariam o anterior) */
 const JAN_EP=["stWin","tpWin","vozWin","netWin","bdWin","revWin","ritmoWin","gradeWin"],JAN_SERIE=["plWin","bibWin","mapWin","relWin"];
 const _openEp18=openEp;openEp=function(id,k){const antes=cur();_openEp18(id,k);const agora=cur();if(!antes||antes===agora)return;
