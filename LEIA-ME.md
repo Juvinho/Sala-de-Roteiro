@@ -51,7 +51,7 @@ npm run instalador
 Quando terminar, o instalador estará em:
 
 ```
-dist\SETUP_SCRIPTROOM_6.1.1.exe
+dist\SETUP_SCRIPTROOM_6.1.2.exe
 ```
 
 Dê dois cliques nele e siga o assistente: **Avançar › Aceito › Avançar › Instalar › Concluir**.
@@ -82,6 +82,24 @@ No VS Code também dá para usar **Terminal › Run Task…**, que lista as quat
   Análise técnica mostra a folha de cada cena por departamento e exporta em .csv.
 - **Exportar PDF…** com opções: folha de rosto, marcas de revisão, só um trecho de cenas, marca
   d'água e **cópias nominais** (um PDF por pessoa, com o nome dela na marca d'água).
+
+## Produção Executiva e Consultoria Dramática (versão 6.1.2)
+
+- **Produção › Orçamento e custos de produção:** planilha financeira automática para produtores executivos e diretores de produção.
+  - Calcula o custo estimado de cada cena combinando **Locações (Estúdio vs. Externa)**, **Adicional Noturno (35%)**, **Elenco e Figuração**, **Arte/Cenografia/Efeitos** e **Suporte de Captação** (Fita Betacam SP, Película 16mm Kodak ou Película 35mm Eastman).
+  - Seletor de moedas de 1995: **R$ (Real — Plano Real)**, **US$ (Dólar Comercial)** e **URV (Unidade Real de Valor)**, com valores de diária configuráveis.
+  - Classifica cada cena como **ECONÔMICA**, **MÉDIO** ou **ALTO CUSTO**, permitindo clicar na linha para saltar até a cena e otimizar o orçamento.
+  - Exporta a planilha orçamentária completa em formato `.CSV` (compatível com Excel 95 e Lotus 1-2-3).
+- **Produção › Claquete e boletim de câmera:** ferramenta de set e pós-produção para continuístas, assistentes de câmera e produtores.
+  - Claquete virtual interativa de estúdio com animação mecânica e som seco sintetizado ao bater a claquete.
+  - Registra **Rolo/Fita**, **Cena**, **Take**, **Lente Óptica** (18mm a 135mm), **Status** (`BOA (PRINT)`, `RESERVA (HOLD)`, `FALSA (NG)`) e observações de continuidade para a ilha de edição.
+  - Exporta o boletim de câmera completo em `.CSV`.
+- **Ferramentas › Doutor de roteiro (Consultoria Dramática):** diagnóstico automatizado para roteiristas com nota de **0 a 100**.
+  - Inspeciona o roteiro em busca de **Muros de Diálogo** (monólogos longos), **Cabeças Falantes** (longas sequências sem ação), **Ação Interna Não Filmável** (verbos mentais), **Exposição Artificial** (*"como você bem sabe..."*), **Cabeçalhos Incompletos** e **Personagens de Fala Única**.
+  - Clicar em qualquer apontamento leva o cursor diretamente para o trecho correspondente no roteiro.
+- **Ferramentas › Sinopse executiva, pitch e escaleta:** gera instantaneamente o dossiê comercial do episódio para apresentação à emissora:
+  - **Logline Executiva**, **Sinopse Curta para Imprensa / Guia de TV**, **Arco dos Personagens no Episódio** e **Escaleta Técnica Numerada**.
+  - Botões para enviar direto ao Bloco de Notas da sala ou baixar em `.TXT`.
 
 ## Estúdio de Gravação, Multi-Câmera e Closed Caption (versão 6.1.1)
 

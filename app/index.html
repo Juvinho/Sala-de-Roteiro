@@ -704,6 +704,24 @@ body.foco #sheet .el:not(.foco-on){opacity:.18;transition:opacity .25s}body.foco
 .vu-seg.clip{background:#FF0000}
 .vu-seg.off{opacity:0.2}
 .k7-counter{background:#000;color:#00FF00;font:bold 14px "Courier New",monospace;padding:2px 6px;border:2px inset #808080;letter-spacing:2px}
+/* 6.1.2: orçamento de produção, claquete/boletim de câmera, doutor de roteiro, gerador de pitch */
+.orc-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:8px}@media (max-width:640px){.orc-grid{grid-template-columns:1fr 1fr}}
+.orc-box{background:#fff;border:2px inset var(--face,#C0C0C0);padding:6px;font-size:11px}
+.orc-box b{display:block;font-size:15px;color:#006400;font-family:"Courier New",monospace}
+.orc-tag{padding:1px 4px;font-weight:700;font-size:10px;border:1px solid #000}
+.orc-tag.alto{background:#FFD8D8;color:#800000;border-color:#800000}
+.orc-tag.med{background:#FFFFE1;color:#805000;border-color:#805000}
+.orc-tag.baixo{background:#D4F8D4;color:#006400;border-color:#006400}
+.slate95{background:#181818;color:#fff;border:2px inset #808080;font-family:"Courier New",monospace}
+.slate95-top{height:22px;background:repeating-linear-gradient(135deg,#fff 0px,#fff 14px,#000 14px,#000 28px);border-bottom:2px solid #000;transition:transform 0.08s ease-out;transform-origin:left bottom}
+.slate95-top.clap{transform:rotate(-10deg)}
+.slate95-body{padding:10px 14px;display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.slate95-cell{border:1px solid #606060;padding:4px 6px;background:#0a0a0a}
+.slate95-cell small{display:block;font-size:9px;color:#9FD4FF;text-transform:uppercase}
+.slate95-cell b{font-size:16px;color:#FFE000}
+.doc-score{display:flex;align-items:center;gap:12px;background:#fff;border:2px inset var(--face,#C0C0C0);padding:8px 12px;margin-bottom:8px}
+.doc-num{font:400 38px/1 var(--f-pix,"Courier New",monospace);padding:4px 10px;background:#000;color:#00FF00;border:2px inset #808080}
+.pitch-box{background:#fff;border:2px inset var(--face,#C0C0C0);padding:10px;font:12px/1.45 "Courier New",monospace;max-height:310px;overflow:auto;white-space:pre-wrap}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
 </style>
 
@@ -740,6 +758,10 @@ body.foco #sheet .el:not(.foco-on){opacity:.18;transition:opacity .25s}body.foco
     <button class="tbtn" type="button" data-cmd="multicam" data-icon="cam" title="Decupagem de estúdio multi-câmera"></button>
     <button class="tbtn" type="button" data-cmd="closedCaption" data-icon="tv" title="Emulador de teletexto e closed caption"></button>
     <button class="tbtn" type="button" data-cmd="tapeDeck" data-icon="tape" title="Gravador de fita cassete C-60 (.WAV)"></button>
+    <button class="tbtn" type="button" data-cmd="orcamento" data-icon="budget" title="Orçamento e custos de produção"></button>
+    <button class="tbtn" type="button" data-cmd="boletimCam" data-icon="slate" title="Claquete e boletim de câmera"></button>
+    <button class="tbtn" type="button" data-cmd="doutor" data-icon="doctor" title="Doutor de roteiro (diagnóstico dramático)"></button>
+    <button class="tbtn" type="button" data-cmd="pitch" data-icon="pitch" title="Sinopse executiva, pitch e escaleta"></button>
     <button class="tbtn" type="button" data-cmd="relatorios" data-icon="report" title="Relatórios de produção"></button>
     <span class="tsep hide-sm"></span>
     <label class="tlbl hide-sm" for="zoomSel">Zoom</label>
@@ -4560,8 +4582,9 @@ TIPS.push("Ctrl+Z agora desfaz palavra por palavra. Editar › Histórico de alt
    A cada versão nova: mude APP_VERSAO e acrescente a entrada no topo de VERSOES.
    (o empacotamento confere se APP_VERSAO bate com o package.json)
    ================================================================ */
-const APP_VERSAO="6.1.1";
+const APP_VERSAO="6.1.2";
 const VERSOES=[
+  ["6.1.2","Produção Executiva e Consultoria Dramática",["Produção › Orçamento e custos de produção: estimativa financeira em R$ (Plano Real), US$ ou URV por cena, departamento, locação e película/fita, com exportação .CSV","Produção › Claquete e boletim de câmera: claquete virtual de estúdio com som mecânico e folha de continuidade (Takes Bons, Reserva e Falsos)","Ferramentas › Doutor de roteiro: consultoria dramática automatizada com nota de 0 a 100, detector de muros de diálogo, cabeças falantes e ação não filmável","Ferramentas › Sinopse executiva, pitch e escaleta: gera logline, resumo para guia de TV, escaleta numerada e mapa de arcos do episódio"]],
   ["6.1.1","Estúdio de TV e Multimídia",["Produção › Decupagem multi-câmera: switcher de estúdio com 4 câmeras, lâmpadas Tally e roteiro em 2 colunas (Áudio/Vídeo)","Exibir › Emulador de teletexto e Closed Caption (Linha 21): monitor CRT 4:3 com aferição de velocidade e exportação .SRT","Ferramentas › Gravador de fita cassete (Deck C-60): interface retrô de gravador K7 com VU meters e gravação/exportação em áudio .WAV 16-bit"]],
   ["6.1.0","Sonoplastia e Ritmo de TV",["Tela de abertura (Splash Screen) horizontal com logo clássico e barra de ferramentas","Ferramentas › Mesa de sonoplastia (Foley): 12 efeitos sintetizados para dramaturgia e rádio","Áudio no roteiro: marcas (SFX: ...) no texto têm botão sonoro direto na página para tocar na hora","Exibir › Ritmo dramático e curva de tensão: gráfico de ondas de tensão e detector de ganchos de intervalo comercial","Produção › Grade de exibição e comerciais: cálculo de minutagem de transmissão e quebras comerciais da emissora","Ferramentas › Matriz de conflitos e ideias: dilemas dramáticos e viradas de roteiro usando seu elenco","Ajuda › Tela de abertura: rever a tela de abertura e créditos a qualquer momento"]],
   ["6.0.0","O mundo inteiro",["Produção › Mapa do mundo: suba o mapa, espete os lugares da Bíblia e veja as cenas de cada um","Caminho do episódio: a rota das cenas desenhada no mapa","Exibir › Árvore de relações: gerações, casais e alianças a partir das fichas","Exibir › Voz dos personagens: como cada um fala, e quem fala parecido demais","Arquivo › Cartões de cena para imprimir, quatro por folha","Correções: o Mapa de caracteres voltou a abrir; Ctrl+Shift+F não abre mais o Localizar junto","Correções: Novo roteiro já começa em “próximo episódio”; janelas de um episódio fecham ao trocar de episódio","Correções: palavras de outra pessoa na sala não contam mais na sua meta; painel mais estável"]],
@@ -6478,9 +6501,673 @@ TIPS.push(
 );
 
 
-/* ---------- correções da 6.1.1 ---------- */
+/* ================================================================
+   SCRIPTROOM 6.1.2 — PRODUÇÃO EXECUTIVA E CONSULTORIA DRAMÁTICA
+   ================================================================ */
+Object.assign(ICON, {
+  budget: '<rect x="1.5" y="1.5" width="13" height="13" fill="#fff" stroke="#000"/><rect x="1.5" y="1.5" width="13" height="3" fill="#008000" stroke="#000"/><path d="M5 4.5v10M1.5 8h13M1.5 11.5h13" stroke="#C0C0C0"/><path d="M11 6.5H8.5v2H11v2H8.5M9.8 5.5v6.5" stroke="#006400" stroke-width="1.2" fill="none"/>',
+  slate: '<rect x="1.5" y="5.5" width="13" height="9" fill="#202020" stroke="#000"/><path d="M1.5 3.5h13v2h-13z" fill="#FFE000" stroke="#000"/><path d="M4 3.5l-1.5 2M8 3.5l-1.5 2M12 3.5l-1.5 2" stroke="#000" stroke-width="1.2"/><path d="M3.5 8h9M3.5 10.5h6M3.5 12.5h4" stroke="#fff"/>',
+  doctor: '<rect x="1.5" y="4.5" width="13" height="9" fill="#fff" stroke="#000"/><path d="M5.5 4.5v-2h5v2" fill="none" stroke="#000"/><path d="M8 6.5v5M5.5 9h5" stroke="#C00000" stroke-width="2"/>',
+  pitch: '<path d="M2.5 1.5h8l3 3v10h-11z" fill="#FFFFE1" stroke="#000"/><path d="M10.5 1.5v3h3" fill="#C0C0C0" stroke="#000"/><path d="M4.5 5.5h5M4.5 8h7M4.5 10.5h7M4.5 13h4" stroke="#000080"/><rect x="4.5" y="3.5" width="3" height="1" fill="#800000"/>'
+});
+
+/* ---------- 1. Orçamento e Custos de Produção (Produtores) ---------- */
+function orcamentoDialog() {
+  const sc = cur();
+  if (!sc) return;
+  const lay = layOk(sc);
+  const scenes = scenesOf(sc, lay.info).filter(x => x.n);
+  if (!scenes.length) {
+    toast("O roteiro ainda não tem cenas para orçar.");
+    return;
+  }
+
+  let moeda = prefs.orcMoeda || "BRL";
+  let suporte = prefs.orcSuporte || "beta";
+  let baseEstudio = +(prefs.orcBaseEst || 1200);
+  let baseExterna = +(prefs.orcBaseExt || 2400);
+  let baseAtor = +(prefs.orcBaseAtor || 350);
+
+  const MOEDAS = {
+    BRL: { s: "R$", nome: "R$ — Real (Plano Real 1995)", f: 1 },
+    USD: { s: "US$", nome: "US$ — Dólar Comercial (1995)", f: 1.08 },
+    URV: { s: "URV", nome: "URV — Unidade Real de Valor", f: 1 }
+  };
+
+  const SUPORTES = {
+    beta: { nome: "Fita Betacam SP 30 min (Estúdio TV)", custoMin: 28 },
+    pel16: { nome: "Película 16mm Kodak (Razão 4:1)", custoMin: 165 },
+    pel35: { nome: "Película 35mm Eastman (Razão 6:1)", custoMin: 420 }
+  };
+
+  function calcOrc() {
+    const M = MOEDAS[moeda] || MOEDAS.BRL;
+    const SUP = SUPORTES[suporte] || SUPORTES.beta;
+    const fmtM = v => `${M.s} ${Math.round(v * M.f).toLocaleString("pt-BR")}`;
+
+    let totLoc = 0, totElenco = 0, totArte = 0, totSuporte = 0;
+
+    const linhas = scenes.map(s => {
+      const hUp = String(s.h || "").toUpperCase();
+      const isExt = /^EXT\b|EXT\./.test(hUp);
+      const isNight = /NOITE|MADRUGADA|ANOITECER/.test(hUp);
+      const oitavos = eighthsN(s.lines, lay.lpp);
+      const durMin = Math.max(0.25, oitavos * 0.125);
+
+      // Custo de locação/estúdio proporcional aos oitavos (mínimo 2/8 de diária)
+      const fracDia = Math.max(0.25, oitavos / 32);
+      let cLoc = (isExt ? baseExterna : baseEstudio) * fracDia;
+      if (isNight) cLoc *= 1.35; // adicional noturno de equipe 35%
+
+      // Elenco + figuração
+      const nChars = s.chars ? s.chars.size : 0;
+      const fromIdx = sc.els.findIndex(e => e.t === "scene" && e.x === s.h);
+      let hasCrowd = false, sfxCount = 0, vfxCount = 0;
+      if (fromIdx >= 0) {
+        for (let k = fromIdx + 1; k < sc.els.length && sc.els[k].t !== "scene"; k++) {
+          const tx = sc.els[k].x || "";
+          if (/multidao|multidão|figurantes|plateia|festa|restaurante cheio|feira|transito|trânsito|policiais/i.test(tx)) hasCrowd = true;
+          if (sfxKeyFromText(tx)) sfxCount++;
+          if (/explosao|explosão|tiroteio|incendio|incêndio|chuva|tempestade|acidente|colisao|colisão/i.test(tx)) vfxCount++;
+        }
+      }
+      const cElenco = (nChars * baseAtor) + (hasCrowd ? baseAtor * 4.5 : 0);
+
+      // Arte, cenografia e efeitos
+      const bdCount = (sc.bd && sc.bd[s.id]) ? Object.values(sc.bd[s.id]).reduce((a, arr) => a + (Array.isArray(arr) ? arr.length : 0), 0) : 0;
+      const cArte = 180 + (bdCount * 110) + (sfxCount * 65) + (vfxCount * 650);
+
+      // Película / Fita
+      const cSup = durMin * SUP.custoMin;
+
+      const totalCena = cLoc + cElenco + cArte + cSup;
+      totLoc += cLoc;
+      totElenco += cElenco;
+      totArte += cArte;
+      totSuporte += cSup;
+
+      let risco = "baixo", riscoLbl = "ECONÔMICA";
+      if (totalCena >= (baseEstudio * 1.4) || vfxCount > 0 || (isExt && isNight)) {
+        risco = "alto"; riscoLbl = "ALTO CUSTO";
+      } else if (totalCena >= (baseEstudio * 0.75) || isExt || hasCrowd) {
+        risco = "med"; riscoLbl = "MÉDIO";
+      }
+
+      return {
+        id: s.id,
+        cena: s.label || s.n,
+        h: s.h,
+        isExt,
+        isNight,
+        oitavos,
+        nChars,
+        hasCrowd,
+        cLoc,
+        cElenco,
+        cArte,
+        cSup,
+        totalCena,
+        risco,
+        riscoLbl
+      };
+    });
+
+    const totalGeral = totLoc + totElenco + totArte + totSuporte;
+    return { M, SUP, fmtM, totLoc, totElenco, totArte, totSuporte, totalGeral, linhas };
+  }
+
+  function renderHTML() {
+    const D = calcOrc();
+    return `
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div class="row" style="background:var(--face,#C0C0C0);border:2px inset var(--face,#C0C0C0);padding:6px 8px;gap:10px;flex-wrap:wrap">
+          <label class="row">Moeda:
+            <select id="orc-moeda">
+              ${Object.entries(MOEDAS).map(([k, v]) => `<option value="${k}"${k === moeda ? " selected" : ""}>${escH(v.nome)}</option>`).join("")}
+            </select>
+          </label>
+          <label class="row">Captação:
+            <select id="orc-sup">
+              ${Object.entries(SUPORTES).map(([k, v]) => `<option value="${k}"${k === suporte ? " selected" : ""}>${escH(v.nome)}</option>`).join("")}
+            </select>
+          </label>
+          <label class="row">Estúdio: <input type="number" id="orc-est" value="${baseEstudio}" min="100" step="100" style="width:68px"></label>
+          <label class="row">Externa: <input type="number" id="orc-ext" value="${baseExterna}" min="100" step="100" style="width:68px"></label>
+          <label class="row">Cachê/Ator: <input type="number" id="orc-at" value="${baseAtor}" min="50" step="50" style="width:60px"></label>
+        </div>
+
+        <div class="orc-grid">
+          <div class="orc-box"><span>Total Estimado do Episódio</span><b>${D.fmtM(D.totalGeral)}</b><small class="muted">${D.linhas.length} cenas orçadas</small></div>
+          <div class="orc-box"><span>Estúdio & Locações (+Noturno)</span><b>${D.fmtM(D.totLoc)}</b><small class="muted">${Math.round((D.totLoc / Math.max(1, D.totalGeral)) * 100)}% do orçamento</small></div>
+          <div class="orc-box"><span>Elenco & Figuração</span><b>${D.fmtM(D.totElenco)}</b><small class="muted">${Math.round((D.totElenco / Math.max(1, D.totalGeral)) * 100)}% do orçamento</small></div>
+          <div class="orc-box"><span>Arte, Efeitos & Captação</span><b>${D.fmtM(D.totArte + D.totSuporte)}</b><small class="muted">${escH(D.SUP.nome.split(" (")[0])}</small></div>
+        </div>
+
+        <div class="listview" style="max-height:280px">
+          <table>
+            <thead>
+              <tr>
+                <th>Cena</th>
+                <th>Locação / Cabeçalho</th>
+                <th class="num">Pág.</th>
+                <th class="num">Elenco</th>
+                <th class="num">Locação</th>
+                <th class="num">Arte/Cap.</th>
+                <th class="num">Total</th>
+                <th>Faixa</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${D.linhas.map(l => `
+                <tr data-orcgo="${l.id}" style="cursor:pointer" title="Clique para abrir a Cena ${escH(l.cena)} no roteiro">
+                  <td><b>${escH(l.cena)}</b></td>
+                  <td>${escH(l.h)}</td>
+                  <td class="num">${e8(l.oitavos)}</td>
+                  <td class="num">${l.nChars}${l.hasCrowd ? "+Fig" : ""} (${D.fmtM(l.cElenco)})</td>
+                  <td class="num">${D.fmtM(l.cLoc)}</td>
+                  <td class="num">${D.fmtM(l.cArte + l.cSup)}</td>
+                  <td class="num"><b>${D.fmtM(l.totalCena)}</b></td>
+                  <td><span class="orc-tag ${l.risco}">${l.riscoLbl}</span></td>
+                </tr>
+              `).join("")}
+            </tbody>
+          </table>
+        </div>
+
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <span class="muted">Dica para produtores: clique numa cena de ALTO CUSTO para ir até ela e avaliar se pode passar de EXT. NOITE para INT. DIA.</span>
+          <button type="button" class="btn def sm" id="orc-csv">${icon("save", 14)} Exportar Planilha (.CSV)</button>
+        </div>
+      </div>
+    `;
+  }
+
+  dialog({
+    id: "orcWin",
+    title: `Orçamento e custos de produção — ${epCode(sc.meta)}`,
+    width: 820,
+    modal: false,
+    icon: "budget",
+    body: `<div id="orcRoot">${renderHTML()}</div>`,
+    onOpen: (w) => {
+      function refresh() {
+        w.querySelector("#orcRoot").innerHTML = renderHTML();
+        bind();
+      }
+      function bind() {
+        const up = () => {
+          moeda = w.querySelector("#orc-moeda").value;
+          suporte = w.querySelector("#orc-sup").value;
+          baseEstudio = Math.max(50, +w.querySelector("#orc-est").value || 1200);
+          baseExterna = Math.max(50, +w.querySelector("#orc-ext").value || 2400);
+          baseAtor = Math.max(20, +w.querySelector("#orc-at").value || 350);
+          prefs.orcMoeda = moeda;
+          prefs.orcSuporte = suporte;
+          prefs.orcBaseEst = baseEstudio;
+          prefs.orcBaseExt = baseExterna;
+          prefs.orcBaseAtor = baseAtor;
+          savePrefs();
+          refresh();
+        };
+        w.querySelectorAll("#orc-moeda, #orc-sup, #orc-est, #orc-ext, #orc-at").forEach(el => {
+          el.onchange = up;
+        });
+        w.querySelectorAll("[data-orcgo]").forEach(tr => {
+          tr.onclick = () => {
+            if (S.view !== "page") setMode("page");
+            gotoEl(tr.dataset.orcgo);
+          };
+        });
+        const bCsv = w.querySelector("#orc-csv");
+        if (bCsv) bCsv.onclick = () => {
+          const D = calcOrc();
+          const head = "Cena;Cabecalho;Oitavos;Atores;Locacao;Elenco;Arte_Efeitos;Captacao;Total;Classificacao\n";
+          const bodyCsv = D.linhas.map(l =>
+            `${l.cena};"${String(l.h).replace(/"/g, '""')}";"${e8(l.oitavos)}";${l.nChars};${Math.round(l.cLoc * D.M.f)};${Math.round(l.cElenco * D.M.f)};${Math.round(l.cArte * D.M.f)};${Math.round(l.cSup * D.M.f)};${Math.round(l.totalCena * D.M.f)};${l.riscoLbl}`
+          ).join("\n");
+          offer(fileName(sc).replace(/\.docx$/, "_orcamento_1995.csv"), new Blob(["\uFEFF" + head + bodyCsv], { type: "text/csv;charset=utf-8" }));
+          toast("Planilha orçamentária (.CSV) exportada!");
+        };
+      }
+      bind();
+    }
+  });
+}
+
+/* ---------- 2. Claquete Virtual & Boletim de Câmera e Continuidade (Produtores / Direção) ---------- */
+function boletimCamDialog() {
+  const sc = cur();
+  if (!sc) return;
+  const lay = layOk(sc);
+  const scenes = scenesOf(sc, lay.info).filter(x => x.n);
+  if (!sc.camLogs) sc.camLogs = [];
+
+  let selCena = scenes.length ? String(scenes[0].label || scenes[0].n) : "1";
+  let rolo = "ROLO 01";
+  let take = 1;
+  let lente = "35mm";
+  let status = "BOA (PRINT)";
+  let obs = "";
+
+  function playClapSound() {
+    const ac = getFoleyAC();
+    if (!ac) return;
+    const t = ac.currentTime;
+    const sz = Math.floor(ac.sampleRate * 0.09);
+    const buf = ac.createBuffer(1, sz, ac.sampleRate);
+    const d = buf.getChannelData(0);
+    for (let i = 0; i < sz; i++) d[i] = (Math.random() * 2 - 1) * Math.exp(-i / (ac.sampleRate * 0.015));
+    const src = ac.createBufferSource();
+    src.buffer = buf;
+    const flt = ac.createBiquadFilter();
+    flt.type = "bandpass";
+    flt.frequency.value = 1850;
+    flt.Q.value = 2.2;
+    const g = ac.createGain();
+    g.gain.setValueAtTime(0.95, t);
+    g.gain.exponentialRampToValueAtTime(0.01, t + 0.085);
+    src.connect(flt); flt.connect(g); g.connect(ac.destination);
+    src.start(t);
+  }
+
+  function renderHTML() {
+    const logs = sc.camLogs || [];
+    const boas = logs.filter(x => x.status.startsWith("BOA")).length;
+    return `
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div class="slate95">
+          <div class="slate95-top" id="sl-bar"></div>
+          <div class="slate95-body">
+            <div class="slate95-cell"><small>PRODUÇÃO / SÉRIE</small><b>${escH(sc.meta.serie || "C2")} · ${escH(epCode(sc.meta))}</b></div>
+            <div class="slate95-cell"><small>CENA / PLANO</small><b id="sl-disp-sc">CENA ${escH(selCena)}</b></div>
+            <div class="slate95-cell"><small>TOMADA (TAKE)</small><b id="sl-disp-tk">TAKE ${pad2(take)}</b></div>
+            <div class="slate95-cell"><small>ROLO / FITA</small><b>${escH(rolo)}</b></div>
+            <div class="slate95-cell"><small>LENTE ÓPTICA</small><b>${escH(lente)}</b></div>
+            <div class="slate95-cell"><small>DATA DE GRAVAÇÃO</small><b>${new Date().toLocaleDateString("pt-BR")}</b></div>
+          </div>
+        </div>
+
+        <div class="row" style="background:var(--face,#C0C0C0);border:2px inset var(--face,#C0C0C0);padding:6px 8px;gap:8px;flex-wrap:wrap">
+          <label class="row">Cena:
+            <select id="sl-sc">
+              ${scenes.map(s => {
+                const lb = String(s.label || s.n);
+                return `<option value="${escH(lb)}"${lb === selCena ? " selected" : ""}>Cena ${escH(lb)} — ${escH(s.h.slice(0, 28))}</option>`;
+              }).join("")}
+            </select>
+          </label>
+          <label class="row">Rolo: <input type="text" id="sl-rolo" value="${escH(rolo)}" style="width:76px"></label>
+          <label class="row">Take: <input type="number" id="sl-take" value="${take}" min="1" max="99" style="width:48px"></label>
+          <label class="row">Lente:
+            <select id="sl-lente">
+              ${["18mm", "24mm", "28mm", "35mm", "50mm", "85mm", "135mm", "Zoom"].map(l => `<option${l === lente ? " selected" : ""}>${l}</option>`).join("")}
+            </select>
+          </label>
+          <label class="row">Avaliação:
+            <select id="sl-st">
+              ${["BOA (PRINT)", "RESERVA (HOLD)", "FALSA (NG)"].map(s => `<option${s === status ? " selected" : ""}>${s}</option>`).join("")}
+            </select>
+          </label>
+        </div>
+
+        <div class="row">
+          <input type="text" id="sl-obs" placeholder="Observação de continuidade (ex: microfone no quadro, ator entrou pela direita, ótima interpretação)..." value="${escH(obs)}" style="flex:1">
+          <button type="button" class="btn def" id="sl-clap">${icon("clapper", 14)} Bater Claquete & Registrar Take</button>
+        </div>
+
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <b>Boletim de Câmera e Continuidade (${logs.length} tomadas · ${boas} boas para montagem)</b>
+          <div class="row">
+            <button type="button" class="btn sm" id="sl-clear">Limpar Boletim</button>
+            <button type="button" class="btn sm" id="sl-csv">${icon("save", 14)} Exportar Boletim (.CSV)</button>
+          </div>
+        </div>
+
+        <div class="listview" style="max-height:210px">
+          <table>
+            <thead>
+              <tr>
+                <th>Rolo</th>
+                <th>Cena</th>
+                <th class="num">Take</th>
+                <th>Lente</th>
+                <th>Status</th>
+                <th>Observações de Continuidade / Montagem</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              ${logs.length ? logs.map((lg, idx) => `
+                <tr>
+                  <td>${escH(lg.rolo)}</td>
+                  <td><b>Cena ${escH(lg.cena)}</b></td>
+                  <td class="num"><b>#${lg.take}</b></td>
+                  <td>${escH(lg.lente)}</td>
+                  <td><span class="orc-tag ${lg.status.startsWith("BOA") ? "baixo" : (lg.status.startsWith("RESERVA") ? "med" : "alto")}">${escH(lg.status)}</span></td>
+                  <td>${escH(lg.obs || "—")}</td>
+                  <td class="num"><button type="button" class="btn sm" data-sldel="${idx}">×</button></td>
+                </tr>
+              `).join("") : `<tr><td colspan="7" class="muted">Nenhuma tomada registrada ainda. Escolha a cena acima e clique em “Bater Claquete & Registrar Take”.</td></tr>`}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    `;
+  }
+
+  dialog({
+    id: "camRepWin",
+    title: `Claquete e boletim de câmera — ${epCode(sc.meta)}`,
+    width: 780,
+    modal: false,
+    icon: "slate",
+    body: `<div id="camRepRoot">${renderHTML()}</div>`,
+    onOpen: (w) => {
+      function refresh() {
+        w.querySelector("#camRepRoot").innerHTML = renderHTML();
+        bind();
+      }
+      function bind() {
+        w.querySelector("#sl-sc").onchange = e => { selCena = e.target.value; take = 1; refresh(); };
+        w.querySelector("#sl-rolo").oninput = e => { rolo = e.target.value; };
+        w.querySelector("#sl-take").oninput = e => { take = Math.max(1, +e.target.value || 1); };
+        w.querySelector("#sl-lente").onchange = e => { lente = e.target.value; };
+        w.querySelector("#sl-st").onchange = e => { status = e.target.value; };
+        w.querySelector("#sl-obs").oninput = e => { obs = e.target.value; };
+
+        w.querySelector("#sl-clap").onclick = () => {
+          rolo = w.querySelector("#sl-rolo").value.trim() || "ROLO 01";
+          take = Math.max(1, +w.querySelector("#sl-take").value || 1);
+          lente = w.querySelector("#sl-lente").value;
+          status = w.querySelector("#sl-st").value;
+          obs = w.querySelector("#sl-obs").value.trim();
+
+          const bar = w.querySelector("#sl-bar");
+          if (bar) bar.classList.add("clap");
+          playClapSound();
+
+          setTimeout(() => {
+            sc.camLogs.push({ rolo, cena: selCena, take, lente, status, obs, ts: Date.now() });
+            take++;
+            obs = "";
+            touch(false);
+            refresh();
+            toast(`Cena ${selCena} · Take ${take - 1} registrado no boletim!`);
+          }, 110);
+        };
+
+        w.querySelectorAll("[data-sldel]").forEach(b => {
+          b.onclick = () => {
+            sc.camLogs.splice(+b.dataset.sldel, 1);
+            touch(false);
+            refresh();
+          };
+        });
+
+        w.querySelector("#sl-clear").onclick = () => {
+          if (!sc.camLogs.length) return;
+          sc.camLogs = [];
+          touch(false);
+          refresh();
+        };
+
+        w.querySelector("#sl-csv").onclick = () => {
+          if (!sc.camLogs.length) { toast("Nenhum take registrado para exportar."); return; }
+          const head = "Rolo;Cena;Take;Lente;Status;Observacoes\n";
+          const rows = sc.camLogs.map(l => `"${l.rolo}";"${l.cena}";${l.take};"${l.lente}";"${l.status}";"${String(l.obs || "").replace(/"/g, '""')}"`).join("\n");
+          offer(fileName(sc).replace(/\.docx$/, "_boletim_camera.csv"), new Blob(["\uFEFF" + head + rows], { type: "text/csv;charset=utf-8" }));
+          toast("Boletim de câmera exportado em .CSV!");
+        };
+      }
+      bind();
+    }
+  });
+}
+
+/* ---------- 3. Consultor Dramatúrgico — Doutor de Roteiro (Roteiristas) ---------- */
+function doutorDialog() {
+  const sc = cur();
+  if (!sc) return;
+  const lay = layOk(sc);
+  const issues = [];
+  let curScene = "Início";
+  let dialStreak = 0;
+  let StreakStartId = null;
+
+  const naoFilmavel = /\b(pensa que|lembra de quando|sente no fundo|imagina como seria|sabe no íntimo|reflete sobre a vida|tem a sensação de que)\b/i;
+  const exposicaoForcada = /\b(como você bem sabe|como você já sabe|você sabe muito bem que eu sou seu|desde que nossos pais morreram há)\b/i;
+
+  sc.els.forEach((e, i) => {
+    const words = (e.x.match(/\S+/g) || []).length;
+    if (e.t === "scene") {
+      curScene = `Cena ${lay.info[i].label || lay.info[i].num || "?"}`;
+      dialStreak = 0;
+      if (!/\b(INT\.|EXT\.|INT\/EXT)/i.test(e.x)) {
+        issues.push({ sev: "warn", cat: "Cabeçalho Incompleto", local: curScene, msg: `Falta indicar INT. ou EXT. em “${e.x.slice(0, 45)}”.`, id: e.id });
+      }
+      if (!/\b(DIA|NOITE|MANHÃ|TARDE|AMANHECER|ANOITECER|MADRUGADA|CONTÍNUO|MESMO)/i.test(e.x)) {
+        issues.push({ sev: "info", cat: "Luz não indicada", local: curScene, msg: `Cabeçalho sem período de luz (DIA/NOITE): “${e.x.slice(0, 45)}”.`, id: e.id });
+      }
+    } else if (e.t === "dialogue") {
+      dialStreak++;
+      if (dialStreak === 1) StreakStartId = e.id;
+      if (dialStreak === 10) {
+        issues.push({ sev: "warn", cat: "Cabeças Falantes (Talking Heads)", local: curScene, msg: "10 falas seguidas sem nenhuma ação física ou rubrica de cena. Intercale reação ou movimento.", id: StreakStartId });
+      }
+      if (words > 48) {
+        issues.push({ sev: "warn", cat: "Muro de Diálogo (Monólogo Longo)", local: curScene, msg: `Fala com ${words} palavras (~${Math.round(words / 2.5)}s). Na TV, considere quebrar com ação ou reação do interlocutor.`, id: e.id });
+      }
+      if (exposicaoForcada.test(e.x)) {
+        issues.push({ sev: "err", cat: "Exposição Artificial (On-the-Nose)", local: curScene, msg: `Diálogo expositivo detectado (“${e.x.slice(0, 50)}…”). Mostre pela ação ou subtexto.`, id: e.id });
+      }
+    } else if (e.t === "action") {
+      dialStreak = 0;
+      if (words > 55) {
+        issues.push({ sev: "warn", cat: "Bloco de Ação Denso", local: curScene, msg: `Parágrafo de ação com ${words} palavras (${lay.info[i].lines} linhas). Quebre em planos menores para facilitar a leitura do diretor.`, id: e.id });
+      }
+      if (naoFilmavel.test(e.x)) {
+        issues.push({ sev: "err", cat: "Ação Interna Não Filmável", local: curScene, msg: `Evite verbos mentais na ação (“${e.x.slice(0, 55)}…”). Escreva o que a câmera vê e o microfone ouve.`, id: e.id });
+      }
+    }
+  });
+
+  // Checa personagens que só têm 1 fala no episódio inteiro
+  const charCounts = new Map();
+  sc.els.forEach(e => {
+    if (e.t === "character") {
+      const bn = baseName(e.x);
+      const prev = charCounts.get(bn) || { n: 0, id: e.id };
+      prev.n++;
+      charCounts.set(bn, prev);
+    }
+  });
+  for (const [nm, obj] of charCounts.entries()) {
+    if (obj.n === 1 && nm.length > 2) {
+      issues.push({ sev: "info", cat: "Fala Única (Custo de Cachê)", local: nm, msg: `O personagem ${nm} tem apenas 1 fala no episódio inteiro. Vale avaliar se a fala pode ir para outro personagem ou virar reação muda.`, id: obj.id });
+    }
+  }
+
+  const nota = Math.max(35, Math.min(100, 100 - issues.filter(x => x.sev === "err").length * 8 - issues.filter(x => x.sev === "warn").length * 4 - issues.filter(x => x.sev === "info").length * 1));
+  let veredito = "Roteiro enxuto, visual e pronto para gravação!";
+  if (nota < 70) veredito = "Roteiro precisa de enxugamento de diálogos e mais ação visual.";
+  else if (nota < 88) veredito = "Bom ritmo geral; pequenos ajustes de carpintaria deixam o texto afiado.";
+
+  const body = `
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <div class="doc-score">
+        <div class="doc-num">${nota}</div>
+        <div>
+          <b style="font-size:13px;color:#000080">Laudo do Doutor de Roteiro: ${escH(veredito)}</b>
+          <div class="muted" style="margin-top:2px">Encontrados: <b>${issues.length}</b> pontos de atenção em ${scenesOf(sc, lay.info).filter(x => x.n).length} cenas analisadas. Clique em qualquer linha para saltar até o trecho na página.</div>
+        </div>
+      </div>
+
+      <div class="listview" style="max-height:320px">
+        <table>
+          <thead>
+            <tr>
+              <th style="width:75px">Nível</th>
+              <th style="width:170px">Diagnóstico</th>
+              <th style="width:90px">Onde</th>
+              <th>Recomendação de Reescrita</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${issues.length ? issues.map(it => `
+              <tr data-docgo="${it.id}" style="cursor:pointer" title="Clique para saltar até este elemento no roteiro">
+                <td><span class="orc-tag ${it.sev === "err" ? "alto" : (it.sev === "warn" ? "med" : "baixo")}">${it.sev === "err" ? "CRÍTICO" : (it.sev === "warn" ? "ATENÇÃO" : "DICA")}</span></td>
+                <td><b>${escH(it.cat)}</b></td>
+                <td>${escH(it.local)}</td>
+                <td>${escH(it.msg)}</td>
+              </tr>
+            `).join("") : `<tr><td colspan="4" class="muted">Nenhum vício de linguagem, muro de diálogo ou problema técnico detectado. Parabéns!</td></tr>`}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  `;
+
+  dialog({
+    id: "docWin",
+    title: `Doutor de roteiro (Consultoria Dramática) — ${epCode(sc.meta)}`,
+    width: 780,
+    modal: false,
+    icon: "doctor",
+    body,
+    buttons: [{ label: "Fechar", def: 1 }],
+    onOpen: (w) => {
+      w.querySelectorAll("[data-docgo]").forEach(tr => {
+        tr.onclick = () => {
+          if (S.view !== "page") setMode("page");
+          gotoEl(tr.dataset.docgo);
+        };
+      });
+    }
+  });
+}
+
+/* ---------- 4. Gerador de Sinopse Executiva, Pitch e Escaleta (Roteiristas & Produtores) ---------- */
+function pitchDialog() {
+  const sc = cur();
+  if (!sc) return;
+  const lay = layOk(sc);
+  const scenes = scenesOf(sc, lay.info).filter(x => x.n);
+
+  // Ranking de personagens por número de falas
+  const charCount = new Map();
+  sc.els.forEach(e => {
+    if (e.t === "character") {
+      const n = baseName(e.x);
+      charCount.set(n, (charCount.get(n) || 0) + 1);
+    }
+  });
+  const topChars = [...charCount.entries()].sort((a, b) => b[1] - a[1]).map(x => x[0]);
+  const protag = topChars[0] || "O PROTAGONISTA";
+  const coProtag = topChars[1] || "SEU ALIADO";
+  const antag = topChars[2] || "O ANTAGONISTA";
+
+  const locs = [...new Set(scenes.map(s => locParse(s.h).loc).filter(Boolean))].slice(0, 3);
+  const firstSyn = scenes[0] ? (scenes[0].syn || scenes[0].first || scenes[0].h) : "";
+  const lastSyn = scenes[scenes.length - 1] ? (scenes[scenes.length - 1].syn || scenes[scenes.length - 1].first || scenes[scenes.length - 1].h) : "";
+
+  const logline = sc.meta.logline || `Em "${sc.meta.titulo}", ${protag} e ${coProtag} enfrentam uma situação limite nos cenários de ${locs.join(", ") || "estúdio"}, enquanto ${antag} pressiona o conflito até o clímax final.`;
+  const sinopseTV = `${sc.meta.serie} (${epCode(sc.meta)}): ${protag} se vê diante de um impasse decisivo (${firstSyn.slice(0, 80)}). Com participação de ${topChars.slice(0, 4).join(", ")}.`;
+
+  const escaletaTxt = scenes.map(s => {
+    const chs = [...(s.chars || [])].join(", ") || "Sem diálogo";
+    return `CENA ${String(s.label || s.n).padEnd(4, " ")} | ${s.h} (${e8(eighthsN(s.lines, lay.lpp))} pág.)\n         Elenco: ${chs}\n         Ação: ${s.syn || s.first || "—"}`;
+  }).join("\n\n");
+
+  const arcosTxt = topChars.slice(0, 6).map(c => {
+    const cScenes = scenes.filter(s => s.chars && s.chars.has(c));
+    const p1 = cScenes[0] ? `Cena ${cScenes[0].label || cScenes[0].n} (${cScenes[0].h})` : "—";
+    const p2 = cScenes[cScenes.length - 1] ? `Cena ${cScenes[cScenes.length - 1].label || cScenes[cScenes.length - 1].n} (${cScenes[cScenes.length - 1].h})` : "—";
+    return `* ${c} (${charCount.get(c)} falas em ${cScenes.length} cenas):\n  Entrada: ${p1}\n  Saída:   ${p2}`;
+  }).join("\n\n");
+
+  const docCompleto = [
+    `====================================================================`,
+    `DOSSIÊ EXECUTIVO DE PITCH & ESCALETA — ${String(sc.meta.serie || "").toUpperCase()}`,
+    `Episódio: ${epCode(sc.meta)} — "${sc.meta.titulo}"`,
+    `Estreia prevista: ${sc.meta.estreia || "—"} · Canal: ${sc.meta.canal || "C2"}`,
+    `====================================================================`,
+    ``,
+    `1. LOGLINE EXECUTIVA (APRESENTAÇÃO PARA EMISSORA)`,
+    `${logline}`,
+    ``,
+    `2. SINOPSE CURTA PARA IMPRENSA / GUIA DE TV (1995)`,
+    `${sinopseTV}`,
+    ``,
+    `3. ARCO DOS PERSONAGENS PRINCIPAIS NESTE EPISÓDIO`,
+    `${arcosTxt || "Nenhum personagem com falas ainda."}`,
+    ``,
+    `4. ESCALETA TÉCNICA NUMERADA (${scenes.length} CENAS · ${lay.pages} PÁGINAS)`,
+    `${escaletaTxt || "Nenhuma cena cadastrada."}`
+  ].join("\n");
+
+  const body = `
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <div class="row" style="justify-content:space-between">
+        <span class="muted">Documento gerado automaticamente a partir das cenas, cabeçalhos e diálogos do roteiro aberto:</span>
+        <div class="row">
+          <button type="button" class="btn sm" id="pt-notas">${icon("note", 14)} Enviar para o Bloco de Notas</button>
+          <button type="button" class="btn def sm" id="pt-txt">${icon("save", 14)} Baixar Dossiê (.TXT)</button>
+        </div>
+      </div>
+      <div class="pitch-box" id="pt-box">${escH(docCompleto)}</div>
+    </div>
+  `;
+
+  dialog({
+    id: "pitchWin",
+    title: `Sinopse executiva, pitch e escaleta — ${epCode(sc.meta)}`,
+    width: 740,
+    modal: false,
+    icon: "pitch",
+    body,
+    buttons: [{ label: "Fechar", def: 1 }],
+    onOpen: (w) => {
+      w.querySelector("#pt-notas").onclick = () => {
+        prefs.notepad = (prefs.notepad ? prefs.notepad + "\n\n" : "") + docCompleto;
+        savePrefs();
+        toast("Dossiê de Pitch copiado para o Bloco de Notas da sala!");
+      };
+      w.querySelector("#pt-txt").onclick = () => {
+        offer(fileName(sc).replace(/\.docx$/, "_pitch_escaleta.txt"), new Blob([docCompleto], { type: "text/plain;charset=utf-8" }));
+        toast("Dossiê executivo (.TXT) exportado!");
+      };
+    }
+  });
+}
+
+/* ---------- comandos e menus da 6.1.2 ---------- */
+Object.assign(CMD, {
+  orcamento: { label: "Orçamento e custos de produção…", icon: "budget", needs: 1, run: () => orcamentoDialog() },
+  boletimCam: { label: "Claquete e boletim de câmera…", icon: "slate", needs: 1, run: () => boletimCamDialog() },
+  doutor: { label: "Doutor de roteiro (diagnóstico)…", icon: "doctor", needs: 1, run: () => doutorDialog() },
+  pitch: { label: "Sinopse executiva, pitch e escaleta…", icon: "pitch", needs: 1, run: () => pitchDialog() }
+});
+
+{
+  const pr = MENUS.find(m => m[0] === "Produção")[2];
+  pr.splice(pr.indexOf("multicam") + 1, 0, "orcamento", "boletimCam");
+}
+{
+  const fe = MENUS.find(m => m[0] === "Ferramentas")[2];
+  fe.splice(fe.indexOf("conflitos") + 1, 0, "doutor", "pitch");
+}
+
+TIPS.push(
+  "Produção › Orçamento e custos de produção: calcula quanto custa cada cena em R$ (Plano Real), US$ ou URV e aponta cenas de alto custo.",
+  "Produção › Claquete e boletim de câmera: bata a claquete sonora no estúdio e anote quais takes valem para a montagem.",
+  "Ferramentas › Doutor de roteiro: dá uma nota de 0 a 100 para o roteiro e localiza muros de diálogo, ação não filmável e cabeças falantes.",
+  "Ferramentas › Sinopse executiva, pitch e escaleta: monta o dossiê de venda do episódio com logline, guia de TV e escaleta completa."
+);
+
+
+/* ---------- correções da 6.1.1 / 6.1.2 ---------- */
 /* janelas que mostram um episódio só fecham quando você troca de episódio (senão mostrariam o anterior) */
-const JAN_EP=["stWin","tpWin","vozWin","netWin","bdWin","revWin","ritmoWin","gradeWin","mcWin","ccWin","tapeWin"],JAN_SERIE=["plWin","bibWin","mapWin","relWin"];
+const JAN_EP=["stWin","tpWin","vozWin","netWin","bdWin","revWin","ritmoWin","gradeWin","mcWin","ccWin","tapeWin","orcWin","camRepWin","docWin","pitchWin"],JAN_SERIE=["plWin","bibWin","mapWin","relWin"];
 const _openEp18=openEp;openEp=function(id,k){const antes=cur();_openEp18(id,k);const agora=cur();if(!antes||antes===agora)return;
   const fecha=ids=>ids.forEach(i=>{const w=document.getElementById(i);if(w&&w._close)try{w._close();}catch(e){}});fecha(JAN_EP);if(!agora||antes.meta.serieId!==agora.meta.serieId)fecha(JAN_SERIE);};
 /* palavras que chegam de outra pessoa (sala ao vivo, sala na rede) não contam na sua meta nem no diário */
