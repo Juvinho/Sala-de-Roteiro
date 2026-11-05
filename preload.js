@@ -10,6 +10,7 @@ contextBridge.exposeInMainWorld("salaNative", {
   close: () => ipcRenderer.invoke("win:close"),
   openWindow: (id) => ipcRenderer.invoke("win:open", id),
   sendToMain: (type, payload) => ipcRenderer.invoke("app:send", type, payload),
+  sendTo: (alvo, type, payload) => ipcRenderer.invoke("app:sendTo", alvo, type, payload),
   openDataFolder: () => ipcRenderer.invoke("app:openData"),
   version: () => ipcRenderer.invoke("app:version"),
   trashList: () => ipcRenderer.invoke("trash:list"),

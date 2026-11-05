@@ -15,10 +15,12 @@ const ACESSORIOS = {
   calc: { width: 320, height: 470, resizable: false },
   crono: { width: 380, height: 500, resizable: true },
   mapa: { width: 470, height: 440, resizable: true },
+  localizar: { width: 440, height: 250, resizable: false, filha: true },
 };
 let DATA = "";
 let win = null;
 const ferramentas = new Map();
+const idDe = (wc) => { if (win && wc === win.webContents) return "main"; for (const [id, w] of ferramentas) if (!w.isDestroyed() && w.webContents === wc) return id; return ""; };
 
 function pastaDados() {
   DATA = path.join(app.getPath("documents"), "Sala de Roteiro 95");
@@ -114,25 +116,32 @@ const janelaDe = (e) => BrowserWindow.fromWebContents(e.sender);
 ipcMain.handle("win:min", (e) => { const w = janelaDe(e); if (w) w.minimize(); });
 ipcMain.handle("win:max", (e) => { const w = janelaDe(e); if (w) w.isMaximized() ? w.unmaximize() : w.maximize(); });
 ipcMain.handle("win:close", (e) => { const w = janelaDe(e); if (w) w.close(); });
-ipcMain.handle("win:open", (_e, id) => {
+ipcMain.handle("win:open", (e, id) => {
   const cfg = ACESSORIOS[id];
+  const dono = idDe(e.sender);
   if (!cfg) throw new Error("acessório desconhecido");
   const aberta = ferramentas.get(id);
   if (aberta && !aberta.isDestroyed()) { if (aberta.isMinimized()) aberta.restore(); aberta.focus(); return true; }
   const w = new BrowserWindow({
-    width: cfg.width, height: cfg.height, minWidth: 260, minHeight: 240, resizable: cfg.resizable, maximizable: false,
+    width: cfg.width, height: cfg.height, minWidth: 260, minHeight: 200, resizable: cfg.resizable, maximizable: false,
+    parent: cfg.filha ? BrowserWindow.fromWebContents(e.sender) || undefined : undefined, skipTaskbar: !!cfg.filha,
     frame: false, show: false, backgroundColor: "#C0C0C0", icon: path.join(__dirname, "build", "icon.png"),
     webPreferences: { preload: path.join(__dirname, "preload.js"), contextIsolation: true, nodeIntegration: false, sandbox: true, spellcheck: true },
   });
   protegerNavegacao(w);
   w.once("ready-to-show", () => w.show());
   w.on("closed", () => ferramentas.delete(id));
-  w.loadFile(path.join(__dirname, "app", "index.html"), { query: { janela: id } });
+  w.loadFile(path.join(__dirname, "app", "index.html"), { query: { janela: id, dono } });
   ferramentas.set(id, w);
   return true;
 });
 ipcMain.handle("app:send", (e, type, payload) => {
   if (win && !win.isDestroyed() && e.sender !== win.webContents) win.webContents.send("app:message", { type, payload });
+});
+// recado de uma janela para outra (ex.: Localizar → Bloco de notas)
+ipcMain.handle("app:sendTo", (e, alvo, type, payload) => {
+  const w = alvo === "main" ? win : ferramentas.get(alvo);
+  if (w && !w.isDestroyed()) w.webContents.send("app:message", { type, payload, from: idDe(e.sender) });
 });
 ipcMain.handle("app:openData", () => shell.openPath(DATA));
 ipcMain.handle("app:version", () => app.getVersion());

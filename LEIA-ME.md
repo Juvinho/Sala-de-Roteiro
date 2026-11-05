@@ -49,7 +49,7 @@ npm run instalador
 Quando terminar, o instalador estará em:
 
 ```
-dist\SETUP_SALA95_4.2.0.exe
+dist\SETUP_SALA95_4.3.0.exe
 ```
 
 Dê dois cliques nele e siga o assistente: **Avançar › Aceito › Avançar › Instalar › Concluir**.
@@ -62,12 +62,25 @@ No VS Code também dá para usar **Terminal › Run Task…**, que lista as quat
 
 ---
 
+## Página, margens e PDF
+
+- **Régua:** arraste os quadradinhos das pontas para mudar as margens da página e os triângulos
+  (azul e vermelho) para mudar o recuo do elemento em que o cursor está: personagem, fala ou
+  rubrica. Dois cliques na régua abrem a janela de página.
+- **Formatar › Página e margens…** traz seis modelos com prévia: Padrão da Sala, Roteiro
+  americano, Papel ofício, Novela brasileira, Radionovela e Rascunho econômico. Vale para a
+  série inteira ou só para um roteiro, e mostra quantas páginas o roteiro teria.
+- **Arquivo › Exportar PDF** gera o roteiro paginado com folha de rosto e número de página,
+  usando as mesmas margens. **Exportar escaleta** gera a lista de cenas com sinopse em .docx.
+
 ## Acessórios em janelas próprias
 
 No programa instalado, estes acessórios abrem como janelas separadas do Windows: dá para arrastar
 para fora da janela principal, levar para outro monitor, e cada um aparece na barra de tarefas.
 
-- **Bloco de notas** (F5 põe data e hora, Localizar, quebra automática de linha)
+- **Bloco de notas** (F5 põe data e hora, quebra automática de linha). **Localizar e
+  substituir** (Ctrl+F, F3 para a próxima) abre numa janela própria, que você pode arrastar
+  para qualquer lugar da tela
 - **Calculadora de minutagem**: entende `2:45 × 12`, `55:30 − 48:10`, `1:02:00 ÷ 4`
 - **Cronômetro da leitura**: espaço inicia, L marca o fim de cada cena
 - **Mapa de caracteres**: ë, ö, —, “ ” e companhia, inseridos onde o cursor estava no roteiro

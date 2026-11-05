@@ -1,7 +1,7 @@
 {
   "name": "sala-de-roteiro-95",
   "productName": "Sala de Roteiro 95",
-  "version": "4.2.0",
+  "version": "4.3.0",
   "description": "Editor de roteiros de TV com cara de 1995, para qualquer série: drama, novela, comédia, policial, radionovela e mais.",
   "main": "main.js",
   "author": "Departamento de Dramaturgia",
@@ -67,12 +67,12 @@
     },
     "publish": {
       "provider": "github",
-      "owner": "juvinho",
-      "repo": "sala-de-roteiro",
+      "owner": "SEU-USUARIO",
+      "repo": "sala-de-roteiro-95",
       "releaseType": "release"
     }
   },
-  "repository": "https://github.com/juvinho/sala-de-roteiro",
+  "repository": "https://github.com/SEU-USUARIO/sala-de-roteiro-95",
   "dependencies": {
     "electron-updater": "6.3.9"
   }

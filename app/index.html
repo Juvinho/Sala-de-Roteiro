@@ -429,6 +429,34 @@ body.tool{overflow:hidden}
 .toolbody .acc-root{flex:1}
 .toolbody .nptext{min-height:0}
 @media (prefers-reduced-motion:reduce){.prog.marquee i{animation:none}}
+
+/* ---------- página e margens ---------- */
+.ruler{width:calc(var(--pw,210)*1mm);position:sticky;top:0;z-index:5;box-shadow:inset -1px -1px #fff,inset 1px 1px #808080,0 2px 0 rgba(0,0,0,.25)}
+.ruler .area{left:calc(var(--ml,38.1)*1mm);right:calc(var(--mr,25.4)*1mm)}
+.ruler .mk{border:0;width:12px;height:9px;background:#000080;clip-path:polygon(50% 0,100% 100%,0 100%);cursor:ew-resize;bottom:0;touch-action:none}
+.ruler .mk.r{background:#800000}
+.ruler .hd{position:absolute;top:2px;width:7px;height:17px;transform:translateX(-50%);background:#C0C0C0;cursor:ew-resize;touch-action:none;
+  box-shadow:inset -1px -1px #000,inset 1px 1px #fff,inset -2px -2px #808080}
+.ruler .rtip{position:absolute;top:0;z-index:3;background:#FFFFE1;color:#000;border:1px solid #000;padding:1px 5px;font:11px Tahoma,Arial,sans-serif;white-space:nowrap;pointer-events:none}
+.sheet{width:calc(var(--pw,210)*1mm);padding:calc(var(--mt,25.4)*1mm) calc(var(--mr,25.4)*1mm) calc(var(--mb,25.4)*1mm) calc(var(--ml,38.1)*1mm)}
+.tp{min-height:calc((var(--ph,297) - var(--mt,25.4) - var(--mb,25.4))*1mm)}
+.pgd{margin:14pt calc(var(--mr,25.4)*-1mm) 14pt calc(var(--ml,38.1)*-1mm)}
+.pgd span{right:calc(var(--mr,25.4)*1mm)}
+.e-character{margin-left:calc(var(--ic,50.8)*1mm)}
+.e-paren{margin:0 calc(var(--ipr,38.1)*1mm) 0 calc(var(--ipl,38.1)*1mm)}
+.e-dialogue{margin:0 calc(var(--idr,25.4)*1mm) 0 calc(var(--idl,25.4)*1mm)}
+.pgsetup{display:grid;grid-template-columns:200px minmax(0,1fr) 210px;gap:12px;align-items:start}
+.pglist{max-height:420px;padding:2px}
+.pgopt{padding:6px 7px;cursor:default;border-bottom:1px dotted var(--light)}
+.pgopt small{display:block;color:var(--muted);margin-top:2px}
+.pgopt.sel{background:var(--sel);color:var(--seltext)}.pgopt.sel small{color:var(--seltext)}
+.pgopt:focus-visible{outline:1px dotted var(--text);outline-offset:-3px}
+.cmf{display:flex;align-items:center;gap:4px}.cmf input{width:70px}
+.pgprev{background:var(--deskgrey);padding:4px;min-height:300px;box-shadow:inset -1px -1px var(--hi),inset 1px 1px var(--lo),inset -2px -2px var(--light),inset 2px 2px var(--dk)}
+.mini.scale{padding:0;margin:0;width:auto}
+.mini .sheet{box-shadow:2px 2px 0 #000;pointer-events:none;min-height:calc(var(--ph,297)*0.55mm)}
+.findgrid{display:grid;grid-template-columns:auto minmax(0,1fr);gap:6px 8px;align-items:center}
+@media (max-width:760px){.pgsetup{grid-template-columns:minmax(0,1fr)}.pglist{max-height:200px}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
 </style>
 
@@ -544,7 +572,7 @@ const mmss=s=>`${Math.floor(s/60)}:${pad2(s%60)}`;
 
 /* ================================================================ paginação (Courier: 10 caracteres por polegada) */
 const WCH={act:57,scene:57,time:69,note:62,action:57,character:37,paren:27,dialogue:37};
-const LPP=58;
+let LPP=58;
 function wrapCount(s,w){
   if(!s)return 1;let lines=0;
   for(const para of String(s).split("\n")){let len=0,l=1;
@@ -554,30 +582,30 @@ function wrapCount(s,w){
   return lines;
 }
 function layout(sc){
-  const els=sc.els,info=[];let n=0;
+  const G=geomOf(sc);const els=sc.els,info=[];let n=0;
   els.forEach((e,i)=>{const nx=els[i+1];let text=e.x;if(e.t==="scene"){n++;text=`CENA ${n} — `+e.x;}
     const end=e.t==="dialogue"&&!(nx&&nx.t==="paren");
-    info.push({lines:wrapCount(text,WCH[e.t]||57),before:(e.t==="act"||e.t==="scene")?2:0,
+    info.push({lines:wrapCount(text,G.wch[e.t]||G.wch.action),before:(e.t==="act"||e.t==="scene")?2:0,
       after:(["act","time","note","action"].includes(e.t)||(e.t==="dialogue"&&end))?1:0,
       keepNext:["act","scene","time","character","paren"].includes(e.t)||(e.t==="dialogue"&&!end),keepLines:e.t==="dialogue",num:e.t==="scene"?n:0,end});});
   return info;
 }
 function paginate(sc){
-  const info=layout(sc),els=sc.els;let y=0,page=2;const breaks=[];
+  const LP=geomOf(sc).lpp;const info=layout(sc),els=sc.els;let y=0,page=2;const breaks=[];
   for(let i=0;i<els.length;i++){const f=info[i];
     if(f.keepNext&&y>0){let h=f.before+f.lines+f.after,j=i+1;
-      while(j<els.length&&info[j].keepNext&&h<=LPP){h+=info[j].before+info[j].lines+info[j].after;j++;}
+      while(j<els.length&&info[j].keepNext&&h<=LP){h+=info[j].before+info[j].lines+info[j].after;j++;}
       if(j<els.length)h+=info[j].before+(info[j].keepLines?info[j].lines:1);
-      if(h<=LPP&&y+h>LPP){page++;y=0;breaks.push({i,pos:"before",page});}}
-    else if(f.keepLines&&y>0&&y+f.before+f.lines>LPP&&f.lines<=LPP){page++;y=0;breaks.push({i,pos:"before",page});}
+      if(h<=LP&&y+h>LP){page++;y=0;breaks.push({i,pos:"before",page});}}
+    else if(f.keepLines&&y>0&&y+f.before+f.lines>LP&&f.lines<=LP){page++;y=0;breaks.push({i,pos:"before",page});}
     if(y>0)y+=f.before;
     f.page=page;let L=f.lines;
-    while(y+L>LPP){L-=(LPP-y);page++;y=0;breaks.push({i,pos:"after",page});}
+    while(y+L>LP){L-=(LP-y);page++;y=0;breaks.push({i,pos:"after",page});}
     y+=L+f.after;
-    if(y>=LPP&&i<els.length-1){page++;y=0;breaks.push({i,pos:"after",page});}
+    if(y>=LP&&i<els.length-1){page++;y=0;breaks.push({i,pos:"after",page});}
   }
   const seen=new Set();
-  return {info,breaks:breaks.filter(b=>!seen.has(b.page)&&seen.add(b.page)),pages:y>0?page:page-1};
+  return {info,breaks:breaks.filter(b=>!seen.has(b.page)&&seen.add(b.page)),pages:y>0?page:page-1,lpp:LP};
 }
 
 /* ================================================================ cenas e personagens */
@@ -676,7 +704,7 @@ function renderSheet(){
   if(!sc){document.getElementById("scale").hidden=true;document.getElementById("board").hidden=true;
     if(!de)desk.insertAdjacentHTML("beforeend",`<div class="desk-empty" id="deskEmpty">${icon("clapper",48)}<p><b>Nenhum roteiro aberto.</b></p><p>Use o botão Iniciar ou Arquivo › Novo para começar.</p><button type="button" class="btn def" data-cmd="novo">Novo roteiro…</button></div>`);renderTypebar();return;}
   if(de)de.remove();syncViews();
-  S.lay=paginate(sc);
+  applyPageVars(sc);S.lay=paginate(sc);
   sheet.innerHTML=titleHTML(sc.meta)+sc.els.map((e,i)=>elHTML(e,S.lay.info[i])).join("");
   placeBreaks();fitSheet();renderTypebar();
 }
@@ -697,7 +725,7 @@ function decor(){
   placeBreaks();renderTypebar();refreshSide();if(typeof updGoal==="function")updGoal();
 }
 let zoom=1;
-function fitSheet(){const avail=desk.clientWidth-36,full=793.7;const z=(typeof prefs!=="undefined"?prefs.zoom:"fit");zoom=z==="fit"?Math.min(1,avail/full):(+z/100);document.getElementById("scale").style.zoom=zoom;}
+function fitSheet(){const avail=desk.clientWidth-36,full=(typeof geomOf==="function"&&cur()?geomOf(cur()).paper.w:210)*3.7795;const z=(typeof prefs!=="undefined"?prefs.zoom:"fit");zoom=z==="fit"?Math.min(1,avail/full):(+z/100);document.getElementById("scale").style.zoom=zoom;}
 function renderTypebar(){
   const f=S.focusId&&findEl(S.focusId);const ss=document.getElementById("styleSel");
   if(ss){ss.value=f?f.e.t:"";ss.disabled=!f;}
@@ -1107,7 +1135,7 @@ function rX(t,o){o=o||{};const sz=o.sz||24;return `<w:r><w:rPr>${FONT}${o.b?"<w:
 const EX='w:line="240" w:lineRule="exact"';
 function pX(ppr,runs){return `<w:p><w:pPr>${ppr}</w:pPr>${runs}</w:p>`;}
 function scriptXML(sc){
-  const m=sc.meta;const lay=paginate(sc);let x="";
+  const m=sc.meta;const lay=paginate(sc);let x="";const GG=geomOf(sc),tw_=mm=>Math.round(mm*56.6929);
   x+=pX(`<w:spacing w:before="3600" w:after="360"/><w:jc w:val="center"/>`,rX(String(m.serie).toUpperCase(),{sz:44,b:1}));
   x+=pX(`<w:spacing w:after="240"/><w:jc w:val="center"/>`,rX(epCode(m),{sz:28}));
   x+=pX(`<w:spacing w:after="80"/><w:jc w:val="center"/>`,rX(`“${m.titulo}”`,{sz:28,b:1}));
@@ -1122,12 +1150,12 @@ function scriptXML(sc){
       case"scene":x+=pX(`<w:keepNext/><w:spacing w:before="480" w:after="0" ${EX}/>`,rX(`CENA ${f.num} — ${t.toUpperCase()}`,{b:1}));break;
       case"time":x+=pX(`<w:keepNext/><w:spacing w:after="240" ${EX}/>`,rX(t,{sz:20,i:1,color:"666666"}));break;
       case"note":{const mm=/^([^:]{2,40}:)(.*)$/.exec(t);x+=pX(`<w:spacing w:after="240" ${EX}/>`,mm?rX(mm[1],{sz:22,b:1,i:1,color:"444444"})+rX(mm[2],{sz:22,i:1,color:"444444"}):rX(t,{sz:22,i:1,color:"444444"}));break;}
-      case"character":x+=pX(`<w:keepNext/><w:spacing w:before="0" w:after="0" ${EX}/><w:ind w:left="2880"/>`,rX(t.toUpperCase()));break;
-      case"paren":x+=pX(`<w:keepNext/><w:spacing w:after="0" ${EX}/><w:ind w:left="2160" w:right="2160"/>`,rX(t));break;
-      case"dialogue":x+=f.end?pX(`<w:keepNext w:val="false"/><w:keepLines/><w:spacing w:after="240" ${EX}/><w:ind w:left="1440" w:right="1440"/>`,rX(t)):pX(`<w:keepNext/><w:keepLines/><w:spacing w:after="0" ${EX}/><w:ind w:left="1440" w:right="1440"/>`,rX(t));break;
+      case"character":x+=pX(`<w:keepNext/><w:spacing w:before="0" w:after="0" ${EX}/><w:ind w:left="${tw_(GG.p.ic)}"/>`,rX(t.toUpperCase()));break;
+      case"paren":x+=pX(`<w:keepNext/><w:spacing w:after="0" ${EX}/><w:ind w:left="${tw_(GG.p.ipl)}" w:right="${tw_(GG.p.ipr)}"/>`,rX(t));break;
+      case"dialogue":x+=f.end?pX(`<w:keepNext w:val="false"/><w:keepLines/><w:spacing w:after="240" ${EX}/><w:ind w:left="${tw_(GG.p.idl)}" w:right="${tw_(GG.p.idr)}"/>`,rX(t)):pX(`<w:keepNext/><w:keepLines/><w:spacing w:after="0" ${EX}/><w:ind w:left="${tw_(GG.p.idl)}" w:right="${tw_(GG.p.idr)}"/>`,rX(t));break;
       default:x+=pX(`<w:spacing w:after="240" ${EX}/>`,rX(t));
     }});
-  return `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:document ${NS}><w:body>${x}<w:sectPr><w:headerReference w:type="default" r:id="rId4"/><w:headerReference w:type="first" r:id="rId5"/><w:pgSz w:w="11906" w:h="16838"/><w:pgMar w:top="1440" w:right="1440" w:bottom="1440" w:left="2160" w:header="708" w:footer="708" w:gutter="0"/><w:titlePg/><w:docGrid w:linePitch="360"/></w:sectPr></w:body></w:document>`;
+  return `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:document ${NS}><w:body>${x}<w:sectPr><w:headerReference w:type="default" r:id="rId4"/><w:headerReference w:type="first" r:id="rId5"/><w:pgSz w:w="${tw_(GG.paper.w)}" w:h="${tw_(GG.paper.h)}"/><w:pgMar w:top="${tw_(GG.p.mt)}" w:right="${tw_(GG.p.mr)}" w:bottom="${tw_(GG.p.mb)}" w:left="${tw_(GG.p.ml)}" w:header="708" w:footer="708" w:gutter="0"/><w:titlePg/><w:docGrid w:linePitch="360"/></w:sectPr></w:body></w:document>`;
 }
 async function exportDocx(sc){
   const m=sc.meta;const hr={sz:18,color:"666666"};
@@ -1559,9 +1587,6 @@ function setZoom(z){prefs.zoom=z;savePrefs();applyPrefs();}
 function showPanel(){if(innerWidth<=900){setView("panel");return;}if(!prefs.painel){prefs.painel=true;savePrefs();applyPrefs();}}
 
 /* ---------- régua, status, título ---------- */
-function buildRuler(){const r=document.getElementById("ruler");if(!r||r.dataset.built)return;r.dataset.built="1";let h="";for(let c=1;c<=14;c++)h+=`<span class="n" style="left:${38.1+c*10}mm">${c}</span>`;r.insertAdjacentHTML("beforeend",h+`<i class="mk" id="mkL"></i><i class="mk r" id="mkR"></i>`);}
-function updRuler(t){const L=document.getElementById("mkL"),Rr=document.getElementById("mkR");if(!L)return;
-  const li={character:50.8,paren:38.1,dialogue:25.4}[t]||0,ri={paren:38.1,dialogue:25.4}[t]||0;L.style.left=(38.1+li)+"mm";Rr.style.left=(210-25.4-ri)+"mm";L.hidden=Rr.hidden=!t;}
 function updStatus(){
   const sc=cur();const f=S.focusId&&findEl(S.focusId);const set=(id,t)=>{const el=document.getElementById(id);if(el)el.textContent=t;};
   if(!sc){set("sbScene","Cena –");set("sbPage","Pág. –");set("sbStyle","–");return;}
@@ -2503,7 +2528,8 @@ function bootTool(id){
   wrap.innerHTML=`<div class="titlebar" id="mainTitle"><span data-icon="${A?A.icon:"script"}"></span><span class="ttl">${escH(A?A.title:"?")}</span><button class="tb-btn" type="button" data-tw="min" aria-label="Minimizar" title="Minimizar">_</button><button class="tb-btn" type="button" data-tw="x" aria-label="Fechar" title="Fechar">×</button></div><div class="toolbody"><div class="acc-root acc-${id}"></div></div>`;
   document.body.appendChild(wrap);paintIcons(wrap);
   wrap.querySelector("#mainTitle").addEventListener("click",e=>{const b=e.target.closest("[data-tw]");if(!b)return;if(b.dataset.tw==="min")window.salaNative.minimize();else window.salaNative.close();});
-  if(A)A.render(wrap.querySelector(".acc-root"),accCtx(()=>window.salaNative.close()));
+  const ctxT=accCtx(()=>window.salaNative.close());ctxT.dono=new URLSearchParams(location.search).get("dono")||"";if(A)A.render(wrap.querySelector(".acc-root"),ctxT);
+  if(window.salaNative.onEvent)window.salaNative.onEvent((k,d)=>{const r=wrap.querySelector(".acc-root");if(k==="msg"&&r&&r._onMsg)r._onMsg(d);});
 }
 addEventListener("storage",e=>{if(e.key===LS_PREF&&e.newValue){try{Object.assign(prefs,JSON.parse(e.newValue));document.body.dataset.scheme=prefs.scheme;}catch(x){}}});
 
@@ -2593,6 +2619,243 @@ startItems=function(){const it=_startItems();const fer=it.findIndex(x=>x&&x.labe
 TIPS.push("No programa instalado, o Bloco de notas, a Calculadora de minutagem, o Cronômetro e o Mapa de caracteres abrem em janelas próprias, que você pode arrastar para fora da janela principal.",
   "A Calculadora de minutagem entende 2:45 × 12, 55:30 − 48:10 e 1:02:00 ÷ 4.",
   "Ajuda › Procurar atualizações baixa a versão nova direto do repositório no GitHub.");
+
+/* ================================================================
+   PÁGINA E MARGENS · RÉGUA · PDF · ESCALETA · LOCALIZAR E SUBSTITUIR
+   ================================================================ */
+Object.assign(ICON,{
+  pdf:'<path d="M3.5 1.5h6l3 3v10h-9z" fill="#fff" stroke="#000"/><rect x="2" y="8" width="9" height="5" fill="#C00000"/><path d="M3.5 12V9h1.2a.9.9 0 0 1 0 1.8H3.5M6.5 12V9h.8a1.5 1.5 0 0 1 0 3zM9.5 12V9h1.4M9.5 10.5h1" fill="none" stroke="#fff" stroke-width=".8"/>',
+  page:'<path d="M3.5 1.5h9v13h-9z" fill="#fff" stroke="#000"/><path d="M5.5 1.5v13M10.5 1.5v13" stroke="#3050D0" stroke-dasharray="1 1"/><path d="M6.5 4h3M6.5 6h3M6.5 8h3" stroke="#000"/>',
+});
+const PAPERS={a4:{label:"A4 (21 × 29,7 cm)",w:210,h:297},carta:{label:"Carta (21,6 × 27,9 cm)",w:215.9,h:279.4},oficio:{label:"Ofício (21,6 × 33 cm)",w:216,h:330}};
+const PAGE_PRESETS={
+  sala:{label:"Padrão da Sala",desc:"A4 com margem larga à esquerda para grampear. O formato dos roteiros de Fundação Varguelia.",papel:"a4",mt:25.4,mb:25.4,ml:38.1,mr:25.4,ic:50.8,ipl:38.1,ipr:38.1,idl:25.4,idr:25.4},
+  americano:{label:"Roteiro americano",desc:"Papel carta, personagem a 9,4 cm da borda e fala em coluna estreita, como nos estúdios de cinema.",papel:"carta",mt:25.4,mb:25.4,ml:38.1,mr:25.4,ic:55.9,ipl:40.6,ipr:50.8,idl:25.4,idr:38.1},
+  oficio:{label:"Papel ofício",desc:"Folha comprida e margens de máquina de escrever, como as 41 folhas do roteiro vazado em Tencri.",papel:"oficio",mt:20,mb:20,ml:30,mr:20,ic:50,ipl:35,ipr:35,idl:25,idr:25},
+  novela:{label:"Novela brasileira",desc:"Nome do personagem na margem e fala recuada logo abaixo. Cabe mais diálogo por página.",papel:"a4",mt:20,mb:20,ml:25,mr:20,ic:0,ipl:30,ipr:10,idl:30,idr:0},
+  radio:{label:"Radionovela",desc:"Personagem colado à margem e fala larga, para o elenco ler no estúdio sem perder a linha.",papel:"a4",mt:20,mb:20,ml:25,mr:20,ic:0,ipl:35,ipr:20,idl:35,idr:0},
+  rascunho:{label:"Rascunho econômico",desc:"Margens apertadas para imprimir menos folhas nas rodadas de revisão.",papel:"a4",mt:15,mb:15,ml:20,mr:15,ic:40,ipl:30,ipr:30,idl:20,idr:20},
+};
+const PG_KEYS=["mt","mb","ml","mr","ic","ipl","ipr","idl","idr"];
+function pageOf(sc){const se=sc?S.series[sc.meta.serieId]:null;return Object.assign({},PAGE_PRESETS.sala,se&&se.pagina||{},sc&&sc.meta.pagina||{});}
+function geomFrom(p){
+  const paper=PAPERS[p.papel]||PAPERS.a4,tw=paper.w-p.ml-p.mr,cpi=(mm,c)=>Math.max(8,Math.floor(mm/25.4*c+1e-6));
+  return {p,paper,tw,lpp:Math.max(20,Math.floor((paper.h-p.mt-p.mb)/25.4*6+1e-6)),
+    wch:{act:cpi(tw,10),scene:cpi(tw,10),action:cpi(tw,10),time:cpi(tw,12),note:cpi(tw,10.909),character:cpi(tw-p.ic,10),paren:cpi(tw-p.ipl-p.ipr,10),dialogue:cpi(tw-p.idl-p.idr,10)}};
+}
+const geomOf=sc=>geomFrom(pageOf(sc));
+function applyPageVars(sc,keepRuler){
+  const g=geomOf(sc),el=document.getElementById("scale");if(!el)return;
+  el.style.setProperty("--pw",g.paper.w);el.style.setProperty("--ph",g.paper.h);for(const k of PG_KEYS)el.style.setProperty("--"+k,g.p[k]);
+  LPP=g.lpp;if(!keepRuler)buildRuler(true);
+}
+/* onde gravar uma mudança de margem: no roteiro, se ele tiver medidas próprias; senão, na série */
+function pageTarget(sc){if(sc.meta.pagina)return {obj:sc.meta.pagina,save:()=>markChanged(sc)};const se=S.series[sc.meta.serieId];if(!se)return {obj:(sc.meta.pagina={}),save:()=>markChanged(sc)};
+  se.pagina=se.pagina||Object.assign({},PAGE_PRESETS.sala);return {obj:se.pagina,save:()=>markSerie(se)};}
+const cm=mm=>(Math.round(mm)/10).toLocaleString("pt-BR",{minimumFractionDigits:1,maximumFractionDigits:1});
+
+/* ---------- régua ---------- */
+function buildRuler(force){
+  const r=document.getElementById("ruler");if(!r)return;if(r.dataset.built&&!force)return;r.dataset.built="1";
+  const sc=cur();const g=geomOf(sc);let h=`<div class="area"></div>`;
+  for(let c=0;c<=Math.floor(g.tw/10);c++)h+=`<span class="n" style="left:calc(var(--ml,38.1)*1mm + ${c}cm)">${c||""}</span>`;
+  h+=`<i class="hd pl" data-rd="ml" title="Margem esquerda (arraste)" style="left:calc(var(--ml,38.1)*1mm)"></i><i class="hd pr" data-rd="mr" title="Margem direita (arraste)" style="left:calc((var(--pw,210) - var(--mr,25.4))*1mm)"></i>`;
+  h+=`<i class="mk" id="mkL" data-rd="L" title="Recuo esquerdo (arraste)"></i><i class="mk r" id="mkR" data-rd="R" title="Recuo direito (arraste)"></i><span class="rtip" id="rtip" hidden></span>`;
+  r.innerHTML=h;updRuler(S.focusId&&findEl(S.focusId)?findEl(S.focusId).e.t:null);
+}
+const INDENT={character:["ic",null],paren:["ipl","ipr"],dialogue:["idl","idr"]};
+function updRuler(t){
+  const L=document.getElementById("mkL"),Rr=document.getElementById("mkR");if(!L)return;const g=geomOf(cur());const ind=INDENT[t];
+  L.hidden=!ind;Rr.hidden=!ind||!ind[1];if(!ind)return;
+  L.style.left=(g.p.ml+g.p[ind[0]])+"mm";if(ind[1])Rr.style.left=(g.paper.w-g.p.mr-g.p[ind[1]])+"mm";
+  L.title=`Recuo de ${TYPES[t].label.toLowerCase()}: ${cm(g.p[ind[0]])} cm (arraste)`;
+}
+(function rulerDrag(){
+  const r=document.getElementById("ruler");if(!r)return;
+  r.addEventListener("dblclick",()=>runCmd("paginaMargens"));
+  r.addEventListener("pointerdown",e=>{
+    const h=e.target.closest("[data-rd]");const sc=cur();if(!h||!sc)return;e.preventDefault();
+    const kind=h.dataset.rd;const f=S.focusId&&findEl(S.focusId);const t=f?f.e.t:null;const ind=INDENT[t];
+    if((kind==="L"||kind==="R")&&!ind)return;
+    const tgt=pageTarget(sc);const tip=document.getElementById("rtip");h.setPointerCapture(e.pointerId);
+    const move=ev=>{const rc=r.getBoundingClientRect();const g=geomOf(sc);const mm=Math.round((ev.clientX-rc.left)/rc.width*g.paper.w);let lbl="";const o=tgt.obj;
+      if(kind==="ml"){o.ml=Math.max(10,Math.min(mm,g.paper.w-o.mr-70));lbl=`Margem esquerda: ${cm(o.ml)} cm`;}
+      if(kind==="mr"){o.mr=Math.max(10,Math.min(g.paper.w-mm,g.paper.w-o.ml-70));lbl=`Margem direita: ${cm(o.mr)} cm`;}
+      if(kind==="L"){const k=ind[0];o[k]=Math.max(0,Math.min(mm-o.ml,g.tw-(ind[1]?o[ind[1]]:0)-30));lbl=`${TYPES[t].label}, recuo esquerdo: ${cm(o[k])} cm`;}
+      if(kind==="R"&&ind[1]){const k=ind[1];o[k]=Math.max(0,Math.min(g.paper.w-o.mr-mm,g.tw-o[ind[0]]-30));lbl=`${TYPES[t].label}, recuo direito: ${cm(o[k])} cm`;}
+      o.preset="personalizado";applyPageVars(sc,true);if(t)updRuler(t);const tp=document.getElementById("rtip");if(tp){tp.hidden=false;tp.textContent=lbl;tp.style.left=Math.max(4,Math.min(ev.clientX-rc.left,rc.width-200))/zoom+"px";}};
+    const up=()=>{h.removeEventListener("pointermove",move);h.removeEventListener("pointerup",up);tgt.save();buildRuler(true);decor();const tp=document.getElementById("rtip");if(tp)tp.hidden=true;if(f)focusEl(f.e.id,"end",false);};
+    h.addEventListener("pointermove",move);h.addEventListener("pointerup",up);
+  });
+})();
+
+/* ---------- Formatar › Página e margens ---------- */
+function pageSetupDialog(){
+  const sc=cur();if(!sc)return;const se=S.series[sc.meta.serieId];const own=!!sc.meta.pagina;
+  const st=Object.assign({},pageOf(sc));let presetKey=st.preset&&PAGE_PRESETS[st.preset]?st.preset:(Object.keys(PAGE_PRESETS).find(k=>PG_KEYS.every(x=>PAGE_PRESETS[k][x]===st[x])&&PAGE_PRESETS[k].papel===st.papel)||"personalizado");
+  const num=(k,l)=>`<label class="fld"><span>${l}</span><span class="cmf"><input type="number" step="0.1" min="0" max="15" data-pk="${k}" value="${(st[k]/10).toFixed(1)}"><span>cm</span></span></label>`;
+  const sample=`<div class="el e-scene" data-num="CENA 4 — ">INT. LABORATÓRIO — NOITE</div><div class="el e-time">[2:30–5:30]</div><div class="el e-action">Jorgenssen abaixa o rifle e vai até onde o moço estava.</div><div class="el e-character">JORGENSSEN</div><div class="el e-paren">(baixo)</div><div class="el e-dialogue">Sangra. Então dá.</div><div class="el e-character">ELLA</div><div class="el e-dialogue end">Ele tem medo de mim, não da cor.</div>`;
+  dialog({title:"Página e margens",width:760,body:`<div class="pgsetup">
+    <div class="col"><b>Modelos</b><div class="listview pglist" role="listbox" aria-label="Modelos de página">${Object.entries(PAGE_PRESETS).map(([k,p])=>`<div class="pgopt${k===presetKey?" sel":""}" data-pp="${k}" role="option" tabindex="0" aria-selected="${k===presetKey}"><b>${escH(p.label)}</b><small>${escH(p.desc)}</small></div>`).join("")}<div class="pgopt${presetKey==="personalizado"?" sel":""}" data-pp="personalizado" role="option" tabindex="0"><b>Personalizado</b><small>As medidas que você ajustar à mão ou na régua.</small></div></div></div>
+    <div class="col"><div class="grid2"><label class="fld"><span>Papel</span><select id="pg-papel">${Object.entries(PAPERS).map(([k,p])=>`<option value="${k}"${k===st.papel?" selected":""}>${p.label}</option>`).join("")}</select></label><span></span></div>
+      <fieldset><legend>Margens da página</legend><div class="grid2">${num("mt","Superior")}${num("mb","Inferior")}${num("ml","Esquerda")}${num("mr","Direita")}</div></fieldset>
+      <fieldset><legend>Recuos a partir da margem</legend><div class="grid2">${num("ic","Personagem")}<span></span>${num("ipl","Rubrica, esquerda")}${num("ipr","Rubrica, direita")}${num("idl","Fala, esquerda")}${num("idr","Fala, direita")}</div></fieldset>
+      <p class="muted" id="pg-info" style="margin:0"></p>
+      <fieldset><legend>Aplicar a</legend><label class="radio"><input type="radio" name="pg-to" value="serie"${own?"":" checked"}><span>Todos os roteiros de ${escH(se?se.nome:"desta série")}</span></label><label class="radio"><input type="radio" name="pg-to" value="ep"${own?" checked":""}><span>Só a este roteiro (${escH(epTag(sc.meta))})</span></label></fieldset></div>
+    <div class="col"><b>Prévia</b><div class="pgprev"><div class="mini scale" id="pg-mini"><div class="sheet">${sample}</div></div></div></div></div>`,
+    onOpen:w=>{
+      const draw=()=>{const g=geomFrom(st);const mini=w.querySelector("#pg-mini");mini.style.setProperty("--pw",g.paper.w);mini.style.setProperty("--ph",g.paper.h);for(const k of PG_KEYS)mini.style.setProperty("--"+k,st[k]);
+        const box=w.querySelector(".pgprev");mini.style.zoom=Math.min(1,(box.clientWidth-8)/(g.paper.w*3.7795));
+        const probe=Object.assign({},sc,{meta:Object.assign({},sc.meta,{pagina:Object.assign({},st)})});const pages=paginate(probe).pages;
+        w.querySelector("#pg-info").textContent=`${g.lpp} linhas por página · ação com ${g.wch.action} letras por linha · fala com ${g.wch.dialogue} · este roteiro teria cerca de ${pages} páginas (hoje tem ${S.lay?S.lay.pages:"?"}).`;};
+      const fill=()=>{w.querySelectorAll("[data-pk]").forEach(i=>i.value=(st[i.dataset.pk]/10).toFixed(1));w.querySelector("#pg-papel").value=st.papel;};
+      const pick=k=>{presetKey=k;w.querySelectorAll(".pgopt").forEach(o=>{const on=o.dataset.pp===k;o.classList.toggle("sel",on);o.setAttribute("aria-selected",on);});if(PAGE_PRESETS[k]){Object.assign(st,PAGE_PRESETS[k]);fill();}draw();};
+      w.querySelector(".pglist").addEventListener("click",e=>{const o=e.target.closest("[data-pp]");if(o)pick(o.dataset.pp);});
+      w.querySelector(".pglist").addEventListener("keydown",e=>{const o=e.target.closest("[data-pp]");if(o&&(e.key==="Enter"||e.key===" ")){e.preventDefault();pick(o.dataset.pp);}});
+      w.addEventListener("input",e=>{const k=e.target.dataset.pk;if(!k)return;const v=parseFloat(String(e.target.value).replace(",","."));if(isNaN(v))return;st[k]=Math.max(0,Math.min(150,v*10));pick("personalizado");});
+      w.querySelector("#pg-papel").onchange=e=>{st.papel=e.target.value;pick("personalizado");};
+      setTimeout(draw,0);},
+    buttons:[{label:"OK",def:1,run:w=>{const to=w.querySelector('input[name="pg-to"]:checked').value;const val=Object.assign({},st,{preset:presetKey});delete val.label;delete val.desc;
+        if(to==="ep"){sc.meta.pagina=val;markChanged(sc);}else{delete sc.meta.pagina;markChanged(sc);if(se){se.pagina=val;markSerie(se);}else sc.meta.pagina=val;}
+        renderSheet();toast(`Página: ${PAGE_PRESETS[presetKey]?PAGE_PRESETS[presetKey].label:"personalizada"} · ${S.lay.pages} páginas`);}},{label:"Cancelar"}]});
+}
+
+/* ---------- PDF próprio (Courier é fonte padrão do PDF, não precisa embutir) ---------- */
+const WIN={0x20AC:0x80,0x201A:0x82,0x0192:0x83,0x201E:0x84,0x2026:0x85,0x2020:0x86,0x2021:0x87,0x02C6:0x88,0x2030:0x89,0x0160:0x8A,0x2039:0x8B,0x0152:0x8C,0x017D:0x8E,0x2018:0x91,0x2019:0x92,0x201C:0x93,0x201D:0x94,0x2022:0x95,0x2013:0x96,0x2014:0x97,0x02DC:0x98,0x2122:0x99,0x0161:0x9A,0x203A:0x9B,0x0153:0x9C,0x017E:0x9E,0x0178:0x9F};
+function pdfStr(str){let s="(";for(const ch of String(str)){let c=ch.codePointAt(0);if(!(c<0x80||(c>=0xA0&&c<=0xFF)))c=WIN[c]||0x3F;
+  if(c===0x28||c===0x29||c===0x5C)s+="\\"+String.fromCharCode(c);else if(c<0x20||c>0x7E)s+="\\"+c.toString(8).padStart(3,"0");else s+=String.fromCharCode(c);}return s+")";}
+function wrapLines(s,w){
+  const out=[];for(const para of String(s||"").split("\n")){let line="";const words=para.split(/\s+/).filter(Boolean);
+    if(!words.length){out.push("");continue;}
+    for(const word of words){let wd=word;
+      if(!line){while(wd.length>w){out.push(wd.slice(0,w));wd=wd.slice(w);}line=wd;}
+      else if(line.length+1+wd.length<=w)line+=" "+wd;
+      else{out.push(line);line="";while(wd.length>w){out.push(wd.slice(0,w));wd=wd.slice(w);}line=wd;}}
+    out.push(line);}
+  return out.length?out:[""];
+}
+async function scriptPDF(sc){
+  const g=geomOf(sc),p=g.p,PT=72/25.4,pw=g.paper.w*PT,ph=g.paper.h*PT,ml=p.ml*PT,mt=p.mt*PT,mr=p.mr*PT;const m=sc.meta;
+  const pages=[];let ops=null;
+  const font={r:"F1",b:"F2",i:"F3",bi:"F4"};
+  const txt=(x,y,size,f,gray,str)=>{ops.push(`BT /${font[f]} ${size} Tf ${gray?"0.4 g":"0 g"} 1 0 0 1 ${x.toFixed(2)} ${y.toFixed(2)} Tm ${pdfStr(str)} Tj ET`);};
+  const newPage=()=>{ops=[];pages.push(ops);};
+  // folha de rosto, com o mesmo espaçamento do .docx
+  newPage();let y=ph-mt-180;const center=(str,size,f,gray,after)=>{y-=size;const wpt=String(str).length*size*0.6;txt((pw-wpt)/2,y,size,f,gray,str);y-=size*0.17+(after||0);};
+  center(String(m.serie).toUpperCase(),22,"b",0,18);center(epCode(m),14,"r",0,12);center(`“${m.titulo}”`,14,"b",0,4);y-=10*1.17+48;
+  center(`${m.temporada}ª temporada · ${m.unidade||"episódio"} ${m.episodio} · ${m.duracao}`,11,"r",0,4);center(estreiaLine(m),11,"r",0,48);(m.notas||[]).forEach(n=>center(n,10,"i",1,4));
+  // corpo
+  const lay=paginate(sc),info=lay.info,LP=g.lpp,head=`${String(m.serie).toUpperCase()} · ${epCode(m)} · `;
+  let row=0,pageNo=1;
+  const header=()=>{const s=head+pageNo;txt(pw-mr-s.length*9*0.6,ph-35.4-9,9,"r",1,s);};
+  const nextPage=()=>{pageNo++;newPage();row=0;header();};
+  nextPage();
+  const styleOf=e=>{switch(e.t){case"act":return {f:"b",size:12,x:0,center:1};case"scene":return {f:"b",size:12,x:0};case"time":return {f:"i",size:10,x:0,gray:1};case"note":return {f:"i",size:11,x:0,gray:1};
+    case"character":return {f:"r",size:12,x:p.ic};case"paren":return {f:"r",size:12,x:p.ipl};case"dialogue":return {f:"r",size:12,x:p.idl};default:return {f:"r",size:12,x:0};}};
+  const draw=(e,line,isFirst,st)=>{const base=ph-mt-(row+1)*12+2.6;let x=ml+st.x*PT;const cw=st.size*0.6;
+    if(st.center)x=ml+(g.tw*PT-line.length*cw)/2;
+    if(e.t==="note"&&isFirst){const mm=/^([^:]{2,40}:)/.exec(line);if(mm){txt(x,base,st.size,"bi",1,mm[1]);txt(x+mm[1].length*cw,base,st.size,"i",1,line.slice(mm[1].length));return;}}
+    txt(x,base,st.size,st.f,st.gray,line);};
+  for(let i=0;i<sc.els.length;i++){const e=sc.els[i],f=info[i];
+    if(f.keepNext&&row>0){let h=f.before+f.lines+f.after,j=i+1;while(j<sc.els.length&&info[j].keepNext&&h<=LP){h+=info[j].before+info[j].lines+info[j].after;j++;}
+      if(j<sc.els.length)h+=info[j].before+(info[j].keepLines?info[j].lines:1);if(h<=LP&&row+h>LP)nextPage();}
+    else if(f.keepLines&&row>0&&row+f.before+f.lines>LP&&f.lines<=LP)nextPage();
+    if(row>0)row+=f.before;
+    let text=e.x;if(e.t==="scene")text=`CENA ${f.num} — ${e.x.toUpperCase()}`;if(e.t==="character"||e.t==="act")text=e.x.toUpperCase();
+    const st=styleOf(e);const lines=wrapLines(text,g.wch[e.t]||g.wch.action);
+    lines.forEach((ln,k)=>{if(row>=LP)nextPage();draw(e,ln,k===0,st);row++;});
+    row+=f.after;if(row>=LP&&i<sc.els.length-1)nextPage();
+  }
+  // montar o arquivo
+  const enc=new TextEncoder();const objs=[];const add=s=>{objs.push(s);return objs.length;};
+  const catalog=add(null),pagesObj=add(null);
+  const fonts=["Courier","Courier-Bold","Courier-Oblique","Courier-BoldOblique"].map(n=>add(`<< /Type /Font /Subtype /Type1 /BaseFont /${n} /Encoding /WinAnsiEncoding >>`));
+  const res=`<< /Font << /F1 ${fonts[0]} 0 R /F2 ${fonts[1]} 0 R /F3 ${fonts[2]} 0 R /F4 ${fonts[3]} 0 R >> >>`;
+  const kids=[];
+  for(const pg of pages){const stream=pg.join("\n");let data=enc.encode(stream),filter="";
+    if(typeof CompressionStream!=="undefined"){try{data=new Uint8Array(await new Response(new Blob([data]).stream().pipeThrough(new CompressionStream("deflate"))).arrayBuffer());filter=" /Filter /FlateDecode";}catch(x){data=enc.encode(stream);filter="";}}
+    const c=add({head:`<< /Length ${data.length}${filter} >>\nstream\n`,data,tail:"\nendstream"});
+    kids.push(add(`<< /Type /Page /Parent ${pagesObj} 0 R /MediaBox [0 0 ${pw.toFixed(2)} ${ph.toFixed(2)}] /Resources ${res} /Contents ${c} 0 R >>`));}
+  objs[catalog-1]=`<< /Type /Catalog /Pages ${pagesObj} 0 R >>`;objs[pagesObj-1]=`<< /Type /Pages /Kids [${kids.map(k=>k+" 0 R").join(" ")}] /Count ${kids.length} >>`;
+  const u16=str=>"<FEFF"+[...String(str)].map(ch=>{const c=ch.codePointAt(0);if(c>0xFFFF){const v=c-0x10000;return ((0xD800+(v>>10)).toString(16)+(0xDC00+(v&1023)).toString(16)).toUpperCase();}return c.toString(16).padStart(4,"0").toUpperCase();}).join("")+">";
+  const info2=add(`<< /Title ${u16(`${m.serie} ${epCode(m)} “${m.titulo}”`)} /Creator (Sala de Roteiro 95) /Producer (Sala de Roteiro 95) >>`);
+  const parts=[enc.encode("%PDF-1.4\n%âãÏÓ\n")];let off=parts[0].length;const offs=[];
+  objs.forEach((o,i)=>{offs.push(off);const head=enc.encode(`${i+1} 0 obj\n`);parts.push(head);off+=head.length;
+    if(typeof o==="string"){const b=enc.encode(o);parts.push(b);off+=b.length;}else{const h=enc.encode(o.head),t=enc.encode(o.tail);parts.push(h,o.data,t);off+=h.length+o.data.length+t.length;}
+    const end=enc.encode("\nendobj\n");parts.push(end);off+=end.length;});
+  let xref=`xref\n0 ${objs.length+1}\n0000000000 65535 f \n`+offs.map(o=>String(o).padStart(10,"0")+" 00000 n \n").join("");
+  parts.push(enc.encode(xref+`trailer\n<< /Size ${objs.length+1} /Root ${catalog} 0 R /Info ${info2} 0 R >>\nstartxref\n${off}\n%%EOF\n`));
+  return {blob:new Blob(parts,{type:"application/pdf"}),pages:pages.length};
+}
+
+/* ---------- escaleta (.docx) ---------- */
+async function exportEscaleta(){
+  const sc=cur();const lay=paginate(sc);const list=scenesOf(sc,lay.info);const m=sc.meta;let x="";
+  x+=pX(`<w:spacing w:after="120"/><w:jc w:val="center"/>`,rX(String(m.serie).toUpperCase(),{sz:28,b:1}));
+  x+=pX(`<w:spacing w:after="60"/><w:jc w:val="center"/>`,rX(`${epCode(m)} · “${m.titulo}”`,{sz:24,b:1}));
+  x+=pX(`<w:spacing w:after="360"/><w:jc w:val="center"/>`,rX(`ESCALETA · ${list.filter(s=>s.n).length} cenas · ${lay.pages} páginas${m.logline?" · "+m.logline:""}`,{sz:20,i:1,color:"444444"}));
+  for(const s of list){
+    if(!s.n){x+=pX(`<w:keepNext/><w:spacing w:before="240" w:after="120"/><w:jc w:val="center"/>`,rX(String(s.act).toUpperCase(),{b:1}));continue;}
+    x+=pX(`<w:keepNext/><w:spacing w:before="160" w:after="20"/>`,rX(`${s.n}. ${String(s.h||"(sem cabeçalho)").toUpperCase()}`,{b:1}));
+    x+=pX(`<w:keepNext/><w:spacing w:after="40"/>`,rX(`${s.tc?s.tcRaw:"[sem minutagem]"} · ${(s.lines/lay.lpp).toFixed(1).replace(".",",")} pág. · ${[...s.chars].join(", ")||"sem falas"}`,{sz:18,i:1,color:"666666"}));
+    const syn=(s.syn||s.first||"").trim();x+=pX(`<w:spacing w:after="80"/><w:ind w:left="360"/>`,rX(syn.length>420?syn.slice(0,417)+"…":syn||"—",{sz:22}));}
+  const doc=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:document ${NS}><w:body>${x}<w:sectPr><w:pgSz w:w="11906" w:h="16838"/><w:pgMar w:top="1134" w:right="1134" w:bottom="1134" w:left="1418" w:header="708" w:footer="708" w:gutter="0"/></w:sectPr></w:body></w:document>`;
+  const styles=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:styles ${NS}><w:docDefaults><w:rPrDefault><w:rPr>${FONT}<w:sz w:val="24"/><w:lang w:val="pt-BR"/></w:rPr></w:rPrDefault></w:docDefaults><w:style w:type="paragraph" w:default="1" w:styleId="Normal"><w:name w:val="Normal"/></w:style></w:styles>`;
+  const ct=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/><Override PartName="/word/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.styles+xml"/></Types>`;
+  const rels=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="word/document.xml"/></Relationships>`;
+  const drels=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/></Relationships>`;
+  await offer(fileName(sc).replace(/\.docx$/,"_escaleta.docx"),await makeZip([["[Content_Types].xml",ct],["_rels/.rels",rels],["word/document.xml",doc],["word/_rels/document.xml.rels",drels],["word/styles.xml",styles]]));
+}
+
+/* ---------- localizar e substituir no Bloco de notas ---------- */
+function npFind(t,o){
+  const q=o.q||"";if(!q)return {ok:false};const hay=o.cs?t.value:t.value.toLowerCase(),nd=o.cs?q:q.toLowerCase();
+  if(o.acao==="all"){let n=0;const re=new RegExp(q.replace(/[.*+?^${}()|[\]\\]/g,"\\$&"),o.cs?"g":"gi");const v=t.value.replace(re,()=>{n++;return o.rep||"";});if(n){t.value=v;t.dispatchEvent(new Event("input"));}return {ok:n>0,count:n};}
+  if(o.acao==="replace"){const sel=t.value.slice(t.selectionStart,t.selectionEnd);if((o.cs?sel:sel.toLowerCase())===nd&&sel){t.setRangeText(o.rep||"",t.selectionStart,t.selectionEnd,"end");t.dispatchEvent(new Event("input"));}}
+  let i=o.dir==="up"?(t.selectionStart>0?hay.lastIndexOf(nd,t.selectionStart-1):-1):hay.indexOf(nd,t.selectionEnd);let volta=false;
+  if(i<0){i=o.dir==="up"?hay.lastIndexOf(nd):hay.indexOf(nd);volta=i>=0;}
+  if(i<0)return {ok:false};t.focus();t.setSelectionRange(i,i+q.length);
+  const before=t.value.slice(0,i).split("\n").length;t.scrollTop=Math.max(0,(before-4)*18);return {ok:true,volta};
+}
+function findFormHTML(o){return `<div class="col"><div class="findgrid"><label for="lf-q">Localizar:</label><input type="text" id="lf-q" value="${escH(o.q||"")}" autofocus><label for="lf-r">Substituir por:</label><input type="text" id="lf-r" value="${escH(o.rep||"")}"></div>
+  <div class="row"><label class="chk"><input type="checkbox" id="lf-cs"${o.cs?" checked":""}> Diferenciar maiúsculas</label><fieldset style="padding:8px 8px 4px;margin-left:auto"><legend>Direção</legend><label class="chk"><input type="radio" name="lf-d" value="up"> Acima</label> <label class="chk"><input type="radio" name="lf-d" value="down" checked> Abaixo</label></fieldset></div>
+  <div class="row"><button type="button" class="btn def" data-lf="next">Localizar próxima</button><button type="button" class="btn" data-lf="replace">Substituir</button><button type="button" class="btn" data-lf="all">Substituir tudo</button></div><span class="muted" id="lf-st" aria-live="polite">&nbsp;</span></div>`;}
+function findFormBind(root,send){
+  const opts=a=>({q:root.querySelector("#lf-q").value,rep:root.querySelector("#lf-r").value,cs:root.querySelector("#lf-cs").checked,dir:(root.querySelector('input[name="lf-d"]:checked')||{}).value||"down",acao:a});
+  const say=r=>{const st=root.querySelector("#lf-st");if(!st)return;const q=root.querySelector("#lf-q").value;
+    st.textContent=!r?"–":r.count!=null?(r.count?`${r.count} ${r.count===1?"substituição":"substituições"}`:`Não encontrei “${q}”`):r.ok?(r.volta?"Cheguei ao fim e voltei ao começo":"Encontrado"):`Não encontrei “${q}”`;};
+  root.addEventListener("click",async e=>{const b=e.target.closest("[data-lf]");if(!b)return;const o=opts(b.dataset.lf);if(!o.q){root.querySelector("#lf-q").focus();return;}say(await send(o));});
+  root.addEventListener("keydown",async e=>{if(e.key==="Enter"&&e.target.id==="lf-q"){e.preventDefault();say(await send(opts("next")));}});
+  root._say=say;
+}
+ACC.localizar={title:"Localizar e substituir",icon:"find",w:420,render(root,ctx){root.innerHTML=findFormHTML({});
+  findFormBind(root,o=>{window.salaNative.sendTo(ctx.dono||"notas","find",o);return new Promise(res=>{root._pending=res;setTimeout(()=>{if(root._pending===res){root._pending=null;res(null);}},1500);});});
+  root._onMsg=d=>{if(d&&d.type==="findResult"&&root._pending){const r=root._pending;root._pending=null;r(d.payload);}};
+  setTimeout(()=>{const q=root.querySelector("#lf-q");if(q)q.focus();},60);}};
+/* o Bloco de notas passa a abrir o Localizar fora dele, no .exe */
+const _notasRender=ACC.notas.render;
+ACC.notas.render=function(root,ctx){
+  _notasRender.call(this,root,ctx);const t=root.querySelector("#np-text");let last={q:""};
+  const openFind=()=>{
+    if(IS_TOOL&&window.salaNative&&window.salaNative.sendTo){window.salaNative.openWindow("localizar");return;}
+    dialog({id:"npFindWin",title:"Localizar e substituir",width:420,modal:false,icon:"find",body:`<div class="acc-root">${findFormHTML(last)}</div>`,onOpen:w=>{const r=w.querySelector(".acc-root");findFormBind(r,o=>{last=o;return npFind(t,o);});}});};
+  root.addEventListener("click",e=>{const b=e.target.closest('[data-np="achar"]');if(b){e.stopImmediatePropagation();openFind();}},true);
+  t.addEventListener("keydown",e=>{if((e.ctrlKey||e.metaKey)&&(e.key.toLowerCase()==="f"||e.key.toLowerCase()==="h")){e.preventDefault();e.stopImmediatePropagation();openFind();}
+    if(e.key==="F3"&&last.q){e.preventDefault();npFind(t,Object.assign({},last,{acao:"next"}));}},true);
+  root._onMsg=d=>{if(d&&d.type==="find"){last=d.payload;const r=npFind(t,d.payload);window.salaNative.sendTo(d.from||"localizar","findResult",r);}};
+};
+
+/* ---------- comandos ---------- */
+Object.assign(CMD,{
+  paginaMargens:{label:"Página e margens…",icon:"page",needs:1,run:()=>pageSetupDialog()},
+  exportarPdf:{label:"Exportar PDF",icon:"pdf",needs:1,run:async()=>{const sc=cur();histCommit();toast("Montando o PDF…");const r=await scriptPDF(sc);await offer(fileName(sc).replace(/\.docx$/,".pdf"),r.blob);}},
+  exportarEscaleta:{label:"Exportar escaleta (.docx)",needs:1,run:()=>exportEscaleta()},
+});
+MENUS.find(m=>m[0]==="Formatar")[2].push("-","paginaMargens");
+{const a=MENUS.find(m=>m[0]==="Arquivo")[2];a.splice(a.indexOf("exportar")+1,0,"exportarPdf","exportarEscaleta");}
+TIPS.push("Arraste os triângulos da régua para mudar o recuo do personagem, da fala e da rubrica. Os quadradinhos nas pontas mudam as margens da página.",
+  "Formatar › Página e margens tem seis modelos, do Padrão da Sala ao papel ofício, com prévia e contagem de páginas.",
+  "Arquivo › Exportar PDF monta o roteiro paginado, com folha de rosto e número de página, pronto para mandar à produção.");
 
 if(IS_TOOL)bootTool(new URLSearchParams(location.search).get("janela"));else boot();
 </script>
