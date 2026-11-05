@@ -24,6 +24,7 @@ contextBridge.exposeInMainWorld("salaNative", {
   lanSend: (m) => ipcRenderer.invoke("lan:send", m),
   lanStop: () => ipcRenderer.invoke("lan:stop"),
   lanIps: () => ipcRenderer.invoke("lan:ips"),
+  popCmd: (nome, cmd, a, b) => ipcRenderer.invoke("pop:cmd", nome, cmd, a, b),
   onLan: (cb) => ipcRenderer.on("lan:event", (_e, d) => cb(d)),
   onEvent: (cb) => {
     ipcRenderer.on("upd:event", (_e, d) => cb("upd", d));

@@ -51,7 +51,7 @@ npm run instalador
 Quando terminar, o instalador estará em:
 
 ```
-dist\SETUP_SCRIPTROOM_4.9.0.exe
+dist\SETUP_SCRIPTROOM_5.0.0.exe
 ```
 
 Dê dois cliques nele e siga o assistente: **Avançar › Aceito › Avançar › Instalar › Concluir**.
@@ -82,6 +82,20 @@ No VS Code também dá para usar **Terminal › Run Task…**, que lista as quat
   Análise técnica mostra a folha de cada cena por departamento e exporta em .csv.
 - **Exportar PDF…** com opções: folha de rosto, marcas de revisão, só um trecho de cenas, marca
   d'água e **cópias nominais** (um PDF por pessoa, com o nome dela na marca d'água).
+
+## Tela de começo e janelas soltas (versão 5.0)
+
+- **Tela de começo:** o ScriptRoom abre sem nenhum roteiro aberto, na janela **Bem-vindo ao
+  ScriptRoom**: *Continuar de onde parei*, Novo roteiro, Abrir, Importar, Nova série, Modelos,
+  Sala na rede e a lista de roteiros recentes com busca (digite e aperte Enter para abrir).
+  **Arquivo › Fechar roteiro** (Ctrl+F4) volta para ela. Para abrir direto no último roteiro,
+  desmarque "Mostrar esta tela ao abrir o ScriptRoom".
+- **Janelas soltas:** no programa instalado, toda janela vira uma janela de verdade do Windows,
+  como o Bloco de notas. Dá para arrastar para fora do ScriptRoom e levar para o outro monitor.
+  As janelas de consulta (Estrutura, Análise técnica, Revisões, Relatórios, Comentários, Séries,
+  Localizar, Lixeira, Sala na rede, Bate-papo) não travam o roteiro e aparecem na barra de
+  tarefas. As de pergunta (Excluir?, Exportar PDF…) travam até você responder, como no Windows 95.
+  Para voltar ao jeito antigo: **Exibir › Janelas soltas**.
 
 ## Sala na rede local: escrever junto pelo IP (versão 4.9)
 

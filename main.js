@@ -290,10 +290,42 @@ ipcMain.handle("upd:download", async () => { if (autoUpdater) await autoUpdater.
 ipcMain.handle("upd:install", () => { if (autoUpdater) setImmediate(() => autoUpdater.quitAndInstall(false, true)); });
 
 /* ---------- janela principal ---------- */
+// Janelas soltas: a janela principal abre uma janela filha em branco e muda o diálogo para
+// dentro dela (o código continua o mesmo). Só "about:blank" com nome sr-pop… é aceito.
+const soltas = new Map();
 function protegerNavegacao(w) {
-  w.webContents.setWindowOpenHandler(({ url }) => { if (/^https?:/.test(url)) shell.openExternal(url); return { action: "deny" }; });
+  w.webContents.setWindowOpenHandler(({ url, frameName }) => {
+    if (w === win && url === "about:blank" && /^sr-pop(-modal)?-[A-Za-z0-9_-]{1,40}$/.test(frameName || "")) {
+      const modal = frameName.startsWith("sr-pop-modal");
+      return { action: "allow", overrideBrowserWindowOptions: {
+        frame: false, parent: win, modal, show: true, resizable: true, minimizable: !modal, maximizable: false, fullscreenable: false,
+        skipTaskbar: true, backgroundColor: "#C0C0C0", minWidth: 200, minHeight: 60, icon: path.join(__dirname, "build", "icon.png"),
+        webPreferences: { contextIsolation: true, nodeIntegration: false, sandbox: true, spellcheck: true },
+      } };
+    }
+    if (/^https?:/.test(url)) shell.openExternal(url);
+    return { action: "deny" };
+  });
+  w.webContents.on("did-create-window", (filha, { frameName }) => {
+    if (!/^sr-pop/.test(frameName || "")) return;
+    soltas.set(frameName, filha);
+    filha.webContents.setWindowOpenHandler(() => ({ action: "deny" }));
+    filha.webContents.on("will-navigate", (e) => e.preventDefault());
+    filha.on("closed", () => soltas.delete(frameName));
+  });
   w.webContents.on("will-navigate", (e) => e.preventDefault());
 }
+ipcMain.handle("pop:cmd", (e, nome, cmd, a, b) => {
+  if (!win || e.sender !== win.webContents) return false;
+  const j = soltas.get(nome);
+  if (!j || j.isDestroyed()) return false;
+  if (cmd === "min") j.minimize();
+  else if (cmd === "focus") { if (j.isMinimized()) j.restore(); j.focus(); }
+  else if (cmd === "toggle") { if (j.isMinimized()) { j.restore(); j.focus(); } else if (j.isFocused()) j.minimize(); else j.focus(); }
+  else if (cmd === "size" && Number.isFinite(a) && Number.isFinite(b)) j.setContentSize(Math.max(200, Math.min(4000, Math.round(a))), Math.max(60, Math.min(3000, Math.round(b))));
+  else if (cmd === "pos" && Number.isFinite(a) && Number.isFinite(b)) j.setPosition(Math.round(a), Math.round(b));
+  return true;
+});
 function criarJanela() {
   win = new BrowserWindow({
     width: 1280, height: 820, minWidth: 820, minHeight: 560,

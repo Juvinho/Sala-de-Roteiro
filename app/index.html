@@ -551,6 +551,27 @@ table.dood .d-I,table.dood .d-IF{background:#7CD07C}table.dood .d-F{background:#
 .lanbox{display:flex;gap:10px;align-items:flex-start;padding:8px;background:#fff;border:2px inset var(--face,#C0C0C0)}
 .lanbox.on{background:#F0FFF0}
 .lanips{margin:4px 0}.lanips code{display:inline-block;font:bold 18px var(--f-type,monospace);background:#000;color:#30FF30;padding:2px 8px;margin:2px 4px 2px 0;letter-spacing:.04em}
+/* pacote 7: tela de começo e janelas soltas */
+.desk-empty.start{display:flex;align-items:flex-start;justify-content:center;padding:28px 12px;margin:0;max-width:none;min-height:100%;box-sizing:border-box;background:transparent;box-shadow:none;text-align:left}
+.stbtn svg,.stcont svg{width:32px;height:32px;flex:none}
+.startwin{width:min(880px,100%);background:var(--face,#C0C0C0);border:2px outset #fff;box-shadow:2px 2px 0 #000;padding:3px;text-align:left;color:var(--text,#000)}
+.startwin .titlebar{cursor:default}
+.st-body{display:grid;grid-template-columns:230px 1fr;gap:10px;padding:10px}
+.st-art{display:flex;flex-direction:column;gap:10px}.st-art .splash{padding:14px 8px}
+.st-art .tip{display:flex;gap:6px;align-items:flex-start;background:#FFFFE1;border:1px solid #000;padding:6px;font-size:12px}.st-art .tip b{display:block}
+.st-stats{margin:0;font-size:11px;color:var(--muted,#555)}
+.st-main{display:flex;flex-direction:column;gap:10px;min-width:0}
+.stcont{display:flex;align-items:center;gap:10px;text-align:left;padding:8px 10px;background:#fff;border:2px outset #fff;cursor:pointer;font:inherit;color:#000}
+.stcont:hover,.stcont:focus-visible{background:#000080;color:#fff}.stcont span{display:flex;flex-direction:column;flex:1;min-width:0}.stcont small{font-size:11px;opacity:.85}.stcont b{font-size:14px}.stcont .go{flex:none;font-size:16px}
+.st-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.stbtn{display:flex;align-items:center;gap:8px;text-align:left;padding:6px 8px;background:var(--face,#C0C0C0);border:2px outset #fff;cursor:pointer;font:inherit;color:inherit;min-height:52px}
+.stbtn:active{border-style:inset}.stbtn:hover b{text-decoration:underline}.stbtn span{display:flex;flex-direction:column;min-width:0}.stbtn small{font-size:10.5px;color:var(--muted,#444)}
+.st-recent tr[data-start]{cursor:pointer}.st-recent tr[data-start]:hover,.st-recent tr[data-start]:focus{background:#000080;color:#fff;outline:none}
+.st-foot{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:4px 10px 6px;border-top:1px solid #808080;flex-wrap:wrap}
+@media (max-width:720px){.st-body{grid-template-columns:1fr}.st-grid{grid-template-columns:repeat(2,1fr)}.st-art .splash{display:none}}
+body.popwin{margin:0;overflow:hidden;background:var(--face,#C0C0C0)}
+body.popwin>.win{position:static!important;width:100%!important;max-width:none!important;max-height:none;margin:0;box-shadow:none;box-sizing:border-box}
+body.popwin .titlebar{-webkit-app-region:drag;cursor:default;user-select:none}body.popwin .titlebar button,body.popwin .titlebar select,body.popwin .titlebar input{-webkit-app-region:no-drag}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
 </style>
 
@@ -4125,6 +4146,97 @@ Object.assign(CMD,{lanSala:{label:"Sala na rede local (IP)…",icon:"lan",run:()
 {const fe=MENUS.find(m=>m[0]==="Ferramentas")[2];fe.splice(fe.indexOf("batePapo")+1,0,"lanSala");}
 if(lanOk())lanEvents();
 TIPS.push("No programa instalado, Ferramentas › Sala na rede local abre uma sala pelo IP: todo mundo na mesma rede escreve junto, sem internet.");
+
+/* ================================================================
+   PACOTE 7: tela de começo · fechar roteiro · todas as janelas soltas (programa instalado)
+   ================================================================ */
+
+/* ---------- tela de começo ---------- */
+function tempoAtras(ts){if(!ts)return "";const s=(Date.now()-ts)/1000;if(s<60)return "agora há pouco";if(s<3600)return `há ${Math.round(s/60)} min`;if(s<86400)return `há ${Math.round(s/3600)} h`;const d=Math.round(s/86400);if(d<30)return `há ${d} dia${d>1?"s":""}`;return new Date(ts).toLocaleDateString("pt-BR");}
+S.startQ="";
+const usoDe=s=>Math.max(s.atualizado||0,(prefs.abertos||{})[s.id]||0);
+const _openEp12=openEp;openEp=function(id,k){_openEp12(id,k);if(id&&S.eps[id]){const a=Object.assign({},prefs.abertos||{});a[id]=Date.now();const ks=Object.keys(a).sort((x,y)=>a[y]-a[x]).slice(0,40);prefs.abertos=Object.fromEntries(ks.map(x=>[x,a[x]]));savePrefs();}};
+function startRows(){const q=S.startQ.trim().toLowerCase();const all=Object.values(S.eps).sort((a,b)=>usoDe(b)-usoDe(a));
+  const l=q?all.filter(s=>`${epLabel(s)} ${(S.series[s.meta.serieId]||{}).nome||""} ${s.meta.logline||""}`.toLowerCase().includes(q)):all.slice(0,10);
+  return l.map((s,i)=>{const se=S.series[s.meta.serieId];return `<tr data-start="${s.id}" tabindex="0"${i===0&&!q?' class="first"':""}><td>${icon("script")} <b>${escH(epTag(s.meta))}</b> · ${escH(s.meta.titulo)}</td><td>${escH(se?se.nome:"—")}</td><td>${escH(s.meta.status||"")}</td><td class="num">${escH(tempoAtras(usoDe(s)))}</td></tr>`;}).join("")||`<tr><td colspan="4" class="muted">${q?"Nenhum roteiro com esse nome.":"Nenhum roteiro ainda. Comece um novo ou importe um .docx."}</td></tr>`;}
+function startHTML(){
+  const all=Object.values(S.eps);const last=[...all].sort((a,b)=>usoDe(b)-usoDe(a))[0];const se=last&&S.series[last.meta.serieId];
+  const nS=Object.keys(S.series).length;const btn=(cmd,ic,l,small)=>`<button type="button" class="stbtn" data-cmd="${cmd}">${icon(ic,32)}<span><b>${l}</b>${small?`<small>${small}</small>`:""}</span></button>`;
+  const rede=window.salaNative?btn("lanSala","lan","Sala na rede","escrever junto pelo IP"):btn("salaAoVivo","people","Sala ao vivo","escrever junto pelo link");
+  return `<div class="desk-empty start" id="deskEmpty"><div class="startwin" role="region" aria-label="Bem-vindo ao ScriptRoom">
+    <div class="titlebar"><span data-icon="clapper"></span><span class="ttl">Bem-vindo ao ScriptRoom</span></div>
+    <div class="st-body"><div class="st-art"><div class="splash"><svg viewBox="0 0 16 16" width="56" height="56" aria-hidden="true">${ICON.clapper}</svg><span class="big">SCRIPTROOM</span><span class="sub">edição 95</span></div>
+        <div class="tip">${icon("lamp",24)}<div><b>Você sabia…</b><span id="stTip">${escH(TIPS[prefs.tip||0]||TIPS[0])}</span><div style="margin-top:6px"><button type="button" class="btn sm" data-stip="1">Próxima dica</button></div></div></div>
+        <p class="st-stats">${all.length} roteiro${all.length===1?"":"s"} · ${nS} série${nS===1?"":"s"}</p></div>
+      <div class="st-main">
+        ${last?`<button type="button" class="stcont" data-start="${last.id}">${icon("script",32)}<span><small>Continuar de onde parei</small><b>${escH(epTag(last.meta))} · ${escH(last.meta.titulo)}</b><small>${escH(se?se.nome:"")} · aberto ${escH(tempoAtras(usoDe(last)))}</small></span><span class="go" aria-hidden="true">▶</span></button>`:""}
+        <div class="st-grid">${btn("novo","new","Novo roteiro","próximo episódio, modelo ou série")}${btn("abrir","open","Abrir…","todos os roteiros da sala")}${btn("importar","folder",".docx, .fdx, .fountain","importar de outro programa")}
+          ${btn("novaSerie","cal","Nova série","novela, comédia, radionovela…")}${btn("meusModelos","page","Modelos","começar de uma estrutura")}${rede}</div>
+        <div class="st-recent"><div class="row"><b>Roteiros recentes</b><input type="search" id="stQ" placeholder="Procurar roteiro" value="${escH(S.startQ)}" aria-label="Procurar roteiro" style="margin-left:auto;width:180px"></div>
+          <div class="listview" style="max-height:236px"><table><thead><tr><th>Roteiro</th><th>Série</th><th>Etapa</th><th class="num">Usado</th></tr></thead><tbody id="stRows">${startRows()}</tbody></table></div></div>
+      </div></div>
+    <div class="st-foot"><label class="chk"><input type="checkbox" id="stShow"${prefs.telaInicio!==false?" checked":""}> Mostrar esta tela ao abrir o ScriptRoom</label><span class="muted">Arquivo › Fechar roteiro volta para cá</span></div></div></div>`;
+}
+function startBind(){const el=document.getElementById("deskEmpty");if(!el||el.dataset.bound)return;el.dataset.bound="1";paintIcons(el);
+  el.addEventListener("click",e=>{const r=e.target.closest("[data-start]");if(r){openEp(r.dataset.start);return;}if(e.target.closest("[data-stip]")){const t=el.querySelector("#stTip");if(t)t.textContent=nextTip();}});
+  el.addEventListener("keydown",e=>{const r=e.target.closest("tr[data-start]");if(!r)return;if(e.key==="Enter"){e.preventDefault();openEp(r.dataset.start);}
+    if(e.key==="ArrowDown"||e.key==="ArrowUp"){e.preventDefault();const n=e.key==="ArrowDown"?r.nextElementSibling:r.previousElementSibling;if(n)n.focus();}});
+  const q=el.querySelector("#stQ");if(q){q.addEventListener("input",()=>{S.startQ=q.value;el.querySelector("#stRows").innerHTML=startRows();paintIcons(el.querySelector("#stRows"));});
+    q.addEventListener("keydown",e=>{if(e.key==="ArrowDown"){const f=el.querySelector("tr[data-start]");if(f){e.preventDefault();f.focus();}}if(e.key==="Enter"){const f=el.querySelector("tr[data-start]");if(f)openEp(f.dataset.start);}});}
+  const c=el.querySelector("#stShow");if(c)c.onchange=()=>{prefs.telaInicio=c.checked;savePrefs();};}
+const _renderSheet12=renderSheet;
+renderSheet=function(){_renderSheet12();if(!cur()){const de=document.getElementById("deskEmpty");if(de)de.remove();desk.insertAdjacentHTML("beforeend",startHTML());startBind();updTitle();const es=_gid12.call(document,"epSel");if(es)es.selectedIndex=-1;}};
+function fecharRoteiro(){if(!cur())return;flush();histCommit();S.cur=null;S.focusId=null;hideAC();if(S.view!=="page")S.view="page";syncViews();renderAll();lsSave();desk.scrollTop=0;if(typeof colabPresence==="function")colabPresence();}
+const _showWelcome12=showWelcome;
+showWelcome=function(force){if(force)return _showWelcome12(true);if(prefs.telaInicio===false)return;if(cur())fecharRoteiro();else renderSheet();};
+const _renderSide12=renderSide;
+renderSide=function(){_renderSide12();if(!cur()&&Object.keys(S.eps).length){const em=side.querySelector(".empty");if(em)em.innerHTML=`<strong>Nenhum roteiro aberto</strong>Escolha um na tela de boas-vindas ou em Arquivo › Abrir.`;}};
+Object.assign(CMD,{fecharRoteiro:{label:"Fechar roteiro",icon:"open",key:"Ctrl+F4",needs:1,run:()=>fecharRoteiro()}});
+{const a=MENUS.find(m=>m[0]==="Arquivo")[2];a.splice(a.indexOf("abrir")+1,0,"fecharRoteiro");}
+document.addEventListener("keydown",e=>{if(e.ctrlKey&&e.key==="F4"&&!IS_TOOL){e.preventDefault();fecharRoteiro();}});
+
+/* ---------- janelas soltas: cada diálogo vira uma janela do Windows ---------- */
+const POPS=new Set();
+const popOk=()=>!!(window.salaNative&&window.salaNative.popCmd)&&!IS_TOOL&&prefs.janelasSoltas!==false;
+const _gid12=Document.prototype.getElementById,_qs12=Document.prototype.querySelector;
+document.getElementById=function(id){const r=_gid12.call(document,id);if(r||!POPS.size)return r;for(const c of POPS){try{const x=c.document.getElementById(id);if(x)return x;}catch(e){}}return null;};
+document.querySelector=function(sel){const r=_qs12.call(document,sel);if(r||!POPS.size)return r;for(const c of POPS){try{const x=c.document.querySelector(sel);if(x)return x;}catch(e){}}return null;};
+let popCascade=0;
+function popOut(w,o){
+  if(o.noPop||w.querySelector(".dpw"))return false;
+  const r=w.getBoundingClientRect();if(r.width<40||r.height<30)return false;const modal=o.modal!==false;
+  const name=`sr-pop${modal?"-modal":""}-${uid("w").replace(/[^A-Za-z0-9_-]/g,"")}`.slice(0,52);
+  const k=modal?0:(POPS.size%8);const x=Math.round(screenX+r.left+k*24),y=Math.round(screenY+r.top+k*24);
+  let child=null;try{child=window.open("about:blank",name,`width=${Math.ceil(r.width)},height=${Math.ceil(r.height)},left=${x},top=${y}`);}catch(e){child=null;}
+  if(!child)return false;let d;try{d=child.document;}catch(e){d=null;}if(!d){try{child.close();}catch(e){}return false;}
+  d.open();d.write('<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><title></title></head><body></body></html>');d.close();d.title=o.title||"ScriptRoom";
+  for(const n of document.head.querySelectorAll('style,link[rel="stylesheet"]'))d.head.appendChild(d.importNode(n,true));
+  for(const n of document.body.querySelectorAll(':scope > style'))d.head.appendChild(d.importNode(n,true));
+  d.documentElement.className=document.documentElement.className;for(const a of [...document.body.attributes])if(a.name!=="id")d.body.setAttribute(a.name,a.value);
+  d.body.classList.add("popwin");if(modal)d.body.classList.add("popmodal");
+  w.style.left="0px";w.style.top="0px";
+  d.body.appendChild(d.adoptNode(w));
+  POPS.add(child);w._pop={child,name};
+  let gone=false;const done=()=>{if(gone)return;gone=true;POPS.delete(child);};
+  const mo=new MutationObserver(()=>{if(w.ownerDocument!==d||!w.isConnected){mo.disconnect();done();try{child.close();}catch(e){}}});mo.observe(d.body,{childList:true});
+  child.addEventListener("pagehide",()=>{if(gone)return;done();if(w._close)w._close();});
+  const fit=()=>{if(gone)return;const b=w.getBoundingClientRect();const h=Math.ceil(b.height),ww=Math.ceil(b.width);if(h>20&&(Math.abs(h-child.innerHeight)>1))window.salaNative.popCmd(name,"size",Math.max(ww,child.innerWidth),h);};
+  try{new child.ResizeObserver(fit).observe(w);}catch(e){try{new ResizeObserver(fit).observe(w);}catch(e2){}}
+  w.addEventListener("click",e=>{const m=e.target.closest('[data-w="min"]');if(m){e.stopImmediatePropagation();e.preventDefault();window.salaNative.popCmd(name,"min");}},true);
+  if(w._task)w._task.onclick=()=>window.salaNative.popCmd(name,"toggle");
+  d.addEventListener("keydown",e=>{if(e.ctrlKey&&!e.altKey&&(e.key==="s"||e.key==="S")){e.preventDefault();flush();}});
+  setTimeout(()=>{try{child.focus();}catch(e){}const f=w.querySelector("[autofocus]")||w.querySelector("input:not([type=checkbox]):not([type=radio]),select,textarea")||w.querySelector(".btn.def")||w.querySelector(".btn");if(f)f.focus();},30);
+  return true;
+}
+const _dialog12=dialog;
+// janelas de consulta ficam livres como o Bloco de notas (não travam o roteiro)
+const LIVRES_ID=new Set(["stWin","bdWin","revWin","updWin","comWin","serWin"]),LIVRES_T=new Set(["Relatórios de produção","Localizar","Lixeira da sala","Dica do dia"]);
+dialog=function(o){if(o.modal===undefined&&(LIVRES_ID.has(o.id)||LIVRES_T.has(o.title)))o=Object.assign({},o,{modal:false,icon:o.icon||({stWin:"struct",bdWin:"tag",revWin:"rev",updWin:"update",comWin:"com",serWin:"cal"}[o.id])||(o.title==="Relatórios de produção"?"report":o.title==="Localizar"?"find":o.title==="Lixeira da sala"?"trash":"lamp")});const r=_dialog12(o);if(popOk()&&o.id!=="welcomeWin")popOut(r.el,o);return r;};
+Object.assign(CMD,{janelasSoltas:{label:"Janelas soltas (como o Bloco de notas)",check:()=>prefs.janelasSoltas!==false,run:()=>{prefs.janelasSoltas=prefs.janelasSoltas===false;savePrefs();toast(prefs.janelasSoltas?"As janelas abrem soltas: arraste para fora, até para outro monitor":"As janelas voltam a abrir dentro do ScriptRoom");}}});
+if(window.salaNative&&!IS_TOOL){const ex=MENUS.find(m=>m[0]==="Exibir")[2];ex.splice(ex.indexOf("verRegua")+1,0,"janelasSoltas");}
+addEventListener("beforeunload",()=>{for(const c of POPS){try{c.close();}catch(e){}}});
+TIPS.push("No programa instalado, toda janela é solta: arraste a Estrutura, o Bate-papo ou as Revisões para fora, até para o outro monitor.",
+  "Arquivo › Fechar roteiro (Ctrl+F4) volta para a tela de boas-vindas, com os roteiros recentes e a busca.");
 
 if(IS_TOOL)bootTool(new URLSearchParams(location.search).get("janela"));else boot();
 </script>
