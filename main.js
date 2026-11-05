@@ -347,7 +347,7 @@ function transitarParaPrincipal() {
 function criarSplash() {
   splash = new BrowserWindow({
     width: 620, height: 350, frame: false, resizable: false, center: true,
-    show: false, alwaysOnTop: true, skipTaskbar: false, backgroundColor: "#040c16",
+    show: false, alwaysOnTop: true, skipTaskbar: false, backgroundColor: "#C6BFA6",
     icon: path.join(__dirname, "build", "icon.png"),
     webPreferences: { preload: path.join(__dirname, "preload.js"), contextIsolation: true, nodeIntegration: false, sandbox: true },
   });
@@ -362,7 +362,7 @@ function abrirSplashManual() {
   const manual = new BrowserWindow({
     width: 620, height: 350, frame: false, resizable: false, center: true,
     show: false, alwaysOnTop: false, parent: win && !win.isDestroyed() ? win : undefined,
-    backgroundColor: "#040c16", icon: path.join(__dirname, "build", "icon.png"),
+    backgroundColor: "#C6BFA6", icon: path.join(__dirname, "build", "icon.png"),
     webPreferences: { preload: path.join(__dirname, "preload.js"), contextIsolation: true, nodeIntegration: false, sandbox: true },
   });
   protegerNavegacao(manual);

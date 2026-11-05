@@ -4,337 +4,228 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=620,initial-scale=1,user-scalable=no">
 <title>ScriptRoom — Inicializando</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=VT323&display=swap">
 <style>
-* { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
+:root {
+  --face: #C6BFA6;
+  --light: #E1DBC6;
+  --hi: #FFFFFF;
+  --lo: #8A8268;
+  --dk: #0A0A0A;
+  --title1: #800000;
+  --text: #000000;
+  --muted: #3C3C3C;
+  --f-ui: Tahoma, Verdana, "MS Sans Serif", Arial, sans-serif;
+  --f-pix: "VT323", "Courier New", ui-monospace, monospace;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  user-select: none;
+  -webkit-font-smoothing: none;
+  font-smooth: never;
+}
+
 html, body {
   width: 620px;
   height: 350px;
   overflow: hidden;
-  font-family: Tahoma, "Segoe UI", Arial, sans-serif;
+  font-family: var(--f-ui);
   font-size: 11px;
-  background: #000;
-  color: #fff;
+  background: var(--face);
+  color: var(--text);
   cursor: default;
 }
-.splash-box {
+
+/* Moldura externa clássica Windows 95 em relevo 3D */
+.win95-splash {
   width: 620px;
   height: 350px;
-  position: relative;
-  background: radial-gradient(circle at 80% 20%, #0d2847 0%, #081728 50%, #040c16 100%);
-  border: 2px solid;
-  border-color: #DFDFDF #0A0A0A #0A0A0A #DFDFDF;
-  box-shadow: inset 1px 1px #FFFFFF, inset -1px -1px #808080, 0 16px 36px rgba(0,0,0,0.85);
+  background: var(--face);
+  padding: 8px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding: 20px 24px 16px;
-  overflow: hidden;
+  box-shadow:
+    inset 1px 1px var(--light),
+    inset -1px -1px var(--dk),
+    inset 2px 2px var(--hi),
+    inset -2px -2px var(--lo);
 }
 
-/* scanlines sutis de monitor CRT de ilha de edição de 1995 */
-.splash-box::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: repeating-linear-gradient(0deg, rgba(0,0,0,0.18) 0px, rgba(0,0,0,0.18) 1px, transparent 1px, transparent 3px);
-  pointer-events: none;
-  opacity: 0.7;
-}
-
-/* borda perfurada de película 35mm decorativa nas laterais */
-.film-edge-left, .film-edge-right {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  width: 10px;
-  background: repeating-linear-gradient(180deg, transparent 0px, transparent 6px, #000 6px, #000 14px);
-  opacity: 0.35;
-  pointer-events: none;
-}
-.film-edge-left { left: 4px; border-right: 1px solid rgba(255,255,255,0.08); }
-.film-edge-right { right: 4px; border-left: 1px solid rgba(255,255,255,0.08); }
-
-/* cabeçalho com logo e arte */
-.header {
-  position: relative;
-  z-index: 2;
+/* Quadro principal com o logo original anos 90 (claquete + SCRIPTROOM + edição 95) */
+.splash-banner {
+  background: linear-gradient(180deg, var(--title1) 0%, #000000 100%);
+  color: #FFFFFF;
+  height: 206px;
   display: flex;
-  align-items: center;
-  gap: 18px;
-}
-.emblem-wrap {
-  width: 72px;
-  height: 72px;
-  flex-shrink: 0;
-  background: linear-gradient(145deg, #16365c, #0a1b2e);
-  border: 2px solid;
-  border-color: #8bb3e0 #05101a #05101a #8bb3e0;
-  box-shadow: inset 1px 1px #fff, 0 4px 12px rgba(0,0,0,0.5);
-  display: flex;
+  flex-direction: column;
+  gap: 6px;
   align-items: center;
   justify-content: center;
+  text-align: center;
+  position: relative;
+  box-shadow:
+    inset -1px -1px var(--hi),
+    inset 1px 1px var(--lo),
+    inset -2px -2px var(--light),
+    inset 2px 2px var(--dk);
 }
-.branding {
-  flex: 1;
-  min-width: 0;
+
+.splash-banner svg {
+  display: block;
+  margin-bottom: 4px;
+  image-rendering: pixelated;
 }
-.title-row {
+
+.splash-banner .big {
+  font: 400 44px/1 var(--f-pix);
+  letter-spacing: 0.05em;
+  color: #FFFFFF;
+}
+
+.splash-banner .sub {
+  font: 400 22px/1 var(--f-pix);
+  color: #9FD4FF;
+}
+
+.splash-ver-tag {
+  position: absolute;
+  right: 10px;
+  bottom: 7px;
+  font: 400 15px/1 var(--f-pix);
+  color: #B89090;
+}
+
+/* Área inferior cinza/bege estilo diálogo clássico de 1995 */
+.splash-bottom {
   display: flex;
-  align-items: baseline;
-  gap: 8px;
+  flex-direction: column;
+  gap: 6px;
+  padding: 2px 2px 0;
 }
-.brand-name {
-  font-family: "Arial Black", "Segoe UI", Impact, sans-serif;
-  font-size: 34px;
-  font-weight: 900;
-  letter-spacing: -0.5px;
-  line-height: 1;
-  background: linear-gradient(180deg, #FFFFFF 0%, #D8ECF8 40%, #7CB8E0 55%, #1F5582 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.9));
-  text-transform: none;
-}
-.badge-edition {
-  font-size: 9px;
-  font-weight: 700;
-  letter-spacing: 0.8px;
-  background: linear-gradient(180deg, #ffd700, #b8860b);
-  color: #000;
-  padding: 2px 6px;
-  border-radius: 2px;
-  text-transform: uppercase;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.6);
-}
-.tagline {
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 1.2px;
-  color: #89b8df;
-  margin-top: 4px;
-  text-transform: uppercase;
-}
-.arch-line {
-  font-size: 9.5px;
-  color: #6a8ea8;
-  margin-top: 3px;
+
+/* Linha de licença gravada em baixo-relevo (groove 95) */
+.license-row {
   display: flex;
-  gap: 12px;
-}
-.arch-line span {
-  display: inline-flex;
+  justify-content: space-between;
   align-items: center;
-  gap: 4px;
-}
-.arch-line span::before {
-  content: "■";
-  color: #00e0ff;
-  font-size: 7px;
-}
-
-/* área intermediária de especificações e módulos de 1995 */
-.spec-box {
-  position: relative;
-  z-index: 2;
-  background: rgba(4, 15, 27, 0.75);
-  border: 1px solid rgba(120, 175, 220, 0.2);
-  box-shadow: inset 1px 1px 3px rgba(0,0,0,0.7);
-  padding: 8px 12px;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 4px 16px;
-  font-size: 9.5px;
-  color: #9ac2e2;
-  margin: 6px 0;
-}
-.spec-item {
-  display: flex;
-  justify-content: space-between;
-}
-.spec-item b {
-  color: #e0f2ff;
-  font-weight: 600;
+  padding: 4px 8px;
+  background: var(--face);
+  box-shadow:
+    inset -1px -1px var(--hi),
+    inset 1px 1px var(--lo);
+  font-size: 11px;
+  color: var(--text);
 }
 
-/* seção da barra horizontal de carregamento (Creative Cloud / 90s style) */
-.loading-bay {
-  position: relative;
-  z-index: 2;
-  margin-top: 4px;
+.license-row b {
+  font-weight: 700;
 }
-.loading-head {
+
+/* Cabeçalho da barra de carregamento */
+.load-status-row {
   display: flex;
   justify-content: space-between;
   align-items: baseline;
-  margin-bottom: 5px;
+  padding: 0 2px;
 }
-.tool-feed {
-  font-size: 10.5px;
-  font-weight: 600;
-  color: #eaf4ff;
+
+.tool-label {
+  font-size: 11px;
+  color: var(--text);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 490px;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-.tool-dot {
-  width: 7px;
-  height: 7px;
-  background: #00ffcc;
-  border-radius: 50%;
-  box-shadow: 0 0 6px #00ffcc;
-  flex-shrink: 0;
-  animation: pulse 0.7s infinite alternate;
-}
-@keyframes pulse {
-  from { opacity: 0.4; transform: scale(0.9); }
-  to { opacity: 1; transform: scale(1.1); }
-}
-.percent-num {
-  font-family: "Courier New", Courier, monospace;
-  font-size: 12px;
-  font-weight: 700;
-  color: #00e0ff;
+  max-width: 530px;
 }
 
-/* barra horizontal retro com blocos ou gradiente de 1995 */
-.progress-frame {
-  width: 100%;
-  height: 18px;
-  background: #02070d;
-  box-shadow: inset -1px -1px #404040, inset 1px 1px #000, inset -2px -2px #262626, inset 2px 2px #000;
-  border: 1px solid #14283d;
-  padding: 2px;
-  position: relative;
-  overflow: hidden;
+.pct-label {
+  font: 400 16px/1 var(--f-pix);
+  color: var(--text);
 }
-.progress-fill {
+
+/* Barra de progresso horizontal clássica Windows 95 em gomos sólidos */
+.prog95-well {
+  width: 100%;
+  height: 22px;
+  background: #FFFFFF;
+  padding: 3px;
+  box-shadow:
+    inset -1px -1px var(--hi),
+    inset 1px 1px var(--lo),
+    inset -2px -2px var(--light),
+    inset 2px 2px var(--dk);
+}
+
+.prog95-fill {
   height: 100%;
   width: 0%;
-  background: linear-gradient(90deg, #02669e 0%, #00a4d6 50%, #00ffcc 100%);
-  background-size: 100% 100%;
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.4), 0 0 8px rgba(0,255,204,0.4);
-  transition: width 0.12s linear;
-  position: relative;
-}
-/* segmentação em estilo LED / barra clássica de progresso */
-.progress-fill::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: repeating-linear-gradient(90deg, transparent 0px, transparent 8px, rgba(0,0,0,0.5) 8px, rgba(0,0,0,0.5) 10px);
+  background: repeating-linear-gradient(
+    90deg,
+    var(--title1) 0px,
+    var(--title1) 10px,
+    transparent 10px,
+    transparent 12px
+  );
 }
 
-/* rodapé com direitos e licença */
-.footer {
-  position: relative;
-  z-index: 2;
+/* Rodapé anos 90 */
+.footer95 {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 9px;
-  color: #6486a2;
-  border-top: 1px solid rgba(255,255,255,0.06);
-  padding-top: 6px;
-  margin-top: 4px;
+  font-size: 10px;
+  color: var(--muted);
+  padding: 0 2px;
 }
-.footer-right {
-  text-align: right;
-  color: #7d9cb5;
-}
-.click-hint {
+
+.click-close {
   display: none;
-  color: #ffd700;
+  color: var(--title1);
   font-weight: 700;
 }
 </style>
 </head>
 <body>
 
-<div class="splash-box" id="splashRoot">
-  <div class="film-edge-left"></div>
-  <div class="film-edge-right"></div>
-
-  <!-- Cabeçalho / Logo -->
-  <div class="header">
-    <div class="emblem-wrap">
-      <svg viewBox="0 0 64 64" width="56" height="56" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <!-- Rolo de filme 35mm e claquete -->
-        <circle cx="32" cy="32" r="28" fill="#061626" stroke="#4887b8" stroke-width="2.5"/>
-        <circle cx="32" cy="32" r="19" fill="#0c233a" stroke="#2a5780" stroke-width="1.5"/>
-        <circle cx="32" cy="32" r="8" fill="#183e63" stroke="#8ec2ec" stroke-width="2"/>
-        <circle cx="32" cy="32" r="3.5" fill="#eaf4ff"/>
-        <!-- Furos do carretel cinematográfico -->
-        <circle cx="32" cy="18" r="3" fill="#040b13" stroke="#5b9bd1" stroke-width="1"/>
-        <circle cx="32" cy="46" r="3" fill="#040b13" stroke="#5b9bd1" stroke-width="1"/>
-        <circle cx="18" cy="32" r="3" fill="#040b13" stroke="#5b9bd1" stroke-width="1"/>
-        <circle cx="46" cy="32" r="3" fill="#040b13" stroke="#5b9bd1" stroke-width="1"/>
-        <circle cx="22" cy="22" r="2.5" fill="#040b13" stroke="#5b9bd1" stroke-width="1"/>
-        <circle cx="42" cy="42" r="2.5" fill="#040b13" stroke="#5b9bd1" stroke-width="1"/>
-        <circle cx="22" cy="42" r="2.5" fill="#040b13" stroke="#5b9bd1" stroke-width="1"/>
-        <circle cx="42" cy="22" r="2.5" fill="#040b13" stroke="#5b9bd1" stroke-width="1"/>
-        <!-- Pena clássica de ouro sobreposta -->
-        <path d="M48 10L54 16L34 38L27 41L29 34L48 10Z" fill="url(#goldPen)" stroke="#1a1200" stroke-width="1"/>
-        <path d="M27 41L25 45L29 43L27 41Z" fill="#fff" stroke="#000" stroke-width="0.5"/>
-        <defs>
-          <linearGradient id="goldPen" x1="28" y1="38" x2="52" y2="12" gradientUnits="userSpaceOnUse">
-            <stop stop-color="#FFD700"/>
-            <stop offset="0.5" stop-color="#FFE880"/>
-            <stop offset="1" stop-color="#C58900"/>
-          </linearGradient>
-        </defs>
-      </svg>
-    </div>
-
-    <div class="branding">
-      <div class="title-row">
-        <h1 class="brand-name">ScriptRoom</h1>
-        <span class="badge-edition">Edição 1995 · Win32</span>
-      </div>
-      <div class="tagline">Sistema Profissional de Roteiro & Dramaturgia de TV</div>
-      <div class="arch-line">
-        <span>Arquitetura Multimídia 32-bit</span>
-        <span>Mecanismo Courier Prime 12pt</span>
-        <span>Protocolo de Rede ScriptNet LAN</span>
-      </div>
-    </div>
+<div class="win95-splash" id="splashRoot">
+  <!-- Logo idêntico ao da Sala de Roteiro 95 -->
+  <div class="splash-banner">
+    <svg viewBox="0 0 16 16" width="64" height="64" aria-hidden="true">
+      <rect x="1.5" y="6.5" width="13" height="8" fill="#202020" stroke="#000"/>
+      <path d="M1.5 3.5l12-2 .5 3-12 2z" fill="#fff" stroke="#000"/>
+      <path d="M4 3l1.5 2.6M7.5 2.4L9 5M11 1.8l1.5 2.6" stroke="#000"/>
+      <path d="M3 9h10M3 11h7" stroke="#fff"/>
+    </svg>
+    <span class="big">SCRIPTROOM</span>
+    <span class="sub">edição 95</span>
+    <span class="splash-ver-tag" id="verTag">v6.1.1</span>
   </div>
 
-  <!-- Quadro de Informações do Sistema de Época -->
-  <div class="spec-box">
-    <div class="spec-item"><span>Versão instalada:</span><b>6.1.1 Pro Edition</b></div>
-    <div class="spec-item"><span>Licenciado para:</span><b>Departamento de Dramaturgia</b></div>
-    <div class="spec-item"><span>Mesa de Sonoplastia:</span><b>Sound Blaster 16 Foley</b></div>
-    <div class="spec-item"><span>Módulos de Produção:</span><b>Multi-Cam · Cassete · CC</b></div>
-  </div>
-
-  <!-- Barra Horizontal de Carregamento de Ferramentas (Creative Cloud / Clássica de 1995) -->
-  <div class="loading-bay">
-    <div class="loading-head">
-      <div class="tool-feed">
-        <div class="tool-dot"></div>
-        <span id="toolStatus">Inicializando subsistema Win32 e bibliotecas de dramática...</span>
-      </div>
-      <div class="percent-num" id="percentText">0%</div>
+  <!-- Painel inferior estilo Windows 95 -->
+  <div class="splash-bottom">
+    <div class="license-row">
+      <span>Licenciado para: <b>Departamento de Dramaturgia — C2</b></span>
+      <span>Versão <b>6.1.1</b> · 32-bit</span>
     </div>
 
-    <div class="progress-frame">
-      <div class="progress-fill" id="progressFill"></div>
+    <div class="load-status-row">
+      <span class="tool-label" id="toolStatus">Carregando: Núcleo de dramaturgia e folha datilografada...</span>
+      <span class="pct-label" id="percentText">0%</span>
     </div>
-  </div>
 
-  <!-- Rodapé de Direitos e Memória -->
-  <div class="footer">
-    <div class="footer-left">
-      © 1995-2026 Departamento de Dramaturgia · C2 Broadcasting System.<br>
-      Todos os direitos reservados. Registro de Software D-95/BR.
+    <div class="prog95-well" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="progBar">
+      <div class="prog95-fill" id="progressFill"></div>
     </div>
-    <div class="footer-right">
-      <span class="click-hint" id="clickHint">[ Pressione Esc ou clique para fechar ]</span>
-      <span id="memStatus">Memória Alocada: 32.768 KB · Modos: Roteiro, Foley, Produção</span>
+
+    <div class="footer95">
+      <span>© 1995 Departamento de Dramaturgia · Todos os direitos reservados.</span>
+      <span class="click-close" id="clickHint">[ Clique ou aperte Esc para fechar ]</span>
+      <span id="memStatus">Memória: 32.768 KB livres</span>
     </div>
   </div>
 </div>
@@ -343,86 +234,67 @@ html, body {
 "use strict";
 
 const ETAPAS = [
-  { p: 10, msg: "Inicializando subsistema Win32 e núcleo de dramática..." },
-  { p: 22, msg: "Carregando tipografia Courier Prime e matriz de diagramação..." },
-  { p: 35, msg: "Inicializando banco de roteiros, séries e revisões coloridas..." },
-  { p: 48, msg: "Carregando Mesa de Sonoplastia Sound Blaster 16 (Foley procedural)..." },
-  { p: 60, msg: "Carregando Analisador de Ritmo Dramático e Curva de Tensão..." },
-  { p: 72, msg: "Montando Beat Board, Quadro de Cenas e Grade de Exibição..." },
-  { p: 83, msg: "Carregando Decupagem Multi-Câmera de Estúdio e Closed Caption..." },
-  { p: 92, msg: "Inicializando Deck de Fita Cassete C-60 e Protocolo ScriptNet LAN..." },
-  { p: 98, msg: "Carregando Teleprompter de Estúdio e Sintetizador de Mesa..." },
-  { p: 100, msg: "Pronto para gravação." }
+  { p: 12, msg: "Carregando: Núcleo de dramaturgia e folha Courier 12pt..." },
+  { p: 25, msg: "Carregando: Banco de séries, cenas e revisões coloridas..." },
+  { p: 38, msg: "Carregando: Mesa de sonoplastia Sound Blaster 16 (Foley)..." },
+  { p: 52, msg: "Carregando: Osciloscópio de ritmo dramático e curva de tensão..." },
+  { p: 65, msg: "Carregando: Mesa de corte e decupagem multi-câmera (4 CAMs)..." },
+  { p: 78, msg: "Carregando: Decodificador Closed Caption Linha 21 (EIA-608)..." },
+  { p: 90, msg: "Carregando: Deck cassete C-60 e gravador PCM .WAV..." },
+  { p: 100, msg: "Pronto. Iniciando o ScriptRoom..." }
 ];
 
+const fillEl = document.getElementById("progressFill");
+const pctEl = document.getElementById("percentText");
+const statusEl = document.getElementById("toolStatus");
+const hintEl = document.getElementById("clickHint");
+const memEl = document.getElementById("memStatus");
+const rootEl = document.getElementById("splashRoot");
+const progBar = document.getElementById("progBar");
+
 const params = new URLSearchParams(window.location.search);
-const isSobre = params.get("modo") === "sobre";
+const isAboutMode = params.get("modo") === "sobre";
 
-const toolStatus = document.getElementById("toolStatus");
-const percentText = document.getElementById("percentText");
-const progressFill = document.getElementById("progressFill");
-const clickHint = document.getElementById("clickHint");
-const memStatus = document.getElementById("memStatus");
+let idx = 0;
 
-function fecharJanela() {
-  if (window.salaNative && window.salaNative.close) {
-    window.salaNative.close();
-  } else {
-    window.close();
+function setProgress(p, text) {
+  fillEl.style.width = p + "%";
+  pctEl.textContent = p + "%";
+  progBar.setAttribute("aria-valuenow", String(p));
+  if (text) statusEl.textContent = text;
+}
+
+function finalizeSplash() {
+  if (isAboutMode) {
+    statusEl.textContent = "Todas as ferramentas carregadas e operacionais.";
+    memEl.style.display = "none";
+    hintEl.style.display = "inline";
+    rootEl.style.cursor = "pointer";
+    rootEl.addEventListener("click", () => window.close());
+    window.addEventListener("keydown", e => {
+      if (e.key === "Escape" || e.key === "Enter" || e.key === " ") window.close();
+    });
+    return;
+  }
+  if (window.salaNative && typeof window.salaNative.splashDone === "function") {
+    window.salaNative.splashDone();
   }
 }
 
-if (isSobre) {
-  // Modo 'Sobre' / exibição manual
-  progressFill.style.width = "100%";
-  percentText.textContent = "100%";
-  toolStatus.textContent = "Todos os módulos e ferramentas de produção carregados.";
-  clickHint.style.display = "inline";
-  memStatus.style.display = "none";
-  document.body.style.cursor = "pointer";
-  document.addEventListener("click", fecharJanela);
-  document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape" || e.key === "Enter" || e.key === " ") fecharJanela();
-  });
-} else {
-  // Modo splash normal de inicialização rápida (~2.2 segundos de sequência realista)
-  let idx = 0;
-  const t0 = performance.now();
-  const duracaoTotal = 2300; // ms
-
-  function avancar() {
-    const elapsed = performance.now() - t0;
-    const progressNorm = Math.min(1, elapsed / duracaoTotal);
-
-    // Encontra a etapa correspondente
-    while (idx < ETAPAS.length - 1 && progressNorm >= ETAPAS[idx + 1].p / 100) {
-      idx++;
-    }
-
-    const etapaAtual = ETAPAS[idx];
-    const pct = Math.min(100, Math.round(progressNorm * 100));
-
-    progressFill.style.width = pct + "%";
-    percentText.textContent = pct + "%";
-    toolStatus.textContent = etapaAtual.msg;
-
-    if (progressNorm < 1) {
-      requestAnimationFrame(avancar);
-    } else {
-      progressFill.style.width = "100%";
-      percentText.textContent = "100%";
-      toolStatus.textContent = ETAPAS[ETAPAS.length - 1].msg;
-      setTimeout(() => {
-        if (window.salaNative && window.salaNative.splashDone) {
-          window.salaNative.splashDone();
-        }
-      }, 250);
-    }
+function step() {
+  if (idx >= ETAPAS.length) {
+    setTimeout(finalizeSplash, 260);
+    return;
   }
-
-  requestAnimationFrame(avancar);
+  const item = ETAPAS[idx++];
+  setProgress(item.p, item.msg);
+  const delay = isAboutMode ? 170 : (220 + Math.floor(Math.random() * 110));
+  setTimeout(step, delay);
 }
+
+window.addEventListener("DOMContentLoaded", () => {
+  setTimeout(step, 140);
+});
 </script>
 </body>
 </html>
-

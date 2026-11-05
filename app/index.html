@@ -4592,7 +4592,7 @@ aboutDialog=async function(){
   dialog({title:"Sobre o ScriptRoom",width:480,body:`<div class="splash"><svg viewBox="0 0 16 16" width="48" height="48" aria-hidden="true">${ICON.clapper}</svg><span class="big">SCRIPTROOM</span><span class="sub">Versão ${escH(v)} · edição 95</span></div>
   <div>Licenciado para:<br><b>Departamento de Dramaturgia — C2</b><br>Série em produção: ${escH((cur()||{meta:{serie:"—"}}).meta.serie)}</div><hr style="border:0;border-top:1px solid var(--lo);border-bottom:1px solid var(--hi);width:100%">
   <div class="muted">${n.length} roteiros · ${fmtN(cenas)} cenas · ${fmtN(falas)} falas<br>Memória usada pela sala: ${fmtN(kb)} KB · ${onde}</div>
-  <b style="margin-top:4px">O que há de novo</b>${novidadesHTML(v)}`,buttons:[...(window.salaNative?[{label:"Procurar atualizações…",run:()=>{setTimeout(()=>runCmd("atualizar"),0);}}]:[]),{label:"OK",def:1}]});
+  <b style="margin-top:4px">O que há de novo</b>${novidadesHTML(v)}`,buttons:[{label:"Tela de abertura…",run:()=>{setTimeout(()=>abrirSplash(),0);}},...(window.salaNative?[{label:"Procurar atualizações…",run:()=>{setTimeout(()=>runCmd("atualizar"),0);}}]:[]),{label:"OK",def:1}]});
 };
 /* depois de atualizar, mostra uma vez o que entrou */
 async function novidadesCheck(){if(IS_TOOL)return;const v=await versaoAtual();const vista=prefs.versaoVista;prefs.versaoVista=v;savePrefs();
