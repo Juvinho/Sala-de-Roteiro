@@ -634,6 +634,43 @@ body.foco #sheet .el:not(.foco-on){opacity:.18;transition:opacity .25s}body.foco
 .relleg{display:flex;flex-wrap:wrap;gap:8px;font-size:11px;margin-left:auto}.relleg i{display:inline-block;width:14px;height:3px;vertical-align:middle;margin-right:3px}
 .vbar{display:inline-block;width:60px;height:8px;border:1px solid #808080;background:#fff;vertical-align:middle}.vbar i{display:block;height:100%}
 #vz-t tr[data-vz]{cursor:pointer}#vz-t tr.sel td{background:#FFFFE1}
+/* 6.5: sonoplastia foley, ritmo dramático, grade de transmissão, matriz de conflitos */
+.el[data-sfx]::after{content:" 🔊 SFX";font:bold 9px var(--f-ui);color:#000080;background:#E2ECF8;border:1px solid #7090B0;padding:1px 4px;margin-left:6px;cursor:pointer;border-radius:2px;vertical-align:middle;user-select:none;display:inline-block}
+.el[data-sfx]:hover::after{background:#000080;color:#fff}
+.foley-panel{display:flex;flex-direction:column;gap:10px}
+.foley-mixer{display:flex;gap:16px;background:#E8E8E8;border:2px inset var(--face,#C0C0C0);padding:8px 12px;align-items:center;flex-wrap:wrap}
+.foley-mixer label{font-size:11px;display:inline-flex;align-items:center;gap:6px}
+.foley-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}@media (max-width:640px){.foley-grid{grid-template-columns:1fr 1fr}}
+.foley-card{background:#F7F7F7;border:2px outset var(--face,#C0C0C0);padding:6px 8px;display:flex;flex-direction:column;gap:4px}
+.foley-card:hover{background:#FFFEE0}
+.foley-card-head{display:flex;justify-content:space-between;align-items:center;font-size:10px}
+.foley-tag{background:#C0C0C0;border:1px solid #808080;padding:0 3px;font-size:9px;font-weight:700}
+.foley-title{font-weight:700;font-size:12px;color:#000060;margin:2px 0}
+.foley-btns{display:flex;gap:4px;margin-top:auto}
+.foley-btns .btn{flex:1;padding:2px 4px;font-size:11px}
+.ritmo-crt{background:#05140b;border:2px inset #000;padding:8px;position:relative;overflow:hidden}
+.ritmo-crt::before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(0deg,rgba(0,255,100,0.06) 0px,rgba(0,255,100,0.06) 1px,transparent 1px,transparent 3px);pointer-events:none}
+.ritmo-head{display:flex;justify-content:space-between;color:#00ff66;font:11px var(--f-pix,monospace);margin-bottom:6px}
+.ritmo-svg{display:block;width:100%;height:160px;background:#030f07}
+.ritmo-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:8px}@media (max-width:600px){.ritmo-stats{grid-template-columns:1fr 1fr}}
+.ritmo-stat{background:#fff;border:1px solid #808080;padding:6px;font-size:11px}
+.ritmo-stat b{display:block;font-size:16px;color:#000080}
+.ritmo-acts{display:flex;flex-direction:column;gap:4px;max-height:160px;overflow:auto;background:#fff;border:2px inset var(--face,#C0C0C0);padding:6px;margin-top:8px}
+.ritmo-act-row{display:flex;justify-content:space-between;align-items:center;padding:3px 4px;border-bottom:1px dotted #C0C0C0;font-size:11px}
+.badge-hook-ok{background:#D4F8D4;border:1px solid #208020;color:#006000;font-weight:700;padding:1px 5px}
+.badge-hook-warn{background:#FFF0C0;border:1px solid #A07000;color:#805000;font-weight:700;padding:1px 5px}
+.grade-table{width:100%;border-collapse:collapse;font-size:11px;background:#fff;border:2px inset var(--face,#C0C0C0)}
+.grade-table th{background:var(--face,#C0C0C0);border:1px solid #808080;padding:3px 6px;text-align:left;position:sticky;top:0}
+.grade-table td{border:1px solid #E0E0E0;padding:3px 6px}
+.grade-table tr.break-row td{background:#FFF6D6;font-weight:700;color:#604000}
+.grade-alert{padding:6px 10px;margin-bottom:8px;font-weight:700;font-size:12px;border:1px solid}
+.grade-alert.ok{background:#D0F0D0;border-color:#208020;color:#005000}
+.grade-alert.warn{background:#FFF0C0;border-color:#C08000;color:#604000}
+.grade-alert.err{background:#FFD8D8;border-color:#C00000;color:#800000}
+.dram-card{background:#FFFFEE;border:2px solid #806020;padding:12px;box-shadow:inset 0 0 10px rgba(180,140,50,0.15),2px 2px 5px rgba(0,0,0,0.25);font-size:12px;line-height:1.5}
+.dram-card h4{margin:0 0 8px;font-size:14px;color:#800000;border-bottom:1px solid #C0A060;padding-bottom:3px}
+.dram-field{margin-bottom:8px}
+.dram-field span{font-weight:700;color:#000080;display:block;font-size:10px;text-transform:uppercase}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
 </style>
 
@@ -665,6 +702,8 @@ body.foco #sheet .el:not(.foco-on){opacity:.18;transition:opacity .25s}body.foco
     <button class="tbtn" type="button" data-cmd="verTemporada" data-icon="cal" title="Planejamento da temporada" aria-pressed="false"></button>
     <button class="tbtn" type="button" data-cmd="notepad" data-icon="note" title="Bloco de notas"></button>
     <button class="tbtn" type="button" data-cmd="leitura" data-icon="speaker" title="Leitura de mesa"></button>
+    <button class="tbtn" type="button" data-cmd="foley" data-icon="foley" title="Mesa de sonoplastia Foley (Sound Blaster 16)"></button>
+    <button class="tbtn" type="button" data-cmd="ritmo" data-icon="ritmo" title="Ritmo dramático e curva de tensão"></button>
     <button class="tbtn" type="button" data-cmd="relatorios" data-icon="report" title="Relatórios de produção"></button>
     <span class="tsep hide-sm"></span>
     <label class="tlbl hide-sm" for="zoomSel">Zoom</label>
@@ -1702,9 +1741,12 @@ function tipDialog(){dialog({title:"Dica do dia",width:420,body:`<div class="tip
 function aboutDialog(){
   const n=Object.values(S.eps);const cenas=n.reduce((a,s)=>a+s.els.filter(e=>e.t==="scene").length,0),falas=n.reduce((a,s)=>a+s.els.filter(e=>e.t==="character").length,0);
   const kb=Math.round(JSON.stringify(S.eps).length/1024);
-  dialog({title:"Sobre o ScriptRoom",width:420,body:`<div class="splash"><svg viewBox="0 0 16 16" width="48" height="48" aria-hidden="true">${ICON.clapper}</svg><span class="big">SCRIPTROOM</span><span class="sub">Versão 4.00.950</span></div>
+  dialog({title:"Sobre o ScriptRoom",width:420,body:`<div class="splash"><svg viewBox="0 0 16 16" width="48" height="48" aria-hidden="true">${ICON.clapper}</svg><span class="big">SCRIPTROOM</span><span class="sub">Versão ${escH(APP_VERSAO)} Pro</span></div>
   <div>Licenciado para:<br><b>Departamento de Dramaturgia — C2</b><br>Série em produção: ${escH((cur()||{meta:{serie:"—"}}).meta.serie)}</div><hr style="border:0;border-top:1px solid var(--lo);border-bottom:1px solid var(--hi);width:100%">
-  <div class="muted">${n.length} roteiros · ${fmtN(cenas)} cenas · ${fmtN(falas)} falas<br>Memória usada pela sala: ${fmtN(kb)} KB</div>`,buttons:[{label:"OK",def:1}]});
+  <div class="muted">${n.length} roteiros · ${fmtN(cenas)} cenas · ${fmtN(falas)} falas<br>Memória usada pela sala: ${fmtN(kb)} KB</div>
+  <div style="margin-top:8px"><button type="button" class="btn" id="abt-splash">Ver tela de abertura (Splash Screen)…</button></div>`,
+  buttons:[{label:"OK",def:1}],
+  onOpen:(w)=>{const b=w.querySelector("#abt-splash");if(b)b.onclick=()=>{w._close();abrirSplash();};}});
 }
 function shutdown(){
   dialog({title:"Desligar o ScriptRoom",width:380,body:`<div class="row" style="flex-wrap:nowrap;align-items:flex-start">${icon("power",32)}<fieldset style="flex:1"><legend>O que você quer fazer?</legend><label class="radio"><input type="radio" name="sd" value="off" checked><span>Salvar tudo e desligar</span></label><label class="radio"><input type="radio" name="sd" value="re"><span>Reiniciar (volta às boas-vindas)</span></label></fieldset></div>`,
@@ -3004,10 +3046,12 @@ function elFlags(n,e){
   if(e.nota){n.dataset.nota="1";n.title="Nota: "+e.nota;}else{delete n.dataset.nota;if(n.title&&n.title.startsWith("Nota: "))n.removeAttribute("title");}
   if(e.alts&&e.alts.length){n.dataset.alts=String(e.alts.length+1);if(!e.nota)n.title=`${e.alts.length+1} versões desta fala (botão direito › Falas alternativas)`;}else delete n.dataset.alts;
   if(e.omit)n.dataset.omit="1";else delete n.dataset.omit;
+  const sfxK=typeof sfxKeyFromText==="function"&&sfxKeyFromText(e.x);if(sfxK)n.dataset.sfx=sfxK;else delete n.dataset.sfx;
 }
 function elHTML(e,f){
   const T=TYPES[e.t]||TYPES.action;
-  return `<div class="el e-${e.t}${f&&f.end?" end":""}" data-id="${e.id}" data-ph="${escH(T.ph)}" data-label="${T.label}"${e.t==="scene"?` data-num="CENA ${f?(f.label||f.num):"?"} — "${e.cor?` data-cor="1" style="--cor:${e.cor}"`:""}`:""}${f&&f.cont?' data-cont="1"':""}${e.nota?` data-nota="1" title="${escH("Nota: "+e.nota)}"`:""}${e.alts&&e.alts.length?` data-alts="${e.alts.length+1}"`:""}${e.omit?' data-omit="1"':""} contenteditable="true" spellcheck="true" role="textbox" aria-label="${T.label}">${escH(e.x)}</div>`;
+  const sfxK=typeof sfxKeyFromText==="function"&&sfxKeyFromText(e.x);
+  return `<div class="el e-${e.t}${f&&f.end?" end":""}" data-id="${e.id}" data-ph="${escH(T.ph)}" data-label="${T.label}"${e.t==="scene"?` data-num="CENA ${f?(f.label||f.num):"?"} — "${e.cor?` data-cor="1" style="--cor:${e.cor}"`:""}`:""}${f&&f.cont?' data-cont="1"':""}${e.nota?` data-nota="1" title="${escH("Nota: "+e.nota)}"`:""}${e.alts&&e.alts.length?` data-alts="${e.alts.length+1}"`:""}${e.omit?' data-omit="1"':""}${sfxK?` data-sfx="${sfxK}"`:""} contenteditable="true" spellcheck="true" role="textbox" aria-label="${T.label}">${escH(e.x)}</div>`;
 }
 function decor(){
   const sc=cur();if(!sc)return;S.lay=paginate(sc);
@@ -4480,8 +4524,9 @@ TIPS.push("Ctrl+Z agora desfaz palavra por palavra. Editar › Histórico de alt
    A cada versão nova: mude APP_VERSAO e acrescente a entrada no topo de VERSOES.
    (o empacotamento confere se APP_VERSAO bate com o package.json)
    ================================================================ */
-const APP_VERSAO="6.0.0";
+const APP_VERSAO="6.5.0";
 const VERSOES=[
+  ["6.5.0","Sonoplastia e Ritmo de TV",["Tela de abertura (Splash Screen) horizontal com logo clássico e barra de ferramentas","Ferramentas › Mesa de sonoplastia (Foley): 12 efeitos sintetizados para dramaturgia e rádio","Áudio no roteiro: marcas (SFX: ...) no texto têm botão sonoro direto na página para tocar na hora","Exibir › Ritmo dramático e curva de tensão: gráfico de ondas de tensão e detector de ganchos de intervalo comercial","Produção › Grade de exibição e comerciais: cálculo de minutagem de transmissão e quebras comerciais da emissora","Ferramentas › Matriz de conflitos e ideias: dilemas dramáticos e viradas de roteiro usando seu elenco","Ajuda › Tela de abertura: rever a tela de abertura e créditos a qualquer momento"]],
   ["6.0.0","O mundo inteiro",["Produção › Mapa do mundo: suba o mapa, espete os lugares da Bíblia e veja as cenas de cada um","Caminho do episódio: a rota das cenas desenhada no mapa","Exibir › Árvore de relações: gerações, casais e alianças a partir das fichas","Exibir › Voz dos personagens: como cada um fala, e quem fala parecido demais","Arquivo › Cartões de cena para imprimir, quatro por folha","Correções: o Mapa de caracteres voltou a abrir; Ctrl+Shift+F não abre mais o Localizar junto","Correções: Novo roteiro já começa em “próximo episódio”; janelas de um episódio fecham ao trocar de episódio","Correções: palavras de outra pessoa na sala não contam mais na sua meta; painel mais estável"]],
   ["5.3.0","Bíblia do mundo",["Produção › Bíblia do mundo: lugares, facções, termos e a linha do tempo da série","Os termos ficam sublinhados na página; escrito de outro jeito, fica em vermelho com Trocar","Sugestões de verbetes tiradas dos próprios roteiros","Arquivo › Exportar a temporada: todos os roteiros em PDF, Word, Final Draft e Fountain num .zip","Arquivo › Reiniciar volta para a tela de começo"]],
   ["5.2.0","Para escritor de série",["Plantar e colher: pistas plantadas e onde elas pagam a conta, na série inteira","Gerador de nomes do mundo, que aprende com o seu elenco","A Revisão agora confere continuidade","Diário de escrita com mapa de calor do ano","Modo foco (Ctrl+Shift+F)"]],
@@ -4981,9 +5026,881 @@ TIPS.push("Produção › Mapa do mundo: suba a imagem do mapa e espete os lugar
   "Arquivo › Cartões de cena para imprimir: quatro cartões por folha, para a parede da sala de roteiro.");
 
 
-/* ---------- correções da 6.0 ---------- */
+/* ================================================================
+   SCRIPTROOM 6.5 — MESA DE SONOPLASTIA, RITMO DE TV E SPLASH SCREEN
+   ================================================================ */
+Object.assign(ICON, {
+  foley: '<rect x="1.5" y="2.5" width="13" height="11" fill="#202020" stroke="#000"/><path d="M4 8h2l2-3v6l-2-3H4z" fill="#00ffcc" stroke="#000" stroke-width=".5"/><path d="M10.5 6q1.5 2 0 4M12.5 4.5q3 3.5 0 7" fill="none" stroke="#00ffcc" stroke-width="1.2"/>',
+  ritmo: '<rect x="1.5" y="2.5" width="13" height="11" fill="#030f07" stroke="#000"/><path d="M2.5 8h2l1.5-4 2.5 8 2-5 1.5 2.5h2" stroke="#00ff66" stroke-width="1.1" fill="none"/>',
+  grade: '<rect x="1.5" y="2.5" width="13" height="11" fill="#fff" stroke="#000"/><path d="M1.5 6h13M6 2.5v11" stroke="#808080"/><circle cx="10.5" cy="9.5" r="2.5" fill="#FFE070" stroke="#000" stroke-width=".8"/><path d="M10.5 8v1.5h1" stroke="#000" stroke-width=".7"/>',
+  matrix: '<path d="M3 3l10 10M13 3L3 13" stroke="#800000" stroke-width="2"/><circle cx="8" cy="8" r="3.5" fill="#FFE880" stroke="#000"/>',
+  splash: '<rect x="1.5" y="4.5" width="13" height="7" fill="#0a192f" stroke="#000"/><circle cx="5" cy="8" r="2" fill="#ffd700"/><rect x="8" y="7" width="5" height="2" fill="#00ffcc"/>'
+});
+
+function sfxKeyFromText(t) {
+  if (!t || typeof t !== "string") return null;
+  const m = /(?:\(|\[)?(?:SFX|SOM)[:\s]+([^()\]\n]+)(?:\)|\])?/i.exec(t);
+  if (!m) return null;
+  const s = m[1].toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+  if (/trovao|chuva|tempestade|raio/.test(s)) return "trovao";
+  if (/tiro|disparo|revolver|bala|pistola|arma/.test(s)) return "tiro";
+  if (/telefone|trim|toca|ligacao|chamada/.test(s)) return "telefone";
+  if (/campainha|ding|interfone/.test(s)) return "campainha";
+  if (/porta|bate|range|tranca/.test(s)) return "porta";
+  if (/passo|passos|sapato|corredor/.test(s)) return "passos";
+  if (/radio|estatica|chiado|sintonia|transmissao/.test(s)) return "radio";
+  if (/coracao|batimento|pulso|palpitacao/.test(s)) return "coracao";
+  if (/claque|palma|riso|gargalhada|plateia|publico/.test(s)) return "claque";
+  if (/gongo|suspense|impacto|acorde|stinger|misterio/.test(s)) return "gongo";
+  if (/maquina|tecla|datilografia|claque-claque/.test(s)) return "maquina";
+  if (/sirene|policia|resgate|ambulancia|viatura/.test(s)) return "sirene";
+  return "gongo";
+}
+
+const FOLEY_ITEMS = [
+  { k: "trovao", rotulo: "Trovão & Chuva", cat: "Clima", desc: "Estrondo grave e chuva torrencial" },
+  { k: "tiro", rotulo: "Disparo de Revólver", cat: "Ação", desc: "Estalo seco de pólvora e eco" },
+  { k: "telefone", rotulo: "Telefone Trim-Trim", cat: "Cotidiano", desc: "Campainha mecânica dos anos 80/90" },
+  { k: "campainha", rotulo: "Campainha Residencial", cat: "Cotidiano", desc: "Clássico ding-dong de porta" },
+  { k: "porta", rotulo: "Porta Rangendo & Bate", cat: "Suspense", desc: "Madeira rangendo e pancada forte" },
+  { k: "passos", rotulo: "Passos no Assoalho", cat: "Suspense", desc: "Passos compassados em assoalho oco" },
+  { k: "radio", rotulo: "Rádio AM & Estática", cat: "Mídia", desc: "Sintonia analógica e apito heteródino" },
+  { k: "coracao", rotulo: "Batimento Cardíaco", cat: "Tensão", desc: "Pulsação sub-grave de suspense" },
+  { k: "claque", rotulo: "Claque de Auditório", cat: "Comédia", desc: "Palmas e risos de auditório de TV" },
+  { k: "gongo", rotulo: "Gongo de Suspense", cat: "Virada", desc: "Acorde orquestral metálico de virada" },
+  { k: "maquina", rotulo: "Máquina de Escrever", cat: "Estúdio", desc: "Batida mecânica com campainha ding" },
+  { k: "sirene", rotulo: "Sirene de Polícia", cat: "Ação", desc: "Uivo de viatura em perseguição" }
+];
+
+let foleyAC = null;
+function getFoleyAC() {
+  if (!foleyAC) {
+    const C = window.AudioContext || window.webkitAudioContext;
+    if (C) foleyAC = new C();
+  }
+  if (foleyAC && foleyAC.state === "suspended") foleyAC.resume();
+  return foleyAC;
+}
+
+function playFoley(tipo, opts) {
+  const ac = getFoleyAC();
+  if (!ac) return;
+  opts = Object.assign({ vol: +(prefs.foleyVol !== undefined ? prefs.foleyVol : 0.75), pitch: +(prefs.foleyPitch || 0), eco: +(prefs.foleyEco !== undefined ? prefs.foleyEco : 0.25) }, opts || {});
+  const master = ac.createGain();
+  master.gain.value = Math.max(0, Math.min(1, opts.vol));
+
+  if (opts.eco > 0.05) {
+    const delay = ac.createDelay();
+    delay.delayTime.value = 0.22;
+    const fb = ac.createGain();
+    fb.gain.value = Math.min(0.65, opts.eco * 0.7);
+    master.connect(delay);
+    delay.connect(fb);
+    fb.connect(delay);
+    delay.connect(ac.destination);
+  }
+  master.connect(ac.destination);
+
+  const t = ac.currentTime;
+  const pitchMult = Math.pow(2, opts.pitch / 12);
+
+  function makeNoiseBuffer(dur) {
+    const sz = Math.floor(ac.sampleRate * dur);
+    const buf = ac.createBuffer(1, sz, ac.sampleRate);
+    const data = buf.getChannelData(0);
+    for (let i = 0; i < sz; i++) data[i] = (Math.random() * 2 - 1);
+    return buf;
+  }
+
+  switch(tipo) {
+    case "trovao": {
+      const dur = 3.2;
+      const noise = ac.createBufferSource();
+      noise.buffer = makeNoiseBuffer(dur);
+      const filter = ac.createBiquadFilter();
+      filter.type = "lowpass";
+      filter.frequency.setValueAtTime(450 * pitchMult, t);
+      filter.frequency.exponentialRampToValueAtTime(55 * pitchMult, t + dur);
+
+      const gain = ac.createGain();
+      gain.gain.setValueAtTime(0.01, t);
+      gain.gain.linearRampToValueAtTime(0.95, t + 0.08);
+      gain.gain.exponentialRampToValueAtTime(0.35, t + 0.6);
+      gain.gain.exponentialRampToValueAtTime(0.001, t + dur);
+
+      noise.connect(filter); filter.connect(gain); gain.connect(master);
+      noise.start(t);
+      break;
+    }
+    case "tiro": {
+      const dur = 1.1;
+      const noise = ac.createBufferSource();
+      noise.buffer = makeNoiseBuffer(dur);
+      const band = ac.createBiquadFilter();
+      band.type = "bandpass";
+      band.frequency.setValueAtTime(950 * pitchMult, t);
+      band.Q.value = 1.6;
+
+      const nGain = ac.createGain();
+      nGain.gain.setValueAtTime(1.0, t);
+      nGain.gain.exponentialRampToValueAtTime(0.001, t + dur);
+
+      const osc = ac.createOscillator();
+      osc.type = "sine";
+      osc.frequency.setValueAtTime(240 * pitchMult, t);
+      osc.frequency.exponentialRampToValueAtTime(30, t + 0.16);
+      const oGain = ac.createGain();
+      oGain.gain.setValueAtTime(0.85, t);
+      oGain.gain.exponentialRampToValueAtTime(0.001, t + 0.18);
+
+      noise.connect(band); band.connect(nGain); nGain.connect(master);
+      osc.connect(oGain); oGain.connect(master);
+      noise.start(t); osc.start(t); osc.stop(t + 0.2);
+      break;
+    }
+    case "telefone": {
+      const dur = 1.6;
+      [440, 480].forEach(f => {
+        const osc = ac.createOscillator();
+        osc.frequency.value = f * pitchMult;
+        const g = ac.createGain();
+        for (let i = 0; i < 18; i++) {
+          const tP = t + i * 0.07;
+          g.gain.setValueAtTime(0.3, tP);
+          g.gain.setValueAtTime(0.01, tP + 0.035);
+        }
+        g.gain.setValueAtTime(0, t + dur);
+        osc.connect(g); g.connect(master);
+        osc.start(t); osc.stop(t + dur);
+      });
+      break;
+    }
+    case "campainha": {
+      const notas = [{ f: 659, tOff: 0, d: 1.1 }, { f: 554, tOff: 0.45, d: 1.3 }];
+      notas.forEach(n => {
+        const osc = ac.createOscillator();
+        osc.type = "sine";
+        osc.frequency.value = n.f * pitchMult;
+        const g = ac.createGain();
+        const start = t + n.tOff;
+        g.gain.setValueAtTime(0.001, start);
+        g.gain.linearRampToValueAtTime(0.65, start + 0.02);
+        g.gain.exponentialRampToValueAtTime(0.0001, start + n.d);
+        osc.connect(g); g.connect(master);
+        osc.start(start); osc.stop(start + n.d);
+      });
+      break;
+    }
+    case "porta": {
+      const osc = ac.createOscillator();
+      osc.type = "sawtooth";
+      osc.frequency.setValueAtTime(140 * pitchMult, t);
+      osc.frequency.linearRampToValueAtTime(260 * pitchMult, t + 0.5);
+      osc.frequency.linearRampToValueAtTime(90 * pitchMult, t + 0.9);
+      const flt = ac.createBiquadFilter();
+      flt.type = "lowpass"; flt.frequency.value = 650;
+      const g = ac.createGain();
+      g.gain.setValueAtTime(0.2, t);
+      g.gain.exponentialRampToValueAtTime(0.01, t + 0.95);
+      osc.connect(flt); flt.connect(g); g.connect(master);
+      osc.start(t); osc.stop(t + 0.95);
+
+      const n = ac.createBufferSource();
+      n.buffer = makeNoiseBuffer(0.3);
+      const nFlt = ac.createBiquadFilter();
+      nFlt.type = "lowpass"; nFlt.frequency.value = 260;
+      const nG = ac.createGain();
+      nG.gain.setValueAtTime(0.001, t + 0.95);
+      nG.gain.linearRampToValueAtTime(0.9, t + 0.97);
+      nG.gain.exponentialRampToValueAtTime(0.001, t + 1.3);
+      n.connect(nFlt); nFlt.connect(nG); nG.connect(master);
+      n.start(t + 0.95);
+      break;
+    }
+    case "passos": {
+      for (let i = 0; i < 4; i++) {
+        const stepT = t + i * 0.42;
+        const n = ac.createBufferSource();
+        n.buffer = makeNoiseBuffer(0.15);
+        const f = ac.createBiquadFilter();
+        f.type = "bandpass"; f.frequency.value = (180 + (i % 2) * 45) * pitchMult; f.Q.value = 3;
+        const g = ac.createGain();
+        g.gain.setValueAtTime(0.001, stepT);
+        g.gain.linearRampToValueAtTime(0.55, stepT + 0.015);
+        g.gain.exponentialRampToValueAtTime(0.001, stepT + 0.12);
+        n.connect(f); f.connect(g); g.connect(master);
+        n.start(stepT);
+      }
+      break;
+    }
+    case "radio": {
+      const dur = 1.8;
+      const n = ac.createBufferSource();
+      n.buffer = makeNoiseBuffer(dur);
+      const f = ac.createBiquadFilter();
+      f.type = "bandpass"; f.frequency.setValueAtTime(1400 * pitchMult, t);
+      f.frequency.linearRampToValueAtTime(950 * pitchMult, t + dur);
+      f.Q.value = 4;
+      const g = ac.createGain();
+      g.gain.setValueAtTime(0.35, t);
+      g.gain.exponentialRampToValueAtTime(0.01, t + dur);
+      n.connect(f); f.connect(g); g.connect(master);
+      n.start(t);
+
+      const osc = ac.createOscillator();
+      osc.type = "sine";
+      osc.frequency.setValueAtTime(1200 * pitchMult, t);
+      osc.frequency.linearRampToValueAtTime(800 * pitchMult, t + dur);
+      const og = ac.createGain();
+      og.gain.setValueAtTime(0.08, t);
+      og.gain.exponentialRampToValueAtTime(0.001, t + dur);
+      osc.connect(og); og.connect(master);
+      osc.start(t); osc.stop(t + dur);
+      break;
+    }
+    case "coracao": {
+      for (let i = 0; i < 3; i++) {
+        const bT = t + i * 0.85;
+        const o1 = ac.createOscillator();
+        o1.type = "sine"; o1.frequency.setValueAtTime(65 * pitchMult, bT);
+        o1.frequency.exponentialRampToValueAtTime(35, bT + 0.12);
+        const g1 = ac.createGain();
+        g1.gain.setValueAtTime(0.65, bT); g1.gain.exponentialRampToValueAtTime(0.001, bT + 0.15);
+        o1.connect(g1); g1.connect(master);
+        o1.start(bT); o1.stop(bT + 0.16);
+
+        const bT2 = bT + 0.18;
+        const o2 = ac.createOscillator();
+        o2.type = "sine"; o2.frequency.setValueAtTime(55 * pitchMult, bT2);
+        o2.frequency.exponentialRampToValueAtTime(30, bT2 + 0.12);
+        const g2 = ac.createGain();
+        g2.gain.setValueAtTime(0.45, bT2); g2.gain.exponentialRampToValueAtTime(0.001, bT2 + 0.15);
+        o2.connect(g2); g2.connect(master);
+        o2.start(bT2); o2.stop(bT2 + 0.16);
+      }
+      break;
+    }
+    case "claque": {
+      const dur = 2.4;
+      const n = ac.createBufferSource();
+      n.buffer = makeNoiseBuffer(dur);
+      const f = ac.createBiquadFilter();
+      f.type = "bandpass"; f.frequency.value = 1100 * pitchMult; f.Q.value = 1.2;
+      const g = ac.createGain();
+      g.gain.setValueAtTime(0.01, t);
+      g.gain.linearRampToValueAtTime(0.6, t + 0.35);
+      g.gain.setValueAtTime(0.5, t + 1.2);
+      g.gain.exponentialRampToValueAtTime(0.001, t + dur);
+      n.connect(f); f.connect(g); g.connect(master);
+      n.start(t);
+      break;
+    }
+    case "gongo": {
+      const dur = 2.8;
+      const parciais = [98, 147, 212, 335, 480];
+      parciais.forEach((freq, idx) => {
+        const osc = ac.createOscillator();
+        osc.type = idx % 2 === 0 ? "sine" : "triangle";
+        osc.frequency.value = freq * pitchMult;
+        const g = ac.createGain();
+        g.gain.setValueAtTime(0.35 / (idx + 1), t);
+        g.gain.exponentialRampToValueAtTime(0.0001, t + dur - idx * 0.3);
+        osc.connect(g); g.connect(master);
+        osc.start(t); osc.stop(t + dur);
+      });
+      break;
+    }
+    case "maquina": {
+      const clackBuf = makeNoiseBuffer(0.05);
+      const n = ac.createBufferSource(); n.buffer = clackBuf;
+      const f = ac.createBiquadFilter(); f.type = "bandpass"; f.frequency.value = 2200;
+      const g = ac.createGain(); g.gain.setValueAtTime(0.7, t); g.gain.exponentialRampToValueAtTime(0.01, t + 0.05);
+      n.connect(f); f.connect(g); g.connect(master);
+      n.start(t);
+
+      const bell = ac.createOscillator();
+      bell.type = "sine"; bell.frequency.value = 2100 * pitchMult;
+      const bg = ac.createGain();
+      bg.gain.setValueAtTime(0.001, t + 0.08);
+      bg.gain.linearRampToValueAtTime(0.45, t + 0.09);
+      bg.gain.exponentialRampToValueAtTime(0.0001, t + 0.8);
+      bell.connect(bg); bg.connect(master);
+      bell.start(t + 0.08); bell.stop(t + 0.8);
+      break;
+    }
+    case "sirene": {
+      const dur = 2.2;
+      const osc = ac.createOscillator();
+      osc.type = "sawtooth";
+      osc.frequency.setValueAtTime(550 * pitchMult, t);
+      osc.frequency.linearRampToValueAtTime(920 * pitchMult, t + 0.6);
+      osc.frequency.linearRampToValueAtTime(550 * pitchMult, t + 1.2);
+      osc.frequency.linearRampToValueAtTime(920 * pitchMult, t + 1.8);
+      const flt = ac.createBiquadFilter(); flt.type = "lowpass"; flt.frequency.value = 1600;
+      const g = ac.createGain();
+      g.gain.setValueAtTime(0.3, t);
+      g.gain.setValueAtTime(0.3, t + 1.8);
+      g.gain.exponentialRampToValueAtTime(0.01, t + dur);
+      osc.connect(flt); flt.connect(g); g.connect(master);
+      osc.start(t); osc.stop(t + dur);
+      break;
+    }
+  }
+}
+
+sheet.addEventListener("click", e => {
+  const n = e.target.closest && e.target.closest(".el");
+  if (!n || !n.dataset.sfx) return;
+  const rect = n.getBoundingClientRect();
+  if (e.clientX > rect.right - 80 || e.altKey) {
+    e.stopPropagation();
+    playFoley(n.dataset.sfx);
+    const it = FOLEY_ITEMS.find(x => x.k === n.dataset.sfx);
+    toast("🔊 Efeito sonoro: " + (it ? it.rotulo : n.dataset.sfx));
+  }
+});
+
+function foleyDialog() {
+  const P = {
+    vol: +(prefs.foleyVol !== undefined ? prefs.foleyVol : 75),
+    pitch: +(prefs.foleyPitch || 0),
+    eco: +(prefs.foleyEco !== undefined ? prefs.foleyEco : 25)
+  };
+  const body = `
+    <div class="foley-panel">
+      <div class="foley-mixer">
+        <label>Volume <input type="range" id="fol-vol" min="0" max="100" value="${P.vol}"></label>
+        <label>Tom (Afinação) <input type="range" id="fol-pit" min="-12" max="12" value="${P.pitch}"></label>
+        <label>Eco (Reverb) <input type="range" id="fol-eco" min="0" max="100" value="${P.eco}"></label>
+        <span class="muted" style="margin-left:auto;font-size:10px">Sintetizador Foley 16-bit Win32</span>
+      </div>
+      <div class="foley-grid">
+        ${FOLEY_ITEMS.map(it => `
+          <div class="foley-card">
+            <div class="foley-card-head">
+              <span class="foley-tag">${escH(it.cat)}</span>
+              <small class="muted">${escH(it.k)}</small>
+            </div>
+            <div class="foley-title">${escH(it.rotulo)}</div>
+            <div class="muted" style="font-size:10px;margin-bottom:4px">${escH(it.desc)}</div>
+            <div class="foley-btns">
+              <button type="button" class="btn def" data-fplay="${it.k}">▶ Tocar</button>
+              <button type="button" class="btn" data-fins="${it.k}" title="Inserir marca (SFX: ...) no roteiro">+ Inserir</button>
+            </div>
+          </div>
+        `).join("")}
+      </div>
+      <p class="muted" style="margin:0">Dica: Escreva <code>(SFX: TROVÃO)</code> ou <code>(SFX: TIRO)</code> no texto para criar um botão sonoro interativo na página.</p>
+    </div>
+  `;
+  dialog({
+    id: "foleyWin",
+    title: "Mesa de sonoplastia — Foley Sound Blaster 16",
+    width: 680,
+    modal: false,
+    icon: "foley",
+    body,
+    onOpen: (w) => {
+      const getOpts = () => ({
+        vol: (+w.querySelector("#fol-vol").value) / 100,
+        pitch: +w.querySelector("#fol-pit").value,
+        eco: (+w.querySelector("#fol-eco").value) / 100
+      });
+      w.querySelectorAll("#fol-vol, #fol-pit, #fol-eco").forEach(el => {
+        el.oninput = () => {
+          prefs.foleyVol = +w.querySelector("#fol-vol").value;
+          prefs.foleyPitch = +w.querySelector("#fol-pit").value;
+          prefs.foleyEco = +w.querySelector("#fol-eco").value;
+          savePrefs();
+        };
+      });
+      w.addEventListener("click", e => {
+        const bp = e.target.closest("[data-fplay]");
+        if (bp) {
+          playFoley(bp.dataset.fplay, getOpts());
+          return;
+        }
+        const bi = e.target.closest("[data-fins]");
+        if (bi) {
+          const item = FOLEY_ITEMS.find(x => x.k === bi.dataset.fins);
+          if (!item || !cur()) return;
+          const f = S.focusId && findEl(S.focusId);
+          const tag = `(SFX: ${item.rotulo.toUpperCase()})`;
+          if (f) {
+            f.e.x = f.e.x ? f.e.x + " " + tag : tag;
+            touch(false);
+            renderSheet();
+            focusEl(f.e.id, "end");
+          } else {
+            const sc = cur();
+            sc.els.push({ id: uid(), t: "action", x: tag });
+            touch(true);
+            renderSheet();
+          }
+          toast(`Efeito "${item.rotulo}" inserido no roteiro!`);
+        }
+      });
+    }
+  });
+}
+
+function calcRitmo(sc) {
+  const lay = layOk(sc);
+  const scenes = scenesOf(sc, lay.info).filter(x => x.n);
+  const actScenes = new Map();
+  let actCur = "ATO UM";
+
+  const tensionKeywords = /morte|arma|tiro|policia|assassino|sangue|perigo|mentira|traicao|segredo|odeio|amor|culpa|verdade|fugir|socorro|pare|nunca|urgente|depressa|atencao/i;
+
+  const pts = scenes.map((scItem, idx) => {
+    let act = scItem.act || actCur;
+    if (scItem.act) actCur = scItem.act;
+    if (!actScenes.has(act)) actScenes.set(act, []);
+    actScenes.get(act).push(scItem);
+
+    const fromIdx = sc.els.findIndex(e => e.t === "scene" && e.x === scItem.h);
+    let wordsDial = 0, wordsAct = 0, questions = 0, excls = 0, conflictHits = 0;
+    if (fromIdx >= 0) {
+      for (let k = fromIdx + 1; k < sc.els.length && sc.els[k].t !== "scene"; k++) {
+        const el = sc.els[k];
+        const txt = el.x || "";
+        const wCount = (txt.match(/\S+/g) || []).length;
+        if (el.t === "dialogue") wordsDial += wCount;
+        else if (el.t === "action") wordsAct += wCount;
+        questions += (txt.match(/\?/g) || []).length;
+        excls += (txt.match(/!/g) || []).length;
+        if (tensionKeywords.test(txt)) conflictHits += (txt.match(new RegExp(tensionKeywords.source, "gi")) || []).length;
+        if (sfxKeyFromText(txt)) conflictHits += 2;
+      }
+    }
+    const totWords = Math.max(1, wordsDial + wordsAct);
+    const dialRatio = wordsDial / totWords;
+
+    let score = 32;
+    if (/NOITE|MADRUGADA/i.test(scItem.h)) score += 10;
+    if (/EXT\./i.test(scItem.h)) score += 5;
+    score += Math.min(30, conflictHits * 4);
+    score += Math.min(20, (questions + excls) * 3);
+    if (dialRatio > 0.35 && dialRatio < 0.75) score += 6;
+
+    score = Math.max(12, Math.min(96, Math.round(score)));
+
+    let bpm = 70 + Math.round(score * 0.95);
+    let ritmoNome = "Moderado (Andante)";
+    if (bpm >= 135) ritmoNome = "Frenético (Presto)";
+    else if (bpm >= 110) ritmoNome = "Ágil (Allegro)";
+    else if (bpm < 85) ritmoNome = "Lento (Adagio)";
+
+    return {
+      idx: idx + 1,
+      label: scItem.label || scItem.n,
+      h: scItem.h,
+      act,
+      score,
+      bpm,
+      ritmoNome,
+      dialRatio: Math.round(dialRatio * 100),
+      words: totWords,
+      syn: scItem.syn || scItem.first || ""
+    };
+  });
+
+  const actHooks = [];
+  for (const [actName, scList] of actScenes.entries()) {
+    if (!scList.length) continue;
+    const lastSc = scList[scList.length - 1];
+    const pt = pts.find(p => p.h === lastSc.h) || pts[pts.length - 1];
+    const isStrong = pt.score >= 60;
+    actHooks.push({
+      act: actName,
+      lastScene: pt.label,
+      score: pt.score,
+      isStrong,
+      msg: isStrong ? `Gancho Forte (${pt.score}%) — Excelente clímax para o comercial.` : `Aviso: Gancho Fraco (${pt.score}%) — Risco de dispersão do público no intervalo.`
+    });
+  }
+
+  const mediaTensao = pts.length ? Math.round(pts.reduce((a, b) => a + b.score, 0) / pts.length) : 0;
+  const mediaBPM = pts.length ? Math.round(pts.reduce((a, b) => a + b.bpm, 0) / pts.length) : 0;
+
+  return { pts, actHooks, mediaTensao, mediaBPM };
+}
+
+function ritmoDialog() {
+  const sc = cur();
+  if (!sc) return;
+  const R = calcRitmo(sc);
+  if (!R.pts.length) {
+    toast("O roteiro ainda não tem cenas para analisar.");
+    return;
+  }
+
+  const W = 720, H = 150, padX = 35, padY = 20;
+  const effW = W - padX * 2, effH = H - padY * 2;
+  const n = R.pts.length;
+  const stepX = n > 1 ? effW / (n - 1) : effW;
+
+  const coords = R.pts.map((pt, i) => {
+    const x = padX + (n > 1 ? i * stepX : effW / 2);
+    const y = H - padY - (pt.score / 100) * effH;
+    return { x, y, pt };
+  });
+
+  const pathD = coords.reduce((acc, c, i) => acc + (i === 0 ? `M${c.x},${c.y}` : ` L${c.x},${c.y}`), "");
+  const areaD = pathD ? `${pathD} L${coords[coords.length - 1].x},${H - padY} L${coords[0].x},${H - padY} Z` : "";
+
+  const svgHTML = `
+    <svg class="ritmo-svg" viewBox="0 0 ${W} ${H}">
+      <line x1="${padX}" y1="${padY}" x2="${W - padX}" y2="${padY}" stroke="#0a2a14" stroke-dasharray="2 3"/>
+      <line x1="${padX}" y1="${padY + effH * 0.25}" x2="${W - padX}" y2="${padY + effH * 0.25}" stroke="#0a2a14" stroke-dasharray="2 3"/>
+      <line x1="${padX}" y1="${padY + effH * 0.5}" x2="${W - padX}" y2="${padY + effH * 0.5}" stroke="#0a2a14" stroke-dasharray="2 3"/>
+      <line x1="${padX}" y1="${padY + effH * 0.75}" x2="${W - padX}" y2="${padY + effH * 0.75}" stroke="#0a2a14" stroke-dasharray="2 3"/>
+      <line x1="${padX}" y1="${H - padY}" x2="${W - padX}" y2="${H - padY}" stroke="#134723"/>
+
+      <path d="${areaD}" fill="rgba(0, 255, 100, 0.08)"/>
+      <path d="${pathD}" fill="none" stroke="#00ff66" stroke-width="2.2"/>
+
+      ${coords.map(c => `
+        <circle cx="${c.x}" cy="${c.y}" r="4" fill="#030f07" stroke="#00ff66" stroke-width="2" class="ritmo-node" data-sc="${escH(c.pt.label)}" style="cursor:pointer">
+          <title>Cena ${escH(c.pt.label)}: ${c.pt.score}% de Tensão (${escH(c.pt.ritmoNome)})&#10;${escH(c.pt.h)}</title>
+        </circle>
+        <text x="${c.x}" y="${H - 5}" fill="#558866" font-size="8.5" text-anchor="middle" font-family="monospace">${escH(c.pt.label)}</text>
+      `).join("")}
+    </svg>
+  `;
+
+  const body = `
+    <div class="ritmo-crt">
+      <div class="ritmo-head">
+        <span>SISTEMA DE ANÁLISE DE TENSÃO DRAMÁTICA · ARQUITETURA 1995</span>
+        <span>OSCILOSCÓPIO ATIVO</span>
+      </div>
+      ${svgHTML}
+      <div class="ritmo-stats">
+        <div class="ritmo-stat"><span>Média de Tensão</span><b>${R.mediaTensao}%</b><small class="muted">Escala dramática</small></div>
+        <div class="ritmo-stat"><span>BPM Médio</span><b>${R.mediaBPM}</b><small class="muted">Andamento do texto</small></div>
+        <div class="ritmo-stat"><span>Total de Cenas</span><b>${R.pts.length}</b><small class="muted">Neste episódio</small></div>
+        <div class="ritmo-stat"><span>Ganchos de Intervalo</span><b>${R.actHooks.filter(h => h.isStrong).length} / ${R.actHooks.length}</b><small class="muted">Atos com clímax</small></div>
+      </div>
+      <div class="ritmo-acts">
+        <b style="font-size:11px;color:#000080;margin-bottom:2px">Auditoria de Ganchos de Intervalo Comercial (Quebra de Atos):</b>
+        ${R.actHooks.map(h => `
+          <div class="ritmo-act-row">
+            <span><b>${escH(h.act)}</b> (saída na Cena ${escH(h.lastScene)})</span>
+            <span class="${h.isStrong ? "badge-hook-ok" : "badge-hook-warn"}">${escH(h.msg)}</span>
+          </div>
+        `).join("")}
+      </div>
+    </div>
+  `;
+
+  dialog({
+    id: "ritmoWin",
+    title: `Ritmo dramático e curva de tensão — ${epCode(sc.meta)}`,
+    width: 760,
+    modal: false,
+    icon: "ritmo",
+    body,
+    onOpen: (w) => {
+      w.querySelectorAll(".ritmo-node").forEach(el => {
+        el.onclick = () => {
+          const lbl = el.dataset.sc;
+          const lay = layOk(sc);
+          const idx = sc.els.findIndex((e, i) => e.t === "scene" && (lay.info[i].label === lbl || String(lay.info[i].num) === lbl));
+          if (idx >= 0) {
+            if (S.view !== "page") setMode("page");
+            gotoEl(sc.els[idx].id);
+            toast(`Navegando para Cena ${lbl}`);
+          }
+        };
+      });
+    }
+  });
+}
+
+function gradeDialog() {
+  const sc = cur();
+  if (!sc) return;
+  const lay = layOk(sc);
+  const scenes = scenesOf(sc, lay.info).filter(x => x.n);
+
+  let gradeFmt = prefs.gradeFmt || "60min";
+
+  function montaHTML() {
+    const CFG = {
+      "30min": { nome: "Comédia / Sitcom (30 min)", arteSec: 22 * 60, blocos: 3, comSec: 160 },
+      "45min": { nome: "Novela / Série (45 min)", arteSec: 34 * 60, blocos: 4, comSec: 220 },
+      "60min": { nome: "Horário Nobre / Série (60 min)", arteSec: 46 * 60, blocos: 5, comSec: 210 },
+      "90min": { nome: "Telefilme Especial (90 min)", arteSec: 72 * 60, blocos: 5, comSec: 270 }
+    }[gradeFmt] || { nome: "Horário Nobre (60 min)", arteSec: 46 * 60, blocos: 5, comSec: 210 };
+
+    let totSec = 0;
+    const scLinhas = scenes.map(s => {
+      const sec = Math.max(15, Math.round(eighthsN(s.lines, lay.lpp) * 7.5));
+      totSec += sec;
+      return { s, sec };
+    });
+
+    const secPerBloco = Math.ceil(totSec / CFG.blocos);
+    let acumulado = 0, blocoCur = 1;
+    const rows = [];
+
+    scLinhas.forEach((item, i) => {
+      acumulado += item.sec;
+      rows.push({
+        tipo: "cena",
+        bloco: blocoCur,
+        cena: item.s.label || item.s.n,
+        h: item.s.h,
+        durSec: item.sec,
+        acumSec: acumulado
+      });
+
+      if (acumulado >= blocoCur * secPerBloco && blocoCur < CFG.blocos && i < scLinhas.length - 1) {
+        rows.push({
+          tipo: "break",
+          bloco: blocoCur,
+          comSec: CFG.comSec,
+          posSec: acumulado
+        });
+        blocoCur++;
+      }
+    });
+
+    const diffSec = totSec - CFG.arteSec;
+    const diffAbs = Math.abs(diffSec);
+    const diffM = Math.floor(diffAbs / 60), diffS = diffAbs % 60;
+    const fmtT = s => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
+
+    let alertClass = "ok", alertMsg = `Duração perfeita! O roteiro tem ${fmtT(totSec)} de arte, ideal para o slot de ${CFG.nome}.`;
+    if (diffSec > 45) {
+      alertClass = "err";
+      alertMsg = `Atenção: O roteiro está ${diffM}m ${diffS}s ACIMA DA GRADE. É necessário cortar cenas para não estourar o horário da emissora.`;
+    } else if (diffSec < -45) {
+      alertClass = "warn";
+      alertMsg = `Aviso: O roteiro está ${diffM}m ${diffS}s ABAIXO DA GRADE. Necessário estender diálogos ou incluir vinhetas da emissora.`;
+    }
+
+    return `
+      <div style="display:flex;gap:12px;align-items:center;margin-bottom:8px">
+        <label class="row">Formato da Emissora:
+          <select id="gr-fmt">
+            <option value="30min"${gradeFmt === "30min" ? " selected" : ""}>30 min (Sitcom / Comédia / Desenho)</option>
+            <option value="45min"${gradeFmt === "45min" ? " selected" : ""}>45 min (Telenovela / Série diária)</option>
+            <option value="60min"${gradeFmt === "60min" ? " selected" : ""}>60 min (Horário Nobre / Drama / Policial)</option>
+            <option value="90min"${gradeFmt === "90min" ? " selected" : ""}>90 min (Telefilme / Episódio Especial)</option>
+          </select>
+        </label>
+        <span class="muted" style="margin-left:auto">Total de Arte: <b>${fmtT(totSec)}</b> / Meta: <b>${fmtT(CFG.arteSec)}</b></span>
+      </div>
+      <div class="grade-alert ${alertClass}">${escH(alertMsg)}</div>
+      <div style="max-height:300px;overflow:auto">
+        <table class="grade-table">
+          <thead>
+            <tr>
+              <th style="width:50px">Bloco</th>
+              <th style="width:60px">Cena</th>
+              <th>Cabeçalho da Cena</th>
+              <th style="width:70px">Duração</th>
+              <th style="width:90px">Tempo Acum.</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${rows.map(r => r.tipo === "break" ? `
+              <tr class="break-row">
+                <td colspan="5">⏸ INTERVALO COMERCIAL Nº ${r.bloco} (${fmtT(r.comSec)} de comerciais da emissora aos ${fmtT(r.posSec)})</td>
+              </tr>
+            ` : `
+              <tr>
+                <td><b>B${r.bloco}</b></td>
+                <td>Cena ${escH(r.cena)}</td>
+                <td>${escH(r.h)}</td>
+                <td>${fmtT(r.durSec)}</td>
+                <td><b>${fmtT(r.acumSec)}</b></td>
+              </tr>
+            `).join("")}
+          </tbody>
+        </table>
+      </div>
+    `;
+  }
+
+  dialog({
+    id: "gradeWin",
+    title: `Grade de exibição e intervalos comerciais — ${epCode(sc.meta)}`,
+    width: 740,
+    modal: false,
+    icon: "grade",
+    body: `<div id="gradeRoot">${montaHTML()}</div>`,
+    onOpen: (w) => {
+      w.addEventListener("change", e => {
+        if (e.target.id === "gr-fmt") {
+          gradeFmt = e.target.value;
+          prefs.gradeFmt = gradeFmt;
+          savePrefs();
+          w.querySelector("#gradeRoot").innerHTML = montaHTML();
+        }
+      });
+    }
+  });
+}
+
+function conflitoDialog() {
+  const chars = Object.values(S.chars || {});
+  const charNames = chars.map(c => c.nome || c.name).filter(Boolean);
+
+  const DILEMAS = [
+    { t: "O Segredo Proibido", oq: "descobriu provas irrefutáveis de uma fraude", contra: "precisa manter silêncio para proteger quem ama", risco: "se a verdade vazar, a carreira e a família são destruídas", twist: "o rival já sabia de tudo e preparou uma armadilha" },
+    { t: "O Prazo Fatal (Ticking Clock)", oq: "tem até o amanhecer para recuperar um documento crucial", contra: "um temporal isolou a cidade e as comunicações caíram", risco: "se o prazo vencer, o contrato expira e a acusação é formalizada", twist: "o documento que procuravam estava o tempo todo no cofre da vítima" },
+    { t: "Lealdade Dividida", oq: "recebeu ordens diretas para demitir ou denunciar o parceiro", contra: "o parceiro salvou sua vida no passado", risco: "se desobedecer, é considerado cúmplice; se obedecer, vira traidor", twist: "o chefe que deu a ordem foi quem planejou a sabotagem" },
+    { t: "A Testemunha Inconveniente", oq: "encontrou a única testemunha ocular do crime", contra: "a testemunha exige uma quantia em dinheiro e fuga imediata", risco: "a polícia e os capangas estão cercando o quarteirão", twist: "a testemunha na verdade é o mandante disfarçado" },
+    { t: "Dilema de Honra", oq: "descobre que seu maior sucesso profissional foi construído sobre uma mentira", contra: "confessar vai anular as conquistas de toda a equipe", risco: "a imprensa sensacionalista está farejando os bastidores", twist: "a confissão pública era exatamente o que o antagonista desejava" }
+  ];
+
+  function sortear(pName) {
+    const p1 = pName || (charNames.length ? charNames[Math.floor(Math.random() * charNames.length)] : "O PROTAGONISTA");
+    const rivals = charNames.filter(n => n !== p1);
+    const p2 = rivals.length ? rivals[Math.floor(Math.random() * rivals.length)] : "O ANTAGONISTA";
+    const d = DILEMAS[Math.floor(Math.random() * DILEMAS.length)];
+
+    return `
+      <div class="dram-card">
+        <h4>${escH(d.t)}</h4>
+        <div class="dram-field"><span>Personagens em Choque:</span><b>${escH(p1)}</b> contra <b>${escH(p2)}</b></div>
+        <div class="dram-field"><span>O Incidente Desencadeador:</span>${escH(p1)} ${escH(d.oq)}.</div>
+        <div class="dram-field"><span>O Obstáculo Dramático:</span>Porém, ${escH(d.contra)}.</div>
+        <div class="dram-field"><span>O que está em jogo (Stakes):</span>${escH(d.risco)}.</div>
+        <div class="dram-field" style="background:#FFF0C0;border-left:3px solid #800000;padding:4px 6px">
+          <span style="color:#800000">A Virada (Plot Twist):</span>${escH(d.twist)}.
+        </div>
+      </div>
+    `;
+  }
+
+  const body = `
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <div class="row" style="align-items:center">
+        <label class="row">Focar no Personagem:
+          <select id="dram-p">
+            <option value="">Sortear do Elenco</option>
+            ${charNames.map(n => `<option value="${escH(n)}">${escH(n)}</option>`).join("")}
+          </select>
+        </label>
+        <button type="button" class="btn def" id="dram-btn">🎲 Gerar Novo Conflito</button>
+      </div>
+      <div id="dram-box">${sortear()}</div>
+      <p class="muted" style="margin:0">Inspirado nos motores dramáticos de 1995: combine seu elenco com arquétipos de tensão para superar bloqueios criativos.</p>
+    </div>
+  `;
+
+  dialog({
+    id: "matrixWin",
+    title: "Matriz de conflitos e ideias dramáticas",
+    width: 600,
+    modal: false,
+    icon: "matrix",
+    body,
+    buttons: [
+      {
+        label: "Inserir como Nota de Roteiro",
+        def: 0,
+        run: () => {
+          const sc = cur();
+          if (!sc) { toast("Abra um roteiro primeiro"); return; }
+          const card = document.querySelector("#dram-box .dram-card");
+          if (!card) return;
+          const txt = "[GRADE: " + card.innerText.replace(/\s+/g, " ").trim() + "]";
+          const f = S.focusId && findEl(S.focusId);
+          if (f) {
+            insertEl(f.i, "note", txt, "after");
+          } else {
+            sc.els.push({ id: uid(), t: "note", x: txt });
+            touch(true);
+            renderSheet();
+          }
+          toast("Dilema inserido como nota no roteiro!");
+        }
+      },
+      { label: "Fechar" }
+    ],
+    onOpen: (w) => {
+      w.querySelector("#dram-btn").onclick = () => {
+        const p = w.querySelector("#dram-p").value;
+        w.querySelector("#dram-box").innerHTML = sortear(p);
+      };
+      w.querySelector("#dram-p").onchange = () => {
+        const p = w.querySelector("#dram-p").value;
+        w.querySelector("#dram-box").innerHTML = sortear(p);
+      };
+    }
+  });
+}
+
+function abrirSplash() {
+  if (window.salaNative && window.salaNative.openSplash) {
+    window.salaNative.openSplash();
+    return;
+  }
+  if (window.salaNative && window.salaNative.openWindow) {
+    window.salaNative.openWindow("splash");
+    return;
+  }
+  const body = `<iframe src="splash.html?modo=sobre" style="width:100%;height:350px;border:0;display:block"></iframe>`;
+  dialog({
+    title: "Tela de Abertura — ScriptRoom",
+    width: 630,
+    modal: true,
+    icon: "splash",
+    body
+  });
+}
+
+document.addEventListener("keydown", e => {
+  if (e.ctrlKey && e.shiftKey && e.code === "KeyS" && !IS_TOOL) {
+    e.preventDefault();
+    e.stopPropagation();
+    foleyDialog();
+  }
+});
+
+/* ---------- comandos e menus da 6.5 ---------- */
+Object.assign(CMD, {
+  foley: { label: "Mesa de sonoplastia (Foley)…", icon: "foley", key: "Ctrl+Shift+S", run: () => foleyDialog() },
+  ritmo: { label: "Ritmo dramático e curva de tensão…", icon: "ritmo", needs: 1, run: () => ritmoDialog() },
+  grade: { label: "Grade de exibição e comerciais…", icon: "grade", needs: 1, run: () => gradeDialog() },
+  conflitos: { label: "Matriz de conflitos e ideias…", icon: "matrix", run: () => conflitoDialog() },
+  splashView: { label: "Tela de abertura (Splash Screen)…", icon: "splash", run: () => abrirSplash() }
+});
+
+{
+  const fe = MENUS.find(m => m[0] === "Ferramentas")[2];
+  fe.splice(fe.indexOf("notepad"), 0, "foley", "conflitos", "-");
+}
+{
+  const ex = MENUS.find(m => m[0] === "Exibir")[2];
+  ex.splice(ex.indexOf("verPainel"), 0, "ritmo");
+}
+{
+  const pr = MENUS.find(m => m[0] === "Produção")[2];
+  pr.splice(pr.indexOf("analise"), 0, "grade");
+}
+{
+  const aj = MENUS.find(m => m[0] === "Ajuda")[2];
+  aj.splice(aj.indexOf("sobre"), 0, "splashView");
+}
+
+TIPS.push(
+  "Ferramentas › Mesa de sonoplastia: 12 efeitos sintetizados de Foley para testar ou inserir direto nas cenas.",
+  "Escreva (SFX: TROVÃO) ou (SFX: TIRO) no texto para criar um botão de áudio interativo na folha.",
+  "Exibir › Ritmo dramático e curva de tensão: veja o gráfico de tensão do episódio e confira se os atos têm gancho para o intervalo comercial.",
+  "Produção › Grade de exibição e comerciais calcula se o tempo do roteiro fecha com o relógio de transmissão da emissora.",
+  "Ajuda › Tela de abertura: exibe a tela de abertura clássica de 1995 com os diagnósticos de ferramentas."
+);
+
+
+/* ---------- correções da 6.5 ---------- */
 /* janelas que mostram um episódio só fecham quando você troca de episódio (senão mostrariam o anterior) */
-const JAN_EP=["stWin","tpWin","vozWin","netWin","bdWin","revWin"],JAN_SERIE=["plWin","bibWin","mapWin","relWin"];
+const JAN_EP=["stWin","tpWin","vozWin","netWin","bdWin","revWin","ritmoWin","gradeWin"],JAN_SERIE=["plWin","bibWin","mapWin","relWin"];
 const _openEp18=openEp;openEp=function(id,k){const antes=cur();_openEp18(id,k);const agora=cur();if(!antes||antes===agora)return;
   const fecha=ids=>ids.forEach(i=>{const w=document.getElementById(i);if(w&&w._close)try{w._close();}catch(e){}});fecha(JAN_EP);if(!agora||antes.meta.serieId!==agora.meta.serieId)fecha(JAN_SERIE);};
 /* palavras que chegam de outra pessoa (sala ao vivo, sala na rede) não contam na sua meta nem no diário */

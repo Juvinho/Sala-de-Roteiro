@@ -238,6 +238,7 @@ ipcMain.handle("win:min", (e) => { const w = janelaDe(e); if (w) w.minimize(); }
 ipcMain.handle("win:max", (e) => { const w = janelaDe(e); if (w) w.isMaximized() ? w.unmaximize() : w.maximize(); });
 ipcMain.handle("win:close", (e) => { const w = janelaDe(e); if (w) w.close(); });
 ipcMain.handle("win:open", (e, id) => {
+  if (id === "splash") { abrirSplashManual(); return true; }
   const cfg = ACESSORIOS[id];
   const dono = idDe(e.sender);
   if (!cfg) throw new Error("acessório desconhecido");
@@ -326,6 +327,60 @@ ipcMain.handle("pop:cmd", (e, nome, cmd, a, b) => {
   else if (cmd === "pos" && Number.isFinite(a) && Number.isFinite(b)) j.setPosition(Math.round(a), Math.round(b));
   return true;
 });
+let splash = null;
+let splashPronto = false;
+let mainPronta = false;
+
+function transitarParaPrincipal() {
+  if (!mainPronta || !splashPronto) return;
+  if (win && !win.isDestroyed()) {
+    win.maximize();
+    win.show();
+    win.focus();
+  }
+  if (splash && !splash.isDestroyed()) {
+    splash.destroy();
+    splash = null;
+  }
+}
+
+function criarSplash() {
+  splash = new BrowserWindow({
+    width: 620, height: 350, frame: false, resizable: false, center: true,
+    show: false, alwaysOnTop: true, skipTaskbar: false, backgroundColor: "#040c16",
+    icon: path.join(__dirname, "build", "icon.png"),
+    webPreferences: { preload: path.join(__dirname, "preload.js"), contextIsolation: true, nodeIntegration: false, sandbox: true },
+  });
+  protegerNavegacao(splash);
+  splash.once("ready-to-show", () => {
+    if (splash && !splash.isDestroyed()) splash.show();
+  });
+  splash.loadFile(path.join(__dirname, "app", "splash.html"));
+}
+
+function abrirSplashManual() {
+  const manual = new BrowserWindow({
+    width: 620, height: 350, frame: false, resizable: false, center: true,
+    show: false, alwaysOnTop: false, parent: win && !win.isDestroyed() ? win : undefined,
+    backgroundColor: "#040c16", icon: path.join(__dirname, "build", "icon.png"),
+    webPreferences: { preload: path.join(__dirname, "preload.js"), contextIsolation: true, nodeIntegration: false, sandbox: true },
+  });
+  protegerNavegacao(manual);
+  manual.once("ready-to-show", () => manual.show());
+  manual.loadFile(path.join(__dirname, "app", "splash.html"), { query: { modo: "sobre" } });
+}
+
+ipcMain.handle("splash:done", () => {
+  splashPronto = true;
+  transitarParaPrincipal();
+  return true;
+});
+
+ipcMain.handle("app:splash", () => {
+  abrirSplashManual();
+  return true;
+});
+
 function criarJanela() {
   win = new BrowserWindow({
     width: 1280, height: 820, minWidth: 820, minHeight: 560,
@@ -335,7 +390,10 @@ function criarJanela() {
   });
   win.webContents.session.setSpellCheckerLanguages(["pt-BR"]);
   protegerNavegacao(win);
-  win.once("ready-to-show", () => { win.maximize(); win.show(); });
+  win.once("ready-to-show", () => {
+    mainPronta = true;
+    transitarParaPrincipal();
+  });
   win.on("closed", () => { win = null; for (const w of ferramentas.values()) if (!w.isDestroyed()) w.close(); app.quit(); });
   win.loadFile(path.join(__dirname, "app", "index.html"));
 }
@@ -343,6 +401,17 @@ function criarJanela() {
 if (!app.requestSingleInstanceLock()) app.quit();
 else {
   app.on("second-instance", () => { if (win) { if (win.isMinimized()) win.restore(); win.focus(); } });
-  app.whenReady().then(() => { Menu.setApplicationMenu(null); pastaDados(); criarJanela(); });
+  app.whenReady().then(() => {
+    Menu.setApplicationMenu(null);
+    criarSplash();
+    pastaDados();
+    criarJanela();
+    // Fallback de segurança: após 6 segundos garante que a tela principal não fique invisível
+    setTimeout(() => {
+      mainPronta = true;
+      splashPronto = true;
+      transitarParaPrincipal();
+    }, 6000);
+  });
   app.on("window-all-closed", () => app.quit());
 }

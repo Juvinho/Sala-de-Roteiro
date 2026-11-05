@@ -51,7 +51,7 @@ npm run instalador
 Quando terminar, o instalador estará em:
 
 ```
-dist\SETUP_SCRIPTROOM_6.0.0.exe
+dist\SETUP_SCRIPTROOM_6.5.0.exe
 ```
 
 Dê dois cliques nele e siga o assistente: **Avançar › Aceito › Avançar › Instalar › Concluir**.
@@ -82,6 +82,36 @@ No VS Code também dá para usar **Terminal › Run Task…**, que lista as quat
   Análise técnica mostra a folha de cada cena por departamento e exporta em .csv.
 - **Exportar PDF…** com opções: folha de rosto, marcas de revisão, só um trecho de cenas, marca
   d'água e **cópias nominais** (um PDF por pessoa, com o nome dela na marca d'água).
+
+## Sonoplastia, Ritmo de TV e Splash Screen (versão 6.5)
+
+- **Tela de abertura horizontal (Splash Screen):** ao abrir o ScriptRoom, surge uma janela horizontal
+  clássica (estilo Creative Cloud e programas emblemáticos de 1995 como Adobe Premiere, Photoshop 3.0 e
+  Macromedia Director). Traz a logo do ScriptRoom, especificações Win32 de 32 bits, e uma **barra horizontal
+  animada** exibindo o carregamento em tempo real de cada módulo e ferramenta da sala.
+  - Pode ser revista a qualquer momento em **Ajuda › Tela de abertura (Splash Screen)…** ou pela janela **Sobre**.
+- **Ferramentas › Mesa de sonoplastia (Foley Sound Blaster 16):** sintetizador de áudio procedural com 12 efeitos
+  sonoros autênticos para dramaturgia, radionovela e TV (Trovão & Chuva, Disparo de Revólver, Telefone Trim-Trim,
+  Campainha, Porta Rangendo & Batendo, Passos no Assoalho, Rádio AM & Estática, Batimento Cardíaco de Tensão,
+  Claque de Auditório de Sitcom, Gongo de Suspense, Máquina de Escrever e Sirene de Polícia).
+  - Controles de volume, afinação (pitch) e eco/reverb.
+  - Botão "+ Inserir" adiciona a marca sonoplástica `(SFX: SOM)` direto no ponto do cursor.
+  - **Áudio interativo na folha:** ao escrever `(SFX: TROVÃO)` ou qualquer outro som no roteiro, aparece um
+    botão sonoro `🔊 SFX` na linha: basta clicar nele ou dar Alt+clique para disparar o efeito sonoro na hora!
+  - Atalho rápido: **Ctrl+Shift+S**.
+- **Exibir › Ritmo dramático e curva de tensão:** monitor osciloscópio de fósforo verde com a curva de tensão
+  cena a cena do episódio inteiro.
+  - Calcula a velocidade dramática (BPM dramático: Adagio, Andante, Allegro, Presto), equilíbrio entre falas e ação,
+    e densidade de conflito.
+  - **Auditoria de ganchos de intervalo comercial:** examina a última cena de cada ato e alerta se o gancho
+    antes dos comerciais está forte o suficiente para segurar o telespectador ou se há risco de perda de audiência.
+  - Clicar em qualquer ponto da curva de ondas salta diretamente para a cena no editor.
+- **Produção › Grade de exibição e comerciais:** cálculo de grade de transmissão de TV (30 min, 45 min, 60 min
+  ou 90 min). Monta a tabela da emissora com os blocos de arte, a posição exata de cada intervalo comercial, o
+  tempo acumulado e avisa se o episódio está acima ou abaixo do relógio oficial da emissora.
+- **Ferramentas › Matriz de conflitos e ideias:** motor de geração de conflitos dramáticos de alta voltagem
+  que combina os personagens do seu próprio Elenco com dilemas, prazos fatais, apostas e viradas inesperadas
+  (plot twists). Botão para inserir como nota de produção `[GRADE: ...]`.
 
 ## O mundo inteiro (versão 6.0)
 
