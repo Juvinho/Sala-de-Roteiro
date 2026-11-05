@@ -35,6 +35,7 @@ jobs:
       - run: npm ci
 
       - name: Gerar e publicar o instalador
-        run: npx electron-builder --win nsis --publish always -c.publish.owner=${{ github.repository_owner }} -c.publish.repo=${{ github.event.repository.name }}
+        shell: bash
+        run: npx electron-builder --win nsis --publish always "--config.publish.owner=${{ github.repository_owner }}" "--config.publish.repo=${{ github.event.repository.name }}"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
